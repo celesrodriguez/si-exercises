@@ -135,3 +135,15 @@ test08IIIIPorIIesIIIIIIII
 	ochoPeano := cuatroPeano next next next next.
 	Assert that: ochoPeano isEqualTo: cuatroPeano * II.
 	Assert that: ochoPeano isEqualTo: II * cuatroPeano.! !
+
+!TestsNumerosPeano class methodsFor: 'as yet unclassified' stamp: 'CR 9/17/2020 04:56:06'!
+test09IIIIDivididoIIesII
+	|cuatroPeano|
+	cuatroPeano := II next next.
+	Assert that: cuatroPeano/II isEqualTo: II.! !
+
+!TestsNumerosPeano class methodsFor: 'as yet unclassified' stamp: 'CR 9/17/2020 04:55:34'!
+test09PeanoDivididoIesPeano
+	|cuatroPeano|
+	cuatroPeano := II next next.
+	Assert that: cuatroPeano isEqualTo: cuatroPeano / I.! !
