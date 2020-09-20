@@ -38,7 +38,7 @@ test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
 	self should: codeBlockToExecute notTakeMoreThan: 100 milliSeconds.! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'CR 9/19/2020 21:03:10'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'CR 9/20/2020 00:51:35'!
 test03CanNotAddACustomerWithEmptyName 
 
 	| customerBook codeBlockThatRaisesException exceptionToCatch assertionsBlock|
@@ -48,7 +48,7 @@ test03CanNotAddACustomerWithEmptyName
 	exceptionToCatch := Error. 
 	assertionsBlock :=  [ :anError | 
 			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
-			self assert: customerBook isEmpty ].
+			self assert: customerBook isAnEmptyBook ].
 	self should: codeBlockThatRaisesException raise: exceptionToCatch withExceptionDo: assertionsBlock. ! !
 
 !CustomerBookTest methodsFor: 'testing' stamp: 'CR 9/19/2020 21:05:41'!
@@ -86,7 +86,7 @@ test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'CR 9/19/2020 21:48:14'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'CR 9/20/2020 00:36:25'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney |
@@ -98,7 +98,7 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	customerBook suspendCustomerNamed: paulMcCartney.
 	customerBook removeCustomerNamed: paulMcCartney.
 	
-	self assert: customerBook isEmpty.
+	self assert: customerBook isAnEmptyBook.
 	
 ! !
 
@@ -136,7 +136,6 @@ test08CanNotSuspendAnAlreadySuspendedCustomer
 		
 	self should: codeBlockThatRaisesException raise: exceptionToCatch withExceptionDo: assertionsBlock. ! !
 
-
 
 !classDefinition: #CustomerBook category: #'CodigoRepetido-Ejercicio'!
 Object subclass: #CustomerBook
@@ -156,17 +155,17 @@ isAnEmptyBook
 	^activeCustomers isEmpty and: [ suspendedCustomers isEmpty ]! !
 
 
-!CustomerBook methodsFor: 'initialization' stamp: 'CR 9/19/2020 22:16:06'!
+!CustomerBook methodsFor: 'initialization' stamp: 'CR 9/20/2020 00:50:09'!
 initialize
 
 	activeCustomers := OrderedCollection new.
-	suspendedCustomers = OrderedCollection new.! !
+	suspendedCustomers := OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/19/2020 22:16:26'!
+!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 00:37:30'!
 addCustomerNamed: aCustomerName
 
-	aCustomerName isAnEmptyBook ifTrue: [ self signalCustomerNameCannotBeEmpty ].
+	aCustomerName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
 	(self includesCustomerNamed: aCustomerName) ifTrue: [ self signalCustomerAlreadyExists ].
 	
 	activeCustomers add: aCustomerName. ! !
