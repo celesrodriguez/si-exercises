@@ -6,6 +6,14 @@ Error subclass: #CantSuspend
 	category: 'CodigoRepetido-Ejercicio'!
 
 
+!classDefinition: #NotFound category: #'CodigoRepetido-Ejercicio'!
+Error subclass: #NotFound
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'CodigoRepetido-Ejercicio'!
+
+
 !classDefinition: #CustomerBookTest category: #'CodigoRepetido-Ejercicio'!
 TestCase subclass: #CustomerBookTest
 	instanceVariableNames: ''
@@ -144,15 +152,27 @@ Object subclass: #CustomerBook
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBook methodsFor: 'testing' stamp: 'CR 9/19/2020 22:13:45'!
+!CustomerBook methodsFor: 'testing' stamp: 'CR 9/20/2020 02:28:27'!
 includesCustomerNamed: aCustomerName
 
-	^(activeCustomers includes: aCustomerName) or: [ suspendedCustomers includes: aCustomerName ]! !
+	^(activeCustomers includes: aCustomerName) or: [ suspendedCustomers includes: aCustomerName ].! !
+
+!CustomerBook methodsFor: 'testing' stamp: 'CR 9/20/2020 02:30:58'!
+isAValidName: aCustomerName
+
+	aCustomerName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ] 
+						ifFalse: [^ true].! !
 
 !CustomerBook methodsFor: 'testing' stamp: 'CR 9/19/2020 22:15:34'!
 isAnEmptyBook
 	
 	^activeCustomers isEmpty and: [ suspendedCustomers isEmpty ]! !
+
+!CustomerBook methodsFor: 'testing' stamp: 'CR 9/20/2020 02:34:30'!
+notIncludedInCustomerBook: aCustomerName
+	
+	(self includesCustomerNamed: aCustomerName) ifTrue: [self signalCustomerAlreadyExists. ]
+										   ifFalse: [^ true].                      ! !
 
 
 !CustomerBook methodsFor: 'initialization' stamp: 'CR 9/20/2020 00:50:09'!
@@ -162,13 +182,12 @@ initialize
 	suspendedCustomers := OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 01:10:30'!
+!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 02:03:09'!
 addCustomerNamed: aCustomerName
 
-	aCustomerName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
-	(self includesCustomerNamed: aCustomerName) ifTrue: [ self signalCustomerAlreadyExists].
-	
-	activeCustomers add: aCustomerName. ! !
+	( (self isAValidName: aCustomerName) and: 
+	[self notIncludedInCustomerBook: aCustomerName])
+	ifTrue: [activeCustomers add: aCustomerName.].! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'CR 9/19/2020 22:12:27'!
 numberOfActiveCustomers
@@ -196,7 +215,7 @@ signalCustomerAlreadyExists
 
 	self error: self class customerAlreadyExistsErrorMessage! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:51'!
+!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 01:32:55'!
 signalCustomerNameCannotBeEmpty 
 
 	self error: self class customerCanNotBeEmptyErrorMessage ! !
