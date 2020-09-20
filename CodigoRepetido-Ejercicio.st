@@ -67,7 +67,7 @@ test04CanNotRemoveAnInvalidCustomer
 		
 	self should: codeBlockThatRaisesException raise: exceptionToCatch withExceptionDo: assertionsBlock. ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'CR 9/19/2020 21:49:05'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'CR 9/20/2020 01:15:58'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
@@ -162,11 +162,11 @@ initialize
 	suspendedCustomers := OrderedCollection new.! !
 
 
-!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 00:37:30'!
+!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 01:10:30'!
 addCustomerNamed: aCustomerName
 
 	aCustomerName isEmpty ifTrue: [ self signalCustomerNameCannotBeEmpty ].
-	(self includesCustomerNamed: aCustomerName) ifTrue: [ self signalCustomerAlreadyExists ].
+	(self includesCustomerNamed: aCustomerName) ifTrue: [ self signalCustomerAlreadyExists].
 	
 	activeCustomers add: aCustomerName. ! !
 
@@ -185,31 +185,13 @@ numberOfSuspendedCustomers
 	
 	^suspendedCustomers size.! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/19/2020 22:17:05'!
-removeCustomerNamed: aName 
- 
-	1 to: activeCustomers size do: 
-	[ :index |
-		aName = (activeCustomers at: index)
-			ifTrue: [
-				activeCustomers removeAt: index.
-				^ aName 
-			] 
-	].
+!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 00:54:56'!
+removeCustomerNamed: customerToRemove 
 
-	1 to: suspendedCustomers size do: 	
-	[ :index |
-		aName = (suspendedCustomers at: index)
-			ifTrue: [
-				suspendedCustomers removeAt: index.
-				^ aName 
-			] 
-	].
-	
-	^ NotFound signal.
+ 	activeCustomers remove: customerToRemove ifAbsent: [suspendedCustomers remove: customerToRemove ifAbsent: [NotFound signal.]].
 ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:52'!
+!CustomerBook methodsFor: 'customer management' stamp: 'CR 9/20/2020 01:08:13'!
 signalCustomerAlreadyExists 
 
 	self error: self class customerAlreadyExistsErrorMessage! !
