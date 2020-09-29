@@ -324,18 +324,6 @@ negated
 	
 	^self * (Entero with: -1)! !
 
-!Numero methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 21:58:20'!
-restaSiendoUnEntero: unSustraendoEntero
-	self subclassResponsibility ! !
-
-!Numero methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 21:54:09'!
-sumaSiendoUnEntero: unSumandoEntero
-	self subclassResponsibility ! !
-
-!Numero methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 22:03:38'!
-sumaSiendoUnaFraccion: unSumandoFraccionario
-	self subclassResponsibility ! !
-
 
 !Numero methodsFor: 'testing' stamp: 'NR 9/23/2018 23:36:49'!
 isNegative
@@ -350,6 +338,33 @@ isOne
 !Numero methodsFor: 'testing' stamp: 'HernanWilkinson 5/7/2016 22:49'!
 isZero
 
+	self subclassResponsibility ! !
+
+
+!Numero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:32:24'!
+multiplicacionSiendoUnEntero: unMultiplicadorEntero
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:32:38'!
+multiplicacionSiendoUnaFraccion: unMultiplicadorFraccionario
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:21:56'!
+restaSiendoUnEntero: unMinuendoEntero
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:21:41'!
+restaSiendoUnaFraccion: unMinuendoFraccionario
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/28/2020 21:54:09'!
+sumaSiendoUnEntero: unSumandoEntero
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/28/2020 22:03:38'!
+sumaSiendoUnaFraccion: unSumandoFraccionario
 	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -376,14 +391,17 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise-Polimorfismo'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 21:12:57'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:33:14'!
 * aMultiplier
+	"
 	(aMultiplier class name isEqualTo: #Fraccion) ifTrue: 
 	[| newNumerator | 
 	newNumerator := self * aMultiplier numerator.
 	^ (newNumerator / aMultiplier denominator ) 
 	]. 
-	^self class with: value * aMultiplier integerValue
+"
+	^ aMultiplier multiplicacionSiendoUnEntero: self.
+	"self class with: value * aMultiplier integerValue"
 	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 21:52:40'!
@@ -496,19 +514,43 @@ isZero
 	^value = 0! !
 
 
-!Entero methodsFor: 'arithmetic aux operations' stamp: 'BT 9/28/2020 20:36:00'!
-convertToFraction
-	^ (Entero with: (self integerValue)) / (Entero with: 1).! !
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:31:58'!
+multiplicacionSiendoUnEntero: unMultiplicadorEntero
 
-!Entero methodsFor: 'arithmetic aux operations' stamp: 'CR 9/28/2020 21:58:40'!
-restaSiendoUnEntero: unSustraendoEntero
+	^self class with: value * unMultiplicadorEntero integerValue.! !
 
-	^ self class with: value - unSustraendoEntero integerValue.! !
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:11'!
+multiplicacionSiendoUnaFraccion: unMultiplicadorFraccionario
 
-!Entero methodsFor: 'arithmetic aux operations' stamp: 'CR 9/28/2020 21:59:52'!
+	| newNumerator | 
+	newNumerator := self * unMultiplicadorFraccionario numerator.
+	^(newNumerator / unMultiplicadorFraccionario denominator). 
+	! !
+
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:15'!
+restaSiendoUnEntero: unMinuendoEntero
+
+	^self class with:  unMinuendoEntero integerValue - value.! !
+
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:27'!
+restaSiendoUnaFraccion: unMinuendoFraccionario
+
+	| newNumerator | 	
+	newNumerator := unMinuendoFraccionario numerator - (self * 				unMinuendoFraccionario denominator).
+	^(newNumerator / unMinuendoFraccionario denominator). 
+	! !
+
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/28/2020 21:59:52'!
 sumaSiendoUnEntero: unSumandoEntero
 
 	^self class with: value + unSumandoEntero integerValue.! !
+
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:44'!
+sumaSiendoUnaFraccion: unSumandoFraccionario
+
+	| newNumerator | 	
+	newNumerator := (self * unSumandoFraccionario denominator) + 			unSumandoFraccionario numerator.
+	^(newNumerator / unSumandoFraccionario denominator). ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -536,8 +578,9 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise-Polimorfismo'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 21:10:37'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:38:01'!
 * aMultiplier 
+	"
 	| newNumerator |
 	
 	(aMultiplier class name isEqualTo: #Entero) ifTrue: 
@@ -546,6 +589,8 @@ Numero subclass: #Fraccion
 	]. 
 
 	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
+	"
+	^ aMultiplier multiplicacionSiendoUnaFraccion: self.
 	! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 22:05:33'!
@@ -651,34 +696,50 @@ printOn: aStream
 		print: denominator ! !
 
 
-!Fraccion methodsFor: 'arithmetic aux operations' stamp: 'CR 9/28/2020 21:59:19'!
-restaSiendoUnEntero: unSustraendoEntero
+!Fraccion methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:51'!
+multiplicacionSiendoUnEntero: unMultiplicadorEntero
+
 	| newNumerator | 
-	newNumerator := (self * unSustraendoEntero denominator) - unSustraendoEntero numerator.
-	^ (newNumerator / unSustraendoEntero denominator). 
+	newNumerator := unMultiplicadorEntero *  numerator.
+	^(newNumerator /  denominator ). 
+	
 	! !
 
-!Fraccion methodsFor: 'arithmetic aux operations' stamp: 'CR 9/28/2020 22:08:34'!
-restaSiendoUnaFraccion: unSustraendoFraccionario
+!Fraccion methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:37:43'!
+multiplicacionSiendoUnaFraccion: unMultiplicadorFraccionario
+	
+	^ (numerator * unMultiplicadorFraccionario numerator) / (denominator * 	unMultiplicadorFraccionario denominator).
+	
+	! !
+
+!Fraccion methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:40:02'!
+restaSiendoUnEntero: unMinuendoEntero
+
+	| newNumerator | 
+	newNumerator := unMinuendoEntero * denominator - numerator.
+	^(newNumerator / denominator). 
+	! !
+
+!Fraccion methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:40:20'!
+restaSiendoUnaFraccion: unMinuendoFraccionario
 
 	| newNumerator newDenominator |
+	newNumerator := (denominator * unMinuendoFraccionario numerator) - 				(numerator                              * unMinuendoFraccionario denominator) .
+	newDenominator := denominator * unMinuendoFraccionario denominator.
+	^newNumerator / newDenominator. ! !
 
-	newNumerator := (numerator * unSustraendoFraccionario denominator) - (denominator * unSustraendoFraccionario numerator).
-	newDenominator := denominator * unSustraendoFraccionario denominator.
-	
-	^newNumerator / newDenominator ! !
-
-!Fraccion methodsFor: 'arithmetic aux operations' stamp: 'CR 9/28/2020 21:59:42'!
+!Fraccion methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:40:30'!
 sumaSiendoUnEntero: unSumandoEntero
+
 	| newNumerator |
 	newNumerator := numerator + (unSumandoEntero * denominator).
-	^ (newNumerator / denominator). 
+	^(newNumerator / denominator). 
 	! !
 
-!Fraccion methodsFor: 'arithmetic aux operations' stamp: 'CR 9/28/2020 22:03:05'!
+!Fraccion methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:40:39'!
 sumaSiendoUnaFraccion: unSumandoFraccionario
-	| newNumerator newDenominator |
-	
+
+	| newNumerator newDenominator |	
 	newNumerator := (numerator * unSumandoFraccionario denominator) + 				(denominator * unSumandoFraccionario numerator).
 	newDenominator := denominator * unSumandoFraccionario denominator.
 	
