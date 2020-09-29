@@ -401,58 +401,24 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise-Polimorfismo'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:33:14'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:59:59'!
 * aMultiplier
-	"
-	(aMultiplier class name isEqualTo: #Fraccion) ifTrue: 
-	[| newNumerator | 
-	newNumerator := self * aMultiplier numerator.
-	^ (newNumerator / aMultiplier denominator ) 
-	]. 
-"
-	^ aMultiplier multiplicacionSiendoUnEntero: self.
-	"self class with: value * aMultiplier integerValue"
-	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 21:52:40'!
+	^ aMultiplier multiplicacionSiendoUnEntero: self.! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:00:11'!
 + anAdder 
-	"
-	if anAdder is Fraccion then transform self to fraction and apply +
-	sino aplica normal suma
 
-	(anAdder class name isEqualTo: #Fraccion) ifTrue: 
-	[| numerador denominador | 
-	denominador := anAdder denominator.
-	numerador := (self * denominador) + (anAdder numerator) .
-	^ (numerador / denominador) 
-	]. 
-"
-	^ anAdder sumaSiendoUnEntero: self.
-	"self class with: value + anAdder integerValue"
-! !
+	^ anAdder sumaSiendoUnEntero: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:57:36'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:00:16'!
 - aSubtrahend 
-	"
-	(aSubtrahend class name isEqualTo: #Fraccion) ifTrue: 
-	[| newNumerator | 
-	newNumerator := (self * aSubtrahend denominator) - aSubtrahend numerator.
-	^ (newNumerator / aSubtrahend denominator). 
-	]. 
-	^ self class with: value - aSubtrahend integerValue.
-	"
+	
 	^ aSubtrahend restaSiendoUnMinuendoEntero: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:45:03'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:00:20'!
 / aDivisor 
-	"
-	(aDivisor class name isEqualTo: #Fraccion) ifTrue: 
-	[ | newNumerator | 
-	newNumerator := self * aDivisor denominator.
-	^ (newNumerator / aDivisor numerator). 
-	]. 
-	^Fraccion with: self over: aDivisor
-	"
+	
 	^ aDivisor divisionSiendoUnDividendoEntero: self.! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
@@ -609,66 +575,27 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise-Polimorfismo'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:38:01'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:03:51'!
 * aMultiplier 
-	"
-	| newNumerator |
-	
-	(aMultiplier class name isEqualTo: #Entero) ifTrue: 
-	[newNumerator := aMultiplier * numerator.
-	^ (newNumerator / denominator). 
-	]. 
 
-	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
-	"
 	^ aMultiplier multiplicacionSiendoUnaFraccion: self.
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/28/2020 22:05:33'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:00:52'!
 + anAdder 
-	"
-	| newNumerator newDenominator |
 	
-	(anAdder class name isEqualTo: #Entero) ifTrue: 
-	[newNumerator := numerator + (anAdder * denominator).
-	^ (newNumerator / denominator). 
-	]. 
-
-	newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
-	newDenominator := denominator * anAdder denominator.
-	"
 	^ anAdder sumaSiendoUnaFraccion: self.! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:58:25'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:01:04'!
 - aSubtrahend 
-	"
-	| newNumerator newDenominator |
 	
-	(aSubtrahend class name isEqualTo: #Entero) ifTrue: 
-	[newNumerator := numerator - (denominator * aSubtrahend ).
-	^ (newNumerator / denominator). 
-	]. 
-
-	newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
-	newDenominator := denominator * aSubtrahend denominator.
-	
-	^newNumerator / newDenominator 
-	"
 	^ aSubtrahend restaSiendoUnMinuendoFraccionario: self.
 	
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 00:46:18'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:00:57'!
 / aDivisor 
-	"
-	| newDenominator |
 	
-	(aDivisor class name isEqualTo: #Entero) ifTrue: 
-	[newDenominator := aDivisor * denominator .
-	^ (numerator / newDenominator). 
-	]. 
-	^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)
-	"
 	^ aDivisor divisionSiendoUnDividendoFraccionario: self.! !
 
 
