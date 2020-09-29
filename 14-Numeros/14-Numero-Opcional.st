@@ -499,10 +499,10 @@ divisionSiendoUnDividendoFraccionario: unDividendoFraccionario
 	^(unDividendoFraccionario numerator / newDenominator). 
 	! !
 
-!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:31:58'!
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 02:33:43'!
 multiplicacionSiendoUnEntero: unMultiplicadorEntero
 
-	^self class with: value * unMultiplicadorEntero integerValue.! !
+	^Entero with: value * unMultiplicadorEntero integerValue.! !
 
 !Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:11'!
 multiplicacionSiendoUnaFraccion: unMultiplicadorFraccionario
@@ -512,15 +512,10 @@ multiplicacionSiendoUnaFraccion: unMultiplicadorFraccionario
 	^(newNumerator / unMultiplicadorFraccionario denominator). 
 	! !
 
-!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:15'!
-restaSiendoUnEntero: unMinuendoEntero
-
-	^self class with:  unMinuendoEntero integerValue - value.! !
-
-!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:56:32'!
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 02:32:56'!
 restaSiendoUnMinuendoEntero: unMinuendoEntero
 
-	^self class with:  unMinuendoEntero integerValue - value.! !
+	^Entero with: unMinuendoEntero integerValue - value.! !
 
 !Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:58:10'!
 restaSiendoUnMinuendoFraccionario: unMinuendoFraccionario
@@ -530,10 +525,10 @@ restaSiendoUnMinuendoFraccionario: unMinuendoFraccionario
 	^(newNumerator / unMinuendoFraccionario denominator). 
 	! !
 
-!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/28/2020 21:59:52'!
+!Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 02:34:48'!
 sumaSiendoUnEntero: unSumandoEntero
 
-	^self class with: value + unSumandoEntero integerValue.! !
+	^Entero with: value + unSumandoEntero integerValue.! !
 
 !Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:39:44'!
 sumaSiendoUnaFraccion: unSumandoFraccionario
@@ -575,6 +570,7 @@ fibonacci
 !Cero methodsFor: 'initialization' stamp: 'CR 9/29/2020 01:39:07'!
 initialize
 	value := 0.! !
+
 
 
 !classDefinition: #Negativo category: #'Numero-Exercise-Opcional'!
@@ -638,10 +634,9 @@ initializeWith: aValue
 Positivo class
 	instanceVariableNames: ''!
 
-!Positivo class methodsFor: 'as yet unclassified' stamp: 'CR 9/29/2020 02:03:35'!
+!Positivo class methodsFor: 'as yet unclassified' stamp: 'CR 9/29/2020 02:36:27'!
 with: aPositiveInteger
-
-
+	
 	^self new initializeWith: aPositiveInteger.! !
 
 
@@ -828,11 +823,11 @@ sumaSiendoUnaFraccion: unSumandoFraccionario
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'NR 9/23/2018 23:45:19'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'CR 9/29/2020 02:44:30'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
-	
+	"aDivisor createFractionWithNumerator: aDividend."
 	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
 	aDividend isZero ifTrue: [ ^aDividend ].
 	
