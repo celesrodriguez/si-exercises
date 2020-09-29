@@ -450,10 +450,10 @@ hash
 	^value hash! !
 
 
-!Entero methodsFor: 'initialization' stamp: 'HernanWilkinson 5/7/2016 20:09'!
+!Entero methodsFor: 'initialization' stamp: 'CR 9/29/2020 01:56:44'!
 initalizeWith: aValue 
 	
-	value := aValue! !
+	^ self subclassResponsibility.! !
 
 
 !Entero methodsFor: 'value' stamp: 'HernanWilkinson 5/7/2016 21:02'!
@@ -552,13 +552,12 @@ Entero class
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no está definido aquí para Enteros Negativos'! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'HernanWilkinson 5/7/2016 22:53'!
+!Entero class methodsFor: 'instance creation' stamp: 'CR 9/29/2020 01:50:10'!
 with: aValue 
 	
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
-	
-	^self new initalizeWith: aValue! !
+	^aValue newNumber. ! !
 
 
 !classDefinition: #Cero category: #'Numero-Exercise-Opcional'!
@@ -568,9 +567,14 @@ Entero subclass: #Cero
 	poolDictionaries: ''
 	category: 'Numero-Exercise-Opcional'!
 
-!Cero methodsFor: 'as yet unclassified' stamp: 'CR 9/29/2020 01:13:38'!
+!Cero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:13:38'!
 fibonacci
 	^Entero with: 1.! !
+
+
+!Cero methodsFor: 'initialization' stamp: 'CR 9/29/2020 01:39:07'!
+initialize
+	value := 0.! !
 
 
 !classDefinition: #Negativo category: #'Numero-Exercise-Opcional'!
@@ -580,7 +584,13 @@ Entero subclass: #Negativo
 	poolDictionaries: ''
 	category: 'Numero-Exercise-Opcional'!
 
-!Negativo methodsFor: 'as yet unclassified' stamp: 'CR 9/29/2020 01:15:35'!
+!Negativo methodsFor: 'initialization' stamp: 'CR 9/29/2020 02:02:33'!
+initializeWith: aValue 
+	
+	value := aValue.! !
+
+
+!Negativo methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:15:35'!
 fibonacci
 	self error: Entero negativeFibonacciErrorDescription. ! !
 
@@ -593,6 +603,12 @@ Negativo class
 !Negativo class methodsFor: 'error-messages' stamp: 'CR 9/29/2020 01:17:26'!
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no está definido aquí para Enteros Negativos'.! !
+
+
+!Negativo class methodsFor: 'as yet unclassified' stamp: 'CR 9/29/2020 02:03:23'!
+with: aNegativeInteger
+
+	^self new initializeWith: aNegativeInteger.! !
 
 
 !classDefinition: #Positivo category: #'Numero-Exercise-Opcional'!
@@ -610,6 +626,24 @@ fibonacci
 	
 	^ (self - one) fibonacci + (self - two) fibonacci.! !
 
+
+!Positivo methodsFor: 'initialization' stamp: 'CR 9/29/2020 02:02:03'!
+initializeWith: aValue 
+	
+	value := aValue.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Positivo class' category: #'Numero-Exercise-Opcional'!
+Positivo class
+	instanceVariableNames: ''!
+
+!Positivo class methodsFor: 'as yet unclassified' stamp: 'CR 9/29/2020 02:03:35'!
+with: aPositiveInteger
+
+
+	^self new initializeWith: aPositiveInteger.! !
+
 
 !classDefinition: #Uno category: #'Numero-Exercise-Opcional'!
 Entero subclass: #Uno
@@ -618,9 +652,14 @@ Entero subclass: #Uno
 	poolDictionaries: ''
 	category: 'Numero-Exercise-Opcional'!
 
-!Uno methodsFor: 'as yet unclassified' stamp: 'CR 9/29/2020 01:23:35'!
+!Uno methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:23:35'!
 fibonacci
 	^ Entero with: 1.! !
+
+
+!Uno methodsFor: 'initialization' stamp: 'CR 9/29/2020 01:57:44'!
+initialize
+	value := 1.! !
 
 
 !classDefinition: #Fraccion category: #'Numero-Exercise-Opcional'!
