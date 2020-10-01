@@ -485,15 +485,13 @@ isZero
 	
 	^self subclassResponsibility.! !
 
-!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:25:15'!
+!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:46:13'!
 verifyValidDenominator
-	"Las subclasses que tengan que chequear cosas van a hacer override."
-	^true.! !
+	"Las subclasses que tengan que chequear cosas van a hacer override."! !
 
-!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:25:23'!
+!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:46:09'!
 verifyValidNumerator
-	"Las subclasses que tengan que chequear cosas van a hacer override."
-	^true.! !
+	"Las subclasses que tengan que chequear cosas van a hacer override."! !
 
 
 !Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:48:14'!
@@ -546,6 +544,10 @@ sumaSiendoUnaFraccion: unSumandoFraccionario
 	| newNumerator | 	
 	newNumerator := (self * unSumandoFraccionario denominator) + 			unSumandoFraccionario numerator.
 	^(newNumerator / unSumandoFraccionario denominator). ! !
+
+
+!Entero methodsFor: 'as yet unclassified' stamp: 'CR 10/1/2020 17:45:27'!
+ifNumeratorIsZeroReturnZero! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -606,6 +608,11 @@ verifyValidDenominator
 verifyValidNumerator
 	self error: self numeratorCanNotBeZeroErrorDescription.
 ! !
+
+
+!Cero methodsFor: 'as yet unclassified' stamp: 'CR 10/1/2020 17:43:25'!
+ifNumeratorIsZeroReturnZero
+	^self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -929,13 +936,13 @@ sumaSiendoUnaFraccion: unSumandoFraccionario
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'CR 10/1/2020 17:38:42'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'CR 10/1/2020 17:49:25'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
 
 	aDivisor verifyValidDenominator.
-	aDividend isZero ifTrue: [ ^aDividend ].
+	aDividend ifNumeratorIsZeroReturnZero.
 	
 	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
 	
