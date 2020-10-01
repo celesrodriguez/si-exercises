@@ -1,4 +1,4 @@
-!classDefinition: #NumeroTest category: #'Numero-Exercise-Opcional'!
+!classDefinition: #NumeroTest category: 'Numero-Exercise-Opcional'!
 TestCase subclass: #NumeroTest
 	instanceVariableNames: 'zero one two four oneFifth oneHalf five twoFifth twoTwentyfifth fiveHalfs three eight negativeOne negativeTwo'
 	classVariableNames: ''
@@ -287,7 +287,7 @@ setUp
 	! !
 
 
-!classDefinition: #Numero category: #'Numero-Exercise-Opcional'!
+!classDefinition: #Numero category: 'Numero-Exercise-Opcional'!
 Object subclass: #Numero
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -379,7 +379,7 @@ sumaSiendoUnaFraccion: unSumandoFraccionario
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Numero class' category: #'Numero-Exercise-Opcional'!
+!classDefinition: 'Numero class' category: 'Numero-Exercise-Opcional'!
 Numero class
 	instanceVariableNames: ''!
 
@@ -394,7 +394,7 @@ invalidNumberTypeErrorDescription
 	^ 'Tipo de número inválido!!'! !
 
 
-!classDefinition: #Entero category: #'Numero-Exercise-Opcional'!
+!classDefinition: #Entero category: 'Numero-Exercise-Opcional'!
 Numero subclass: #Entero
 	instanceVariableNames: 'value'
 	classVariableNames: ''
@@ -485,6 +485,16 @@ isZero
 	
 	^self subclassResponsibility.! !
 
+!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:25:15'!
+verifyValidDenominator
+	"Las subclasses que tengan que chequear cosas van a hacer override."
+	^true.! !
+
+!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:25:23'!
+verifyValidNumerator
+	"Las subclasses que tengan que chequear cosas van a hacer override."
+	^true.! !
+
 
 !Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:48:14'!
 divisionSiendoUnDividendoEntero: unDividendoEntero
@@ -539,7 +549,7 @@ sumaSiendoUnaFraccion: unSumandoFraccionario
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Entero class' category: #'Numero-Exercise-Opcional'!
+!classDefinition: 'Entero class' category: 'Numero-Exercise-Opcional'!
 Entero class
 	instanceVariableNames: ''!
 
@@ -555,7 +565,7 @@ with: aValue
 	^aValue newNumber. ! !
 
 
-!classDefinition: #Cero category: #'Numero-Exercise-Opcional'!
+!classDefinition: #Cero category: 'Numero-Exercise-Opcional'!
 Entero subclass: #Cero
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -587,8 +597,28 @@ isZero
 	
 	^true! !
 
+!Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:29:49'!
+verifyValidDenominator
+	self error: self canNotDivideByZeroErrorDescription.
+! !
+
+!Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:27:06'!
+verifyValidNumerator
+	self error: self numeratorCanNotBeZeroErrorDescription.
+! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Cero class' category: 'Numero-Exercise-Opcional'!
+Cero class
+	instanceVariableNames: ''!
+
+!Cero class methodsFor: 'error-messages' stamp: 'CR 10/1/2020 17:23:39'!
+numeratorCanNotBeZeroErrorDescription
+	^'Una fraccion no puede ser cero'.! !
+
 
-!classDefinition: #Negativo category: #'Numero-Exercise-Opcional'!
+!classDefinition: #Negativo category: 'Numero-Exercise-Opcional'!
 Entero subclass: #Negativo
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -622,7 +652,7 @@ isZero
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Negativo class' category: #'Numero-Exercise-Opcional'!
+!classDefinition: 'Negativo class' category: 'Numero-Exercise-Opcional'!
 Negativo class
 	instanceVariableNames: ''!
 
@@ -637,7 +667,7 @@ with: aNegativeInteger
 	^self new initializeWith: aNegativeInteger.! !
 
 
-!classDefinition: #Positivo category: #'Numero-Exercise-Opcional'!
+!classDefinition: #Positivo category: 'Numero-Exercise-Opcional'!
 Entero subclass: #Positivo
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -676,7 +706,7 @@ isZero
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Positivo class' category: #'Numero-Exercise-Opcional'!
+!classDefinition: 'Positivo class' category: 'Numero-Exercise-Opcional'!
 Positivo class
 	instanceVariableNames: ''!
 
@@ -686,7 +716,7 @@ with: aPositiveInteger
 	^self new initializeWith: aPositiveInteger.! !
 
 
-!classDefinition: #Uno category: #'Numero-Exercise-Opcional'!
+!classDefinition: #Uno category: 'Numero-Exercise-Opcional'!
 Entero subclass: #Uno
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -718,8 +748,22 @@ isZero
 	
 	^false! !
 
+!Uno methodsFor: 'testing' stamp: 'CR 10/1/2020 17:09:37'!
+verifyValidDenominator 
+	self error: self class canNotDenominatorBeOne! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Uno class' category: 'Numero-Exercise-Opcional'!
+Uno class
+	instanceVariableNames: ''!
+
+!Uno class methodsFor: 'error messages' stamp: 'CR 10/1/2020 17:09:59'!
+canNotDenominatorBeOne
+	^'la fraccion no puede ser un entero'! !
+
 
-!classDefinition: #Fraccion category: #'Numero-Exercise-Opcional'!
+!classDefinition: #Fraccion category: 'Numero-Exercise-Opcional'!
 Numero subclass: #Fraccion
 	instanceVariableNames: 'numerator denominator'
 	classVariableNames: ''
@@ -772,12 +816,12 @@ numerator
 	^ numerator! !
 
 
-!Fraccion methodsFor: 'initialization' stamp: 'HernanWilkinson 5/7/2016 22:54'!
+!Fraccion methodsFor: 'initialization' stamp: 'CR 10/1/2020 17:21:36'!
 initializeWith: aNumerator over: aDenominator
 
 	"Estas precondiciones estan por si se comenten errores en la implementacion - Hernan"
-	aNumerator isZero ifTrue: [ self error: 'una fraccion no puede ser cero' ].
-	aDenominator isOne ifTrue: [ self error: 'una fraccion no puede tener denominador 1 porque sino es un entero' ].
+	aNumerator verifyValidNumerator.
+	aDenominator verifyValidDenominator.
 	
 	numerator := aNumerator.
 	denominator := aDenominator ! !
@@ -881,16 +925,17 @@ sumaSiendoUnaFraccion: unSumandoFraccionario
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Fraccion class' category: #'Numero-Exercise-Opcional'!
+!classDefinition: 'Fraccion class' category: 'Numero-Exercise-Opcional'!
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'CR 9/29/2020 02:44:30'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'CR 10/1/2020 17:28:26'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
-	"aDivisor createFractionWithNumerator: aDividend."
-	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
+
+	aDivisor verifyValidDenominator.
+	"aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ]."
 	aDividend isZero ifTrue: [ ^aDividend ].
 	
 	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
