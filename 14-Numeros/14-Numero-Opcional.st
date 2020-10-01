@@ -421,10 +421,10 @@ Numero subclass: #Entero
 	
 	^ aDivisor divisionSiendoUnDividendoEntero: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'CR 10/1/2020 16:38:18'!
 // aDivisor 
 	
-	^self class with: value // aDivisor integerValue! !
+	^Entero with: value // aDivisor integerValue! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:24:43'!
 fibonacci
@@ -470,20 +470,20 @@ printOn: aStream
 	aStream print: value ! !
 
 
-!Entero methodsFor: 'testing' stamp: 'NR 9/23/2018 22:17:55'!
+!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 16:32:11'!
 isNegative
 	
-	^value < 0! !
+	^self subclassResponsibility.! !
 
-!Entero methodsFor: 'testing' stamp: 'HernanWilkinson 5/7/2016 20:14'!
+!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 16:32:19'!
 isOne
 	
-	^value = 1! !
+	^self subclassResponsibility.! !
 
-!Entero methodsFor: 'testing' stamp: 'HernanWilkinson 5/7/2016 20:12'!
+!Entero methodsFor: 'testing' stamp: 'CR 10/1/2020 16:32:26'!
 isZero
 	
-	^value = 0! !
+	^self subclassResponsibility.! !
 
 
 !Entero methodsFor: 'private-arithmetic-operations' stamp: 'CR 9/29/2020 00:48:14'!
@@ -572,6 +572,21 @@ initialize
 	value := 0.! !
 
 
+!Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 16:32:34'!
+isNegative
+	
+	^false! !
+
+!Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 16:32:56'!
+isOne
+	
+	^false.! !
+
+!Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 16:32:48'!
+isZero
+	
+	^true! !
+
 
 !classDefinition: #Negativo category: #'Numero-Exercise-Opcional'!
 Entero subclass: #Negativo
@@ -589,6 +604,21 @@ initializeWith: aValue
 !Negativo methodsFor: 'arithmetic operations' stamp: 'CR 9/29/2020 01:15:35'!
 fibonacci
 	self error: Entero negativeFibonacciErrorDescription. ! !
+
+
+!Negativo methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:10'!
+isNegative
+	^true! !
+
+!Negativo methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:01'!
+isOne
+	
+	^false! !
+
+!Negativo methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:04'!
+isZero
+	
+	^false! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -628,6 +658,22 @@ initializeWith: aValue
 	
 	value := aValue.! !
 
+
+!Positivo methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:24'!
+isNegative
+	
+	^false! !
+
+!Positivo methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:17'!
+isOne
+	
+	^false! !
+
+!Positivo methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:20'!
+isZero
+	
+	^false! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Positivo class' category: #'Numero-Exercise-Opcional'!
@@ -655,6 +701,22 @@ fibonacci
 !Uno methodsFor: 'initialization' stamp: 'CR 9/29/2020 01:57:44'!
 initialize
 	value := 1.! !
+
+
+!Uno methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:35'!
+isNegative
+	
+	^false! !
+
+!Uno methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:30'!
+isOne
+	
+	^true! !
+
+!Uno methodsFor: 'testing' stamp: 'CR 10/1/2020 16:33:38'!
+isZero
+	
+	^false! !
 
 
 !classDefinition: #Fraccion category: #'Numero-Exercise-Opcional'!
@@ -721,10 +783,10 @@ initializeWith: aNumerator over: aDenominator
 	denominator := aDenominator ! !
 
 
-!Fraccion methodsFor: 'testing' stamp: 'NR 9/23/2018 23:41:38'!
+!Fraccion methodsFor: 'testing' stamp: 'CR 10/1/2020 16:43:01'!
 isNegative
 	
-	^numerator < 0! !
+	^numerator isNegative! !
 
 !Fraccion methodsFor: 'testing' stamp: 'HernanWilkinson 5/7/2016 22:51'!
 isOne
