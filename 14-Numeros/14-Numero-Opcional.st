@@ -597,9 +597,9 @@ isZero
 	
 	^true! !
 
-!Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:29:49'!
+!Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:35:05'!
 verifyValidDenominator
-	self error: self canNotDivideByZeroErrorDescription.
+	self error: Numero canNotDivideByZeroErrorDescription.
 ! !
 
 !Cero methodsFor: 'testing' stamp: 'CR 10/1/2020 17:27:06'!
@@ -929,13 +929,12 @@ sumaSiendoUnaFraccion: unSumandoFraccionario
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'CR 10/1/2020 17:28:26'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'CR 10/1/2020 17:38:42'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
 
 	aDivisor verifyValidDenominator.
-	"aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ]."
 	aDividend isZero ifTrue: [ ^aDividend ].
 	
 	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
