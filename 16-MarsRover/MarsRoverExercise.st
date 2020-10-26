@@ -98,8 +98,8 @@ test10rotatingRightOnEastPointsToSouth
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 02:01:39'!
-test10xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:31:59'!
+test11performManyInstructionsWorksCorrectly
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'S'.
 	aMarsRover performInstructions: 'rr'.
@@ -107,41 +107,13 @@ test10xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:29:46'!
-test11performManyInstructions
-	| aMarsRover |
-	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'S'.
-	aMarsRover performInstructions: 'rr'.
-	self assert: (aMarsRover direction isKindOf: North).
-	
-	! !
-
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:07:33'!
-test11xxx
-	| aMarsRover |
-	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'W'.
-	aMarsRover performInstructions: 'll'.
-	self assert: (aMarsRover direction isKindOf: East).
-	
-	! !
-
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:14:17'!
-test12xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:34:24'!
+test12movingDiagonallyOnWestMovesSouthWest
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'W'.
 	aMarsRover performInstructions: 'flf'.
 	self assert: (aMarsRover direction isKindOf: South).
 	self assert: aMarsRover position equals: -1@-1.
-	
-	! !
-
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:15:58'!
-test13xxx
-	| aMarsRover |
-	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'W'.
-	aMarsRover performInstructions: 'blb'.
-	self assert: (aMarsRover direction isKindOf: South).
-	self assert: aMarsRover position equals: 1@1.
 	
 	! !
 
@@ -290,15 +262,20 @@ Object subclass: #MarsRover
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
 
-!MarsRover methodsFor: 'initialization' stamp: 'CR 10/26/2020 16:08:10'!
+!MarsRover methodsFor: 'initialization' stamp: 'CR 10/26/2020 16:37:06'!
 initializeWithPosition: aCardinalPointToStartOn andDirection: aCardinalOrientationToPointTo 
 	self verifyThatCardinalOrientationIsValid: aCardinalOrientationToPointTo.
+	self setDirectionTo: aCardinalOrientationToPointTo.
+	currentPosition := aCardinalPointToStartOn.
+	! !
+
+!MarsRover methodsFor: 'initialization' stamp: 'CR 10/26/2020 16:37:06'!
+setDirectionTo: aCardinalOrientationToPointTo
+
 	(aCardinalOrientationToPointTo = 'N') ifTrue: [self pointToNorth].
 	(aCardinalOrientationToPointTo = 'E') ifTrue: [self pointToEast].
 	(aCardinalOrientationToPointTo = 'W') ifTrue: [self pointToWest].
-	(aCardinalOrientationToPointTo = 'S') ifTrue: [self pointToSouth].
-	currentPosition := aCardinalPointToStartOn.
-	! !
+	(aCardinalOrientationToPointTo = 'S') ifTrue: [self pointToSouth]! !
 
 
 !MarsRover methodsFor: 'instruction' stamp: 'CR 10/26/2020 01:20:46'!
@@ -351,14 +328,12 @@ position
 	^currentPosition.! !
 
 
-!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 15:58:53'!
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:40:27'!
 checkIfValidInstructionAndPerform: anInstructionToPerform
 
-	( self isAValidInstruction: anInstructionToPerform) ifTrue: [
-			self performActionWithMarsRover: anInstructionToPerform
-			] ifFalse:[
-			self class signalInvalidInstruction.		
-	].! !
+		(self isAValidInstruction: anInstructionToPerform) 
+		ifTrue: [self performActionWithMarsRover: anInstructionToPerform] 
+		ifFalse: 	[self class signalInvalidInstruction.		].! !
 
 !MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:01:51'!
 ifActionIsMoveBackward: anInstructionToPerform
@@ -389,11 +364,10 @@ performActionWithMarsRover: anInstructionToPerform
 	(self ifActionIsRotateRight: anInstructionToPerform) ifTrue: [currentDirection rotateRight].
 			! !
 
-!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 15:57:46'!
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:40:42'!
 performInstructions: instructionsSequenceToPerform
 
 	self verifyThatInstructionsSequenceIsNotEmpty: instructionsSequenceToPerform.
-
 	self processInstructionsSequence: instructionsSequenceToPerform.
 	 ! !
 
