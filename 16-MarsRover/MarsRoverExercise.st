@@ -5,8 +5,18 @@ TestCase subclass: #MarsRoverTest
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 00:08:10'!
-test01xxx
+!MarsRoverTest methodsFor: 'creation' stamp: 'CR 10/26/2020 16:20:52'!
+test01creatingMarsRoverWithInvalidDirectionRaisesError
+	self 
+		should: [MarsRover withPosition: 0@0 andDirection: 'X'.]
+		raise: Error
+		withExceptionDo: [ :anError | self assert: anError messageText equals: MarsRover cantCreateMarsRoverWithInvalidDirection ].
+	
+	! !
+
+
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:21:37'!
+test02performingEmptyInstructionRaisesError
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'N'.
 	self 
@@ -16,8 +26,8 @@ test01xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 00:40:49'!
-test02xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:23:50'!
+test03movingForwardOnNorthMovesNorth
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'N'.
 	aMarsRover performInstructions: 'f'.
@@ -25,8 +35,8 @@ test02xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 00:19:15'!
-test03xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:23:42'!
+test04movingBackwardOnNorthMovesSouth
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'N'.
 	aMarsRover performInstructions: 'b'.
@@ -34,8 +44,8 @@ test03xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 01:35:34'!
-test04xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:25:19'!
+test05rotatingLeftPointingNorthPointsWest
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'N'.
 	aMarsRover performInstructions: 'l'.
@@ -43,8 +53,8 @@ test04xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 01:26:06'!
-test05xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:25:49'!
+test06rotatingRightPointingNorthPointsEast
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'N'.
 	aMarsRover performInstructions: 'r'.
@@ -52,8 +62,8 @@ test05xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 00:40:59'!
-test06xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:26:38'!
+test07movingForwardOnEastMovesEast
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'E'.
 	aMarsRover performInstructions: 'f'.
@@ -61,8 +71,8 @@ test06xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 01:20:06'!
-test07xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:27:03'!
+test08movingBackwardOnEastMovesWest
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'E'.
 	aMarsRover performInstructions: 'b'.
@@ -70,8 +80,8 @@ test07xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 01:27:56'!
-test08xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:27:29'!
+test09rotatingLeftOnEastPointsNorth
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'E'.
 	aMarsRover performInstructions: 'l'.
@@ -79,8 +89,8 @@ test08xxx
 	
 	! !
 
-!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 01:28:38'!
-test09xxx
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:28:00'!
+test10rotatingRightOnEastPointsToSouth
 	| aMarsRover |
 	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'E'.
 	aMarsRover performInstructions: 'r'.
@@ -97,6 +107,44 @@ test10xxx
 	
 	! !
 
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:29:46'!
+test11performManyInstructions
+	| aMarsRover |
+	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'S'.
+	aMarsRover performInstructions: 'rr'.
+	self assert: (aMarsRover direction isKindOf: North).
+	
+	! !
+
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:07:33'!
+test11xxx
+	| aMarsRover |
+	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'W'.
+	aMarsRover performInstructions: 'll'.
+	self assert: (aMarsRover direction isKindOf: East).
+	
+	! !
+
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:14:17'!
+test12xxx
+	| aMarsRover |
+	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'W'.
+	aMarsRover performInstructions: 'flf'.
+	self assert: (aMarsRover direction isKindOf: South).
+	self assert: aMarsRover position equals: -1@-1.
+	
+	! !
+
+!MarsRoverTest methodsFor: 'actions' stamp: 'CR 10/26/2020 16:15:58'!
+test13xxx
+	| aMarsRover |
+	aMarsRover := MarsRover withPosition: 0@0 andDirection: 'W'.
+	aMarsRover performInstructions: 'blb'.
+	self assert: (aMarsRover direction isKindOf: South).
+	self assert: aMarsRover position equals: 1@1.
+	
+	! !
+
 
 !classDefinition: #Direction category: 'MarsRoverExercise'!
 Object subclass: #Direction
@@ -105,18 +153,27 @@ Object subclass: #Direction
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
 
-!Direction methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:07:36'!
-initializeWith: aMarsRoverToBeAttachedTo
-	
-	marsRoverAttachedTo := aMarsRoverToBeAttachedTo.! !
-
-!Direction methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:16:35'!
+!Direction methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:16:35'!
 moveBackward
 	self subclassResponsibility.! !
 
-!Direction methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:16:31'!
+!Direction methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:16:31'!
 moveForward
 	self subclassResponsibility.! !
+
+!Direction methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:17:46'!
+rotateLeft
+	self subclassResponsibility.! !
+
+!Direction methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:17:39'!
+rotateRight
+	self subclassResponsibility.! !
+
+
+!Direction methodsFor: 'initialization' stamp: 'CR 10/26/2020 01:07:36'!
+initializeWith: aMarsRoverToBeAttachedTo
+	
+	marsRoverAttachedTo := aMarsRoverToBeAttachedTo.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -124,7 +181,7 @@ moveForward
 Direction class
 	instanceVariableNames: ''!
 
-!Direction class methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:06:26'!
+!Direction class methodsFor: 'instance creation' stamp: 'CR 10/26/2020 01:06:26'!
 for: aMarsRoverToBeAttachedTo
 	
 	^self new initializeWith: aMarsRoverToBeAttachedTo. ! !
@@ -137,19 +194,19 @@ Direction subclass: #East
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
 
-!East methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:18:33'!
+!East methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:18:33'!
 moveBackward
 	marsRoverAttachedTo moveWest.! !
 
-!East methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:17:04'!
+!East methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:17:04'!
 moveForward
 	marsRoverAttachedTo moveEast.! !
 
-!East methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:36:22'!
+!East methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:36:22'!
 rotateLeft
 	marsRoverAttachedTo pointToNorth.! !
 
-!East methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:36:30'!
+!East methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:36:30'!
 rotateRight
 	marsRoverAttachedTo pointToSouth.! !
 
@@ -161,19 +218,19 @@ Direction subclass: #North
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
 
-!North methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:19:00'!
+!North methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:19:00'!
 moveBackward
 	marsRoverAttachedTo moveSouth.! !
 
-!North methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:18:51'!
+!North methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:18:51'!
 moveForward
 	marsRoverAttachedTo moveNorth.! !
 
-!North methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:37:22'!
+!North methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:37:22'!
 rotateLeft
 	marsRoverAttachedTo pointToWest. ! !
 
-!North methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 01:37:35'!
+!North methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 01:37:35'!
 rotateRight
 	marsRoverAttachedTo pointToEast. ! !
 
@@ -185,6 +242,22 @@ Direction subclass: #South
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
 
+!South methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:17:05'!
+moveBackward
+	marsRoverAttachedTo moveNorth.! !
+
+!South methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:15:30'!
+moveForward
+	marsRoverAttachedTo moveSouth.! !
+
+!South methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:10:07'!
+rotateLeft
+	marsRoverAttachedTo pointToEast. ! !
+
+!South methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 15:41:06'!
+rotateRight
+	marsRoverAttachedTo pointToWest.! !
+
 
 !classDefinition: #West category: 'MarsRoverExercise'!
 Direction subclass: #West
@@ -192,6 +265,22 @@ Direction subclass: #West
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
+
+!West methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:16:40'!
+moveBackward
+	marsRoverAttachedTo moveEast.! !
+
+!West methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:15:11'!
+moveForward
+	marsRoverAttachedTo moveWest.! !
+
+!West methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 16:09:42'!
+rotateLeft
+	marsRoverAttachedTo pointToSouth.! !
+
+!West methodsFor: 'marsrover interaction' stamp: 'CR 10/26/2020 15:41:43'!
+rotateRight
+	marsRoverAttachedTo pointToNorth.! !
 
 
 !classDefinition: #MarsRover category: 'MarsRoverExercise'!
@@ -201,11 +290,13 @@ Object subclass: #MarsRover
 	poolDictionaries: ''
 	category: 'MarsRoverExercise'!
 
-!MarsRover methodsFor: 'initialization' stamp: 'CR 10/26/2020 01:43:08'!
+!MarsRover methodsFor: 'initialization' stamp: 'CR 10/26/2020 16:08:10'!
 initializeWithPosition: aCardinalPointToStartOn andDirection: aCardinalOrientationToPointTo 
-	(aCardinalOrientationToPointTo isEqualTo: 'N') ifTrue: [self pointToNorth].
-	(aCardinalOrientationToPointTo isEqualTo: 'E') ifTrue: [self pointToEast].
-	(aCardinalOrientationToPointTo isEqualTo: 'S') ifTrue: [self pointToSouth].
+	self verifyThatCardinalOrientationIsValid: aCardinalOrientationToPointTo.
+	(aCardinalOrientationToPointTo = 'N') ifTrue: [self pointToNorth].
+	(aCardinalOrientationToPointTo = 'E') ifTrue: [self pointToEast].
+	(aCardinalOrientationToPointTo = 'W') ifTrue: [self pointToWest].
+	(aCardinalOrientationToPointTo = 'S') ifTrue: [self pointToSouth].
 	currentPosition := aCardinalPointToStartOn.
 	! !
 
@@ -229,37 +320,6 @@ moveSouth
 moveWest
 
 	currentPosition := (currentPosition x - 1 ) @ currentPosition y! !
-
-!MarsRover methodsFor: 'instruction' stamp: 'CR 10/26/2020 02:01:04'!
-performInstructions: instructionSequenceToPerform
-
-	(instructionSequenceToPerform isEmpty) ifTrue: [self class signalInvalidInstruction].
-	
-	instructionSequenceToPerform do: [ : anInstructionToPerform |
-		 ( 'fbrl' includes: anInstructionToPerform) ifTrue: [
-			(anInstructionToPerform isEqualTo: $f) ifTrue: [
-			currentDirection moveForward.		].
-			(anInstructionToPerform isEqualTo: $b) ifTrue: [
-		currentDirection moveBackward. ].
-			(anInstructionToPerform isEqualTo: $l) ifTrue: [currentDirection rotateLeft].
-			(anInstructionToPerform isEqualTo: $r) ifTrue: [currentDirection rotateRight].		
-			] ifFalse:[
-			self signalInvalidInstruction.		
-			]
-		
-		].
-	"
-	(instructionSequenceToPerform isEqualTo: 'f') ifTrue: [
-		currentDirection moveForward.
-		].
-	(instructionSequenceToPerform isEqualTo: 'b') ifTrue: [
-		currentDirection moveBackward.
-		].
-	
-	(instructionSequenceToPerform isEqualTo: 'l') ifTrue: [currentDirection rotateLeft].
-	(instructionSequenceToPerform isEqualTo: 'r') ifTrue: [currentDirection rotateRight].
-	"
-	 ! !
 
 !MarsRover methodsFor: 'instruction' stamp: 'CR 10/26/2020 01:37:57'!
 pointToEast
@@ -290,6 +350,81 @@ direction
 position
 	^currentPosition.! !
 
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 15:58:53'!
+checkIfValidInstructionAndPerform: anInstructionToPerform
+
+	( self isAValidInstruction: anInstructionToPerform) ifTrue: [
+			self performActionWithMarsRover: anInstructionToPerform
+			] ifFalse:[
+			self class signalInvalidInstruction.		
+	].! !
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:01:51'!
+ifActionIsMoveBackward: anInstructionToPerform
+
+	^ anInstructionToPerform = $b! !
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:01:17'!
+ifActionIsMoveForward: anInstructionToPerform
+
+	^ anInstructionToPerform = $f! !
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:02:33'!
+ifActionIsRotateLeft: anInstructionToPerform
+
+	^ anInstructionToPerform = $l! !
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:02:53'!
+ifActionIsRotateRight: anInstructionToPerform
+
+	^ anInstructionToPerform = $r! !
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 16:02:58'!
+performActionWithMarsRover: anInstructionToPerform
+
+	(self ifActionIsMoveForward: anInstructionToPerform) ifTrue: [currentDirection moveForward.		].
+	(self ifActionIsMoveBackward: anInstructionToPerform) ifTrue: [currentDirection moveBackward. ].
+	(self ifActionIsRotateLeft: anInstructionToPerform) ifTrue: [currentDirection rotateLeft].
+	(self ifActionIsRotateRight: anInstructionToPerform) ifTrue: [currentDirection rotateRight].
+			! !
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 15:57:46'!
+performInstructions: instructionsSequenceToPerform
+
+	self verifyThatInstructionsSequenceIsNotEmpty: instructionsSequenceToPerform.
+
+	self processInstructionsSequence: instructionsSequenceToPerform.
+	 ! !
+
+!MarsRover methodsFor: 'instruction processing' stamp: 'CR 10/26/2020 15:59:27'!
+processInstructionsSequence: instructionsSequenceToPerform
+
+	instructionsSequenceToPerform do: [ : anInstructionToPerform |
+		 self checkIfValidInstructionAndPerform: anInstructionToPerform.
+	].! !
+
+
+!MarsRover methodsFor: 'testing' stamp: 'CR 10/26/2020 16:09:05'!
+isACardinalPoint: aCardinalOrientationToPointTo
+
+	^ ('NEWS' includes: (aCardinalOrientationToPointTo at: 1)) and: [aCardinalOrientationToPointTo size = 1]! !
+
+!MarsRover methodsFor: 'testing' stamp: 'CR 10/26/2020 15:48:00'!
+isAValidInstruction: anInstructionToPerform
+
+	^ 'fbrl' includes: anInstructionToPerform! !
+
+!MarsRover methodsFor: 'testing' stamp: 'CR 10/26/2020 15:47:04'!
+verifyThatCardinalOrientationIsValid: aCardinalOrientationToPointTo
+
+	(self isACardinalPoint: aCardinalOrientationToPointTo) ifFalse: [self class signalInvalidDirection ]! !
+
+!MarsRover methodsFor: 'testing' stamp: 'CR 10/26/2020 15:55:33'!
+verifyThatInstructionsSequenceIsNotEmpty: instructionSequenceToPerform
+
+	(instructionSequenceToPerform isEmpty) ifTrue: [self class signalInvalidInstruction].! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'MarsRover class' category: 'MarsRoverExercise'!
@@ -302,12 +437,20 @@ withPosition: aCardinalPointToStartOn andDirection: aCardinalOrientationToPointT
 	^self new initializeWithPosition: aCardinalPointToStartOn andDirection: aCardinalOrientationToPointTo.! !
 
 
-!MarsRover class methodsFor: 'error messages' stamp: 'CR 10/26/2020 00:01:33'!
-signalInvalidInstruction
-	self error: MarsRover cantPerformInvalidAction.! !
+!MarsRover class methodsFor: 'error messages' stamp: 'CR 10/26/2020 15:27:13'!
+cantCreateMarsRoverWithInvalidDirection
+	
+	^'Cant create MarsRover with invalid direction'! !
 
-
-!MarsRover class methodsFor: 'as yet unclassified' stamp: 'CR 10/26/2020 00:02:31'!
+!MarsRover class methodsFor: 'error messages' stamp: 'CR 10/26/2020 00:02:31'!
 cantPerformInvalidAction
 	
 	^'Cant perform invalid instruction'! !
+
+!MarsRover class methodsFor: 'error messages' stamp: 'CR 10/26/2020 15:27:32'!
+signalInvalidDirection
+	self error: MarsRover cantCreateMarsRoverWithInvalidDirection.! !
+
+!MarsRover class methodsFor: 'error messages' stamp: 'CR 10/26/2020 00:01:33'!
+signalInvalidInstruction
+	self error: MarsRover cantPerformInvalidAction.! !
