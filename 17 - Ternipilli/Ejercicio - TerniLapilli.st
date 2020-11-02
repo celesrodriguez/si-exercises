@@ -143,7 +143,7 @@ test12diagonalVictoryWorksCorrectly
 	self assert: aMatch isOver.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:39:16'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 17:34:06'!
 test13movingNonOwnedPieceRaisesError
 
 	| aMatch |
@@ -252,10 +252,64 @@ test18movingToInvalidPositionRaisesError
 	
 	! !
 
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 17:31:18'!
+test19movingChangesOwnershipCorrectly
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	aMatch setOAt: 2@3.
+	aMatch moveXFrom: 3@2 to: 3@3.
+	self deny: aMatch isOver. 
+	self assert: (aMatch doesPositionBelongToX: 3@3).
+	self deny: (aMatch doesPositionBelongToX: 3@2).
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 17:37:27'!
+test20winnerIsCorrect
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	aMatch setOAt: 1@3.
+	self assert: aMatch isOver.
+	self deny: aMatch XWins.
+	self assert: aMatch OWins.
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 17:39:28'!
+test21thereIsNoWinnerWhenGameIsNotOver
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	self deny: aMatch isOver.
+	self deny: aMatch XWins.
+	self deny: aMatch OWins.
+	
+	
+	! !
+
 
 !classDefinition: #TerniLapilli category: 'Ejercicio - TerniLapilli'!
 Object subclass: #TerniLapilli
-	instanceVariableNames: 'gameState currentPlayer gameBoard piecesInTheGame'
+	instanceVariableNames: 'gameState currentPlayer gameBoard piecesInTheGame winner'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Ejercicio - TerniLapilli'!
@@ -343,12 +397,13 @@ verifyCurrentPlayerO
 verifyCurrentPlayerX
 	currentPlayer checkAndPlayOnXsTurn.! !
 
-!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 15:58:52'!
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:37:42'!
 verifyIfCurrentPlayerWins: lastPosition
 	| doesCurrentPlayerWin |
 	doesCurrentPlayerWin := self lastPositionFormsALine: lastPosition.
 	doesCurrentPlayerWin ifTrue: [
 		gameState := GameOver ofGame: self.
+		winner := currentPlayer.
 		]! !
 
 !TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 16:50:44'!
@@ -380,15 +435,15 @@ verifyPosition: anInitialPosition and: aDestinationPosition
 	self verifyItIsAValidPoint: anInitialPosition.
 	self verifyItIsAValidPoint: aDestinationPosition! !
 
-!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 06:25:17'!
-verifyPositionIsOwnedByO: aPositionToBeChecked
-	(gameBoard at: aPositionToBeChecked) failIfNotOwnedByO. 
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:40:22'!
+verifyPositionIsOwnedByO: aPositionToBeCheckedItsOwnership
+	(gameBoard at: aPositionToBeCheckedItsOwnership) failIfNotOwnedByO. 
 	
 ! !
 
-!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 06:25:07'!
-verifyPositionIsOwnedByX: aPositionToBeChecked
-	(gameBoard at: aPositionToBeChecked) failIfNotOwnedByX. 
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:40:29'!
+verifyPositionIsOwnedByX: aPositionToBeCheckedItsOwnership
+	(gameBoard at: aPositionToBeCheckedItsOwnership) failIfNotOwnedByX. 
 	
 ! !
 
@@ -402,13 +457,21 @@ verifyValidMovementFrom: anInitialPosition to: aDestinationPosition
 		! !
 
 
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 17:36:52'!
+OWins
+	^ winner isO. ! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 17:36:43'!
+XWins
+	^ winner isX. ! !
+
 !TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:00:15'!
 failBecauseItsNotMyTurn
 	self signalInvalidPlayer.! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 17:06:21'!
-isCenter: anInitialPosition
-	^ anInitialPosition = 2@2.
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 17:40:58'!
+isCenter: aPositionToCheckIfItsTheCenterOfBoard
+	^ aPositionToCheckIfItsTheCenterOfBoard = 2@2.
 		! !
 
 !TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 15:47:12'!
@@ -470,11 +533,12 @@ initializeBoard
 		]
 	! !
 
-!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 15:59:37'!
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 17:37:12'!
 initializeGame
 	piecesInTheGame := 0.
 	currentPlayer := PlayerX ofGame: self.
 	gameState := NotAllPiecesInGame ofGame: self.
+	winner := Nobody ofGame: self.
 	self initializeBoard.! !
 
 
@@ -582,13 +646,13 @@ updateGame: aDestinationPosition
 	! !
 
 
-!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:47:05'!
-doesPositionBelongToO: aPoint 
-	^ (gameBoard at: aPoint) itsOwnerIsO.! !
+!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 17:27:26'!
+doesPositionBelongToO: aPointToVerifyOwnerShip 
+	^ (gameBoard at: aPointToVerifyOwnerShip) itsOwnerIsO.! !
 
-!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 01:46:29'!
-doesPositionBelongToX: aPoint 
-	^ (self doesPositionBelongToO: aPoint) not. ! !
+!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 17:27:33'!
+doesPositionBelongToX: aPointToVerifyOwnerShip 
+	^ (gameBoard at: aPointToVerifyOwnerShip) itsOwnerIsX.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -686,6 +750,10 @@ isO
 isSomebody
 	^false.! !
 
+!Nobody methodsFor: 'accessing' stamp: 'CR 11/2/2020 17:29:02'!
+isX
+	^false.! !
+
 
 !Nobody methodsFor: 'testing' stamp: 'CR 11/2/2020 06:31:49'!
 failIfNotOwnedByO: aPositionOwnedByMe
@@ -713,6 +781,10 @@ isO
 !PlayerO methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:27'!
 isSomebody
 	^true.! !
+
+!PlayerO methodsFor: 'accessing' stamp: 'CR 11/2/2020 17:28:46'!
+isX
+	^false.! !
 
 
 !PlayerO methodsFor: 'testing' stamp: 'CR 11/2/2020 03:52:44'!
@@ -751,6 +823,10 @@ isO
 
 !PlayerX methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:20'!
 isSomebody
+	^true.! !
+
+!PlayerX methodsFor: 'accessing' stamp: 'CR 11/2/2020 17:28:53'!
+isX
 	^true.! !
 
 
@@ -820,6 +896,10 @@ isOccupied
 !TerniLapilliPosition methodsFor: 'testing' stamp: 'CR 11/2/2020 03:46:59'!
 itsOwnerIsO
 	^owner isO.! !
+
+!TerniLapilliPosition methodsFor: 'testing' stamp: 'CR 11/2/2020 17:28:35'!
+itsOwnerIsX
+	^owner isX.! !
 
 
 !TerniLapilliPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 04:08:13'!
