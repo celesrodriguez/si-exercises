@@ -1136,3 +1136,862 @@ PASSED!
 
 !testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:41:57'!
 ERROR!
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:48:27'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 02:48:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:48:27'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:48:38'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 02:48:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:48:38'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:49:05'!
+ERROR!
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 02:50:15' prior: 50883281!
+setXAt: aPoint 
+	self verifyNotAllPiecesInTheGame.
+	self verifyCurrentPlayerX.
+	self verifyItIsAValidPoint: aPoint.
+	self occupyPositionIfPossible: aPoint By: XPlayer.
+	self changeCurrentPlayer.! !
+
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer YPlayer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #TerniLapilli category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 02:50:31'!
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer YPlayer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 02:50:58' prior: 50882269!
+isPlayingX
+	^ isXsTurn.! !
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 02:51:14' prior: 50882750!
+setOAt: aPoint 
+	self verifyCurrentPlayerO.
+	self verifyItIsAValidPoint: aPoint.
+	self occupyPositionIfPossible: aPoint By: OPlayer.
+	self changeCurrentPlayer.
+! !
+
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer OPlayer'
+	classVariableNames: 'OPlayer'
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #TerniLapilli category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 02:51:21'!
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer OPlayer'
+	classVariableNames: 'OPlayer'
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer OPlayer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #TerniLapilli category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 02:51:22'!
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer OPlayer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+!Nobody methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 02:52:56' prior: 50883518 overrides: 50883521!
+isO
+	^false.! !
+
+!methodRemoval: TLPositionOwner #isO stamp: 'CR 11/2/2020 02:53:14'!
+isO
+	self subclassResponsibility.!
+
+!methodRemoval: Nobody #isO stamp: 'CR 11/2/2020 02:53:21'!
+isO
+	^false.!
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 02:53:34'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 02:53:34'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:53:34'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 02:53:34'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:53:34'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 02:53:34'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 02:53:34'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:53:34'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 02:53:34'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:53:45'!
+ERROR!
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 02:54:58' prior: 50883020!
+isOccupied
+	owner isOccupied.
+	(owner = nil ) ifTrue: [^false] ifFalse: [^true].! !
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 02:55:04' prior: 50883748!
+isOccupied
+	owner isOccupied.! !
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 02:55:08' prior: 50883754!
+isOccupied
+	^owner isOccupied.! !
+!TLPositionOwner methodsFor: 'nil' stamp: 'CR 11/2/2020 02:55:20'!
+isOccupied
+	self subclassResponsibility ! !
+!Nobody methodsFor: 'nil' stamp: 'CR 11/2/2020 02:55:32' overrides: 50883762!
+isOccupied
+	^false.! !
+!O methodsFor: 'nil' stamp: 'CR 11/2/2020 02:55:38' overrides: 50883762!
+isOccupied
+	^true.! !
+!X methodsFor: 'nil' stamp: 'CR 11/2/2020 02:55:43' overrides: 50883762!
+isOccupied
+	^true.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 02:55:51'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 02:55:51'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:55:51'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 02:55:51'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:55:51'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 02:55:51'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 02:55:51'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:55:51'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 02:55:51'!
+ERROR!
+!TLPosition methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 02:56:55' prior: 50882896!
+initializeWithRow: aRowToSetPosition andColumn: aColumnToSetPosition
+	row := aRowToSetPosition.
+	column := aColumnToSetPosition.
+	owner := Nobody new.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 02:58:56'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 02:58:56'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:58:56'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 02:58:56'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:58:56'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 02:58:56'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 02:58:56'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:58:56'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 02:58:56'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:58:59'!
+ERROR!
+
+(gameBoard at: aPoint)!
+!Nobody methodsFor: 'nil' stamp: 'CR 11/2/2020 02:59:42'!
+isO
+	^false.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 02:59:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 02:59:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:59:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 02:59:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 02:59:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 02:59:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 02:59:48'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:59:48'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 02:59:48'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 02:59:55'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:00:13'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:01:26'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 03:01:26'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:01:26'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 03:01:26'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:01:26'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 03:01:26'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:01:26'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:01:26'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 03:01:26'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:01:29'!
+ERROR!
+
+owner!
+
+(gameBoard at: aPoint)!
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:06:24' prior: 50882925!
+initializeBoard
+	gameBoard := Dictionary new.
+	1 to: 3 do: [ :row |
+		1 to: 3 do: [ :column |
+			gameBoard at: row@column put: (TLPosition onRow: row onColumn: column). 	
+			]
+		]
+	! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:06:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 03:06:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:06:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 03:06:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:06:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 03:06:27'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:06:27'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:06:27'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 03:06:27'!
+PASSED!
+
+gameBoard := Dictionary new.!
+
+gameBoard at: 0@7 put: (TLPosition onRow: 0 onColumn: 7).!
+
+gameBoard at: 0@7.!
+
+gameBoard at: 0@7.!
+
+gameBoard at: 0@7.!
+
+pipi := gameBoard at: 0@7.!
+
+pipi isOwnerO !
+!X methodsFor: 'nil' stamp: 'CR 11/2/2020 03:09:03'!
+isO
+	^false.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:09:11'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 03:09:11'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:09:11'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 03:09:11'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:09:11'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 03:09:11'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:09:11'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:09:11'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 03:09:11'!
+PASSED!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 03:09:56' prior: 50883211!
+test09setPositionToPlayerWorksCorrectly
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 1@1.
+	"aMatch setOAt: 2@1."
+	self assert: (aMatch doesPositionBelongToX: 1@1).
+	"self assert: (aMatch doesPositionBelongToO: 2@1)."
+	self deny: aMatch isOver.! !
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:09:59'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:09:59'!
+ERROR!
+
+aMatch!
+
+gameBoard at: 1@1!
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:17:14' prior: 50883368!
+initializeGame
+	isXsTurn := true.
+	piecesInTheGame := 0.
+	XPlayer := X new.
+	OPlayer := O new.
+	self initializeBoard.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 03:17:22'!
+PASSED!
+!TLPositionOwner methodsFor: 'nil' stamp: 'CR 11/2/2020 03:17:49'!
+isO
+	self subclassResponsibility! !
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:19:16' prior: 50883000!
+occupyPositionIfPossible: aPosition By: aPlayer
+	(gameBoard at: aPosition) failIfOccupied.
+	((gameBoard at: aPosition) isOccupied) 
+		ifTrue: [self signalPositionAlreadyOccupied]
+		ifFalse: [self occupyPosition: aPosition By: aPlayer]! !
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:19:30' prior: 50884052!
+occupyPositionIfPossible: aPosition By: aPlayer
+	(gameBoard at: aPosition) failIfOccupied.
+	((gameBoard at: aPosition) isOccupied) 
+		ifTrue: [self signalPositionAlreadyOccupied]
+		ifFalse: [self occupyPosition: aPosition By: aPlayer]! !
+!TLPosition methodsFor: 'nil' stamp: 'CR 11/2/2020 03:19:40'!
+failIfOccupied
+	! !
+!TLPosition methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:20:38' prior: 50884073!
+failIfOccupied
+	^owner ifOwnerIsSomeoneThenFail.! !
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:22:32'!
+ItsOwnerIsO
+	^owner isO.! !
+
+!methodRemoval: TLPosition #isOwnerO stamp: 'CR 11/2/2020 03:22:36'!
+isOwnerO
+	^owner isO.!
+!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:22:46' prior: 50883111!
+doesPositionBelongToO: aPoint 
+	^ (gameBoard at: aPoint) ItsOwnerIsO.! !
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:23:27' prior: 50883666!
+setOAt: aPoint 
+	self verifyNotAllPiecesInTheGame.
+	self verifyCurrentPlayerO.
+	self verifyItIsAValidPoint: aPoint.
+	self occupyPositionIfPossible: aPoint By: OPlayer.
+	self changeCurrentPlayer.
+! !
+!TLPositionOwner methodsFor: 'nil' stamp: 'CR 11/2/2020 03:24:39'!
+ifOwnerIsSomeoneThenFail
+	self subclassResponsibility ! !
+!Nobody methodsFor: 'nil' stamp: 'CR 11/2/2020 03:26:05' overrides: 50884103!
+ifOwnerIsSomeoneThenFail! !
+!O methodsFor: 'nil' stamp: 'CR 11/2/2020 03:26:26' overrides: 50884103!
+ifOwnerIsSomeoneThenFail
+	TerniLapilli signalPositionAlreadyOccupied.! !
+!X methodsFor: 'nil' stamp: 'CR 11/2/2020 03:26:31' overrides: 50884103!
+ifOwnerIsSomeoneThenFail
+	TerniLapilli signalPositionAlreadyOccupied.! !
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:27:11' prior: 50884063!
+occupyPositionIfPossible: aPosition By: aPlayer
+	(gameBoard at: aPosition) failIfOccupied.
+	self occupyPosition: aPosition By: aPlayer.! !
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:27:38' prior: 50883374!
+occupyPosition: aPosition By: aPlayer
+	(gameBoard at: aPosition) setOwnerTo: aPlayer. 
+	piecesInTheGame := piecesInTheGame + 1.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:27:42'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 03:27:42'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:27:42'!
+FAILURE!
+
+Object subclass: #TLPositionOwner
+	instanceVariableNames: 'terniLapilliGame'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #TLPositionOwner category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 03:29:31'!
+Object subclass: #TLPositionOwner
+	instanceVariableNames: 'terniLapilliGame'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+Object subclass: #TLPlayer
+	instanceVariableNames: 'terniLapilliGame'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #TLPlayer category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 03:31:46'!
+Object subclass: #TLPlayer
+	instanceVariableNames: 'terniLapilliGame'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+TLPlayer subclass: #Nobody
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #Nobody category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 03:31:56'!
+TLPlayer subclass: #Nobody
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+TLPlayer subclass: #O
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #O category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 03:32:01'!
+TLPlayer subclass: #O
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+TLPlayer subclass: #X
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #X category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 03:32:07'!
+TLPlayer subclass: #X
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classRemoval: #TLPositionOwner stamp: 'CR 11/2/2020 03:32:14'!
+Object subclass: #TLPositionOwner
+	instanceVariableNames: 'terniLapilliGame'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:32:55' prior: 50883758!
+isOccupied
+	^owner isntNobody.! !
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:08' prior: 50884238!
+isOccupied
+	^owner isSomebody.! !
+!X methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:20'!
+isSomebody
+	^true.! !
+
+!methodRemoval: X #isOccupied stamp: 'CR 11/2/2020 03:33:22'!
+isOccupied
+	^true.!
+!O methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:27'!
+isSomebody
+	^true.! !
+
+!methodRemoval: O #isOccupied stamp: 'CR 11/2/2020 03:33:29'!
+isOccupied
+	^true.!
+!Nobody methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:38'!
+isSomebody
+	^false.! !
+
+!methodRemoval: Nobody #isOccupied stamp: 'CR 11/2/2020 03:33:40'!
+isOccupied
+	^false.!
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:34:01' prior: 50884242!
+isOccupied
+	^owner isSomebody.! !
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:35:37' prior: 50884013!
+initializeGame
+	isXsTurn := true.
+	piecesInTheGame := 0.
+	XPlayer := X ofGame: self.
+	OPlayer := O ofGame: self.
+	self initializeBoard.! !
+!TLPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:36:45' prior: 50883805!
+initializeWithRow: aRowToSetPosition andColumn: aColumnToSetPosition
+	row := aRowToSetPosition.
+	column := aColumnToSetPosition.
+	owner := Nobody ofGame: terniLapilliGame.! !
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:37:42' prior: 50883918!
+initializeBoard
+	gameBoard := Dictionary new.
+	1 to: 3 do: [ :row |
+		1 to: 3 do: [ :column |
+			gameBoard at: row@column put: (TLPosition onRow: row onColumn: column ofGame: self). 	
+			]
+		]
+	! !
+!TLPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:38:21'!
+initializeWithRow: aRowToSetPosition andColumn: aColumnToSetPosition ofGame: aTLGameToBeAttachedTo
+	row := aRowToSetPosition.
+	column := aColumnToSetPosition.
+	terniLapilliGame := aTLGameToBeAttachedTo.
+	owner := Nobody ofGame: terniLapilliGame.! !
+!TLPlayer class methodsFor: 'nil' stamp: 'CR 11/2/2020 03:38:53'!
+ofGame: aTLGameToBeAttachedTo
+	^self new initializeWithGame: aTLGameToBeAttachedTo.! !
+!TLPlayer methodsFor: 'nil' stamp: 'CR 11/2/2020 03:39:14'!
+initializeWithGame: aTLGameToBeAttachedTo
+
+	terniLapilliGame := aTLGameToBeAttachedTo.! !
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:39:45' prior: 50884112!
+ifOwnerIsSomeoneThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.! !
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:39:52' prior: 50884117!
+ifOwnerIsSomeoneThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.! !
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:40:45' prior: 50884077!
+failIfOccupied
+	^owner ifItsSomebodyThenFail.! !
+!Nobody methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:41:03'!
+ifItsSomebodyThenFail! !
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:41:09'!
+ifItsSomebodyThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.! !
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:41:18'!
+ifItsSomebodyThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.! !
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:41:28' prior: 50884327!
+failIfOccupied
+	^owner ifItsSomebodyThenFail: self.! !
+!Nobody methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:42:38'!
+ifItsSomebodyThenFail: aPositionToBeOwnedByMe
+	aPositionToBeOwnedByMe alreadyOccupied.! !
+
+!methodRemoval: Nobody #ifItsSomebodyThenFail stamp: 'CR 11/2/2020 03:42:48'!
+ifItsSomebodyThenFail!
+!Nobody methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:43:26' prior: 50884350!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe alreadyOccupied.! !
+!Nobody methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:43:43' prior: 50884359!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
+
+!methodRemoval: Nobody #ifOwnerIsSomeoneThenFail stamp: 'CR 11/2/2020 03:43:51'!
+ifOwnerIsSomeoneThenFail!
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:44:01'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
+
+!methodRemoval: O #ifItsSomebodyThenFail stamp: 'CR 11/2/2020 03:44:03'!
+ifItsSomebodyThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.!
+
+!methodRemoval: O #ifOwnerIsSomeoneThenFail stamp: 'CR 11/2/2020 03:44:04'!
+ifOwnerIsSomeoneThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.!
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:44:11'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
+
+!methodRemoval: X #ifItsSomebodyThenFail stamp: 'CR 11/2/2020 03:44:14'!
+ifItsSomebodyThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.!
+
+!methodRemoval: X #ifOwnerIsSomeoneThenFail stamp: 'CR 11/2/2020 03:44:15'!
+ifOwnerIsSomeoneThenFail
+	terniLapilliGame signalPositionAlreadyOccupied.!
+!Nobody methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:44:22' prior: 50884365!
+ifItsSomebodyThenFail: aPositionOwnedByMe! !
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:44:38'!
+failBecauseItsAlreadyOccupied
+	! !
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:45:00' prior: 50884409!
+failBecauseItsAlreadyOccupied
+	terniLapilliGame signalPositionAlreadyOccupied. ! !
+!TLPlayer methodsFor: 'nil' stamp: 'CR 11/2/2020 03:45:27'!
+isO
+	self subclassResponsibility ! !
+!TLPlayer methodsFor: 'nil' stamp: 'CR 11/2/2020 03:45:47'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	self subclassResponsibility ! !
+!TLPlayer methodsFor: 'nil' stamp: 'CR 11/2/2020 03:46:07'!
+isSomebody
+	self subclassResponsibility ! !
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:46:59'!
+itsOwnerIsO
+	^owner isO.! !
+
+!methodRemoval: TLPosition #ItsOwnerIsO stamp: 'CR 11/2/2020 03:47:02'!
+ItsOwnerIsO
+	^owner isO.!
+!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:47:05' prior: 50884088!
+doesPositionBelongToO: aPoint 
+	^ (gameBoard at: aPoint) itsOwnerIsO.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 03:48:35'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:48:40'!
+ERROR!
+!TLPosition class methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:49:19'!
+onRow: row onColumn: column ofGame: aTLGameToBeAttachedTo
+	^self new initializeWithRow: row andColumn: column ofGame: aTLGameToBeAttachedTo.! !
+
+!methodRemoval: TLPosition class #onRow:onColumn: stamp: 'CR 11/2/2020 03:49:22'!
+onRow: row onColumn: column
+	^self new initializeWithRow: row andColumn: column.!
+
+!methodRemoval: TLPosition #initializeWithRow:andColumn: stamp: 'CR 11/2/2020 03:49:31'!
+initializeWithRow: aRowToSetPosition andColumn: aColumnToSetPosition
+	row := aRowToSetPosition.
+	column := aColumnToSetPosition.
+	owner := Nobody ofGame: terniLapilliGame.!
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 03:49:45'!
+PASSED!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 03:50:32' prior: 50883450!
+verifyCurrentPlayerO
+	isXsTurn ifTrue: [self signalInvalidPlayer]. ! !
+
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'currentPlayer gameBoard piecesInTheGame XPlayer OPlayer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!classDefinition: #TerniLapilli category: 'Ejercicio - TerniLapilli' stamp: 'CR 11/2/2020 03:50:58'!
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'currentPlayer gameBoard piecesInTheGame XPlayer OPlayer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+!TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 03:51:55' prior: 50882287!
+changeCurrentPlayer
+	currentPlayer changePlayer.! !
+!O methodsFor: 'nil' stamp: 'CR 11/2/2020 03:52:44'!
+changePlayer
+	terniLapilliGame changeTurnToX.! !
+!X methodsFor: 'nil' stamp: 'CR 11/2/2020 03:52:54'!
+changePlayer
+	terniLapilliGame changeTurnToO.! !
+!TerniLapilli methodsFor: 'nil' stamp: 'CR 11/2/2020 03:53:17'!
+changeTurnToX
+	currentPlayer := XPlayer.! !
+!TerniLapilli methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:53:26'!
+changeTurnToO
+	currentPlayer := OPlayer.! !

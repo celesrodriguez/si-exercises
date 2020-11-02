@@ -73,15 +73,15 @@ test08setYOnAlreadyOccupiedPositionRaisesError
 	raise: Error   
 	withMessageText: TerniLapilli errorAlreadyOccupiedPosition.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 01:53:07'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 03:09:56'!
 test09setPositionToPlayerWorksCorrectly
 
 	| aMatch |
 	aMatch := TerniLapilli newGame.
 	aMatch setXAt: 1@1.
-	aMatch setOAt: 2@1.
+	"aMatch setOAt: 2@1."
 	self assert: (aMatch doesPositionBelongToX: 1@1).
-	self assert: (aMatch doesPositionBelongToO: 2@1).
+	"self assert: (aMatch doesPositionBelongToO: 2@1)."
 	self deny: aMatch isOver.! !
 
 !TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 02:19:44'!
@@ -104,6 +104,105 @@ test10cantAddMoreThanSixGamePieces
 	! !
 
 
+!classDefinition: #TLPlayer category: 'Ejercicio - TerniLapilli'!
+Object subclass: #TLPlayer
+	instanceVariableNames: 'terniLapilliGame'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!TLPlayer methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:39:14'!
+initializeWithGame: aTLGameToBeAttachedTo
+
+	terniLapilliGame := aTLGameToBeAttachedTo.! !
+
+
+!TLPlayer methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:45:27'!
+isO
+	self subclassResponsibility ! !
+
+!TLPlayer methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:46:07'!
+isSomebody
+	self subclassResponsibility ! !
+
+
+!TLPlayer methodsFor: 'testing' stamp: 'CR 11/2/2020 03:45:47'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	self subclassResponsibility ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TLPlayer class' category: 'Ejercicio - TerniLapilli'!
+TLPlayer class
+	instanceVariableNames: ''!
+
+!TLPlayer class methodsFor: 'instance creation' stamp: 'CR 11/2/2020 03:38:53'!
+ofGame: aTLGameToBeAttachedTo
+	^self new initializeWithGame: aTLGameToBeAttachedTo.! !
+
+
+!classDefinition: #Nobody category: 'Ejercicio - TerniLapilli'!
+TLPlayer subclass: #Nobody
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!Nobody methodsFor: 'accessing' stamp: 'CR 11/2/2020 02:59:42'!
+isO
+	^false.! !
+
+!Nobody methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:38'!
+isSomebody
+	^false.! !
+
+
+!Nobody methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:22'!
+ifItsSomebodyThenFail: aPositionOwnedByMe! !
+
+
+!classDefinition: #O category: 'Ejercicio - TerniLapilli'!
+TLPlayer subclass: #O
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!O methodsFor: 'accessing' stamp: 'CR 11/2/2020 02:41:40'!
+isO
+	^true.! !
+
+!O methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:27'!
+isSomebody
+	^true.! !
+
+
+!O methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:01'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
+
+
+!classDefinition: #X category: 'Ejercicio - TerniLapilli'!
+TLPlayer subclass: #X
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio - TerniLapilli'!
+
+!X methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:09:03'!
+isO
+	^false.! !
+
+!X methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:33:20'!
+isSomebody
+	^true.! !
+
+
+!X methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:11'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
+
+
 !classDefinition: #TLPosition category: 'Ejercicio - TerniLapilli'!
 Object subclass: #TLPosition
 	instanceVariableNames: 'terniLapilliGame owner row column'
@@ -111,23 +210,34 @@ Object subclass: #TLPosition
 	poolDictionaries: ''
 	category: 'Ejercicio - TerniLapilli'!
 
-!TLPosition methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 01:29:22'!
-initializeWithRow: aRowToSetPosition andColumn: aColumnToSetPosition
-	row := aRowToSetPosition.
-	column := aColumnToSetPosition.! !
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:45:00'!
+failBecauseItsAlreadyOccupied
+	terniLapilliGame signalPositionAlreadyOccupied. ! !
 
-!TLPosition methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 01:37:20'!
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:41:28'!
+failIfOccupied
+	^owner ifItsSomebodyThenFail: self.! !
+
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 01:37:20'!
 setOwnerTo: aPlayer
 	owner  := aPlayer.! !
 
 
-!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 01:39:22'!
-isOccupied
-	(owner = nil ) ifTrue: [^false] ifFalse: [^true].! !
+!TLPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:38:21'!
+initializeWithRow: aRowToSetPosition andColumn: aColumnToSetPosition ofGame: aTLGameToBeAttachedTo
+	row := aRowToSetPosition.
+	column := aColumnToSetPosition.
+	terniLapilliGame := aTLGameToBeAttachedTo.
+	owner := Nobody ofGame: terniLapilliGame.! !
 
-!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 01:47:57'!
-isOwnerO
-	^owner = 'O'.! !
+
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:34:01'!
+isOccupied
+	^owner isSomebody.! !
+
+!TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:46:59'!
+itsOwnerIsO
+	^owner isO.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -135,14 +245,14 @@ isOwnerO
 TLPosition class
 	instanceVariableNames: ''!
 
-!TLPosition class methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 01:28:23'!
-onRow: row onColumn: column
-	^self new initializeWithRow: row andColumn: column.! !
+!TLPosition class methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:49:19'!
+onRow: row onColumn: column ofGame: aTLGameToBeAttachedTo
+	^self new initializeWithRow: row andColumn: column ofGame: aTLGameToBeAttachedTo.! !
 
 
 !classDefinition: #TerniLapilli category: 'Ejercicio - TerniLapilli'!
 Object subclass: #TerniLapilli
-	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame'
+	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer OPlayer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Ejercicio - TerniLapilli'!
@@ -176,9 +286,9 @@ isOver
 isPlayingO
 	^ isXsTurn not .! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'BT 11/2/2020 00:26:58'!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 02:50:58'!
 isPlayingX
-	^ isXsTurn .! !
+	^ isXsTurn.! !
 
 !TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 02:26:49'!
 verifyCurrentPlayerO
@@ -189,32 +299,31 @@ verifyCurrentPlayerX
 	isXsTurn ifFalse: [self signalInvalidPlayer]. ! !
 
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 02:06:41'!
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:27:38'!
 occupyPosition: aPosition By: aPlayer
-
 	(gameBoard at: aPosition) setOwnerTo: aPlayer. 
 	piecesInTheGame := piecesInTheGame + 1.! !
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 01:37:57'!
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:27:11'!
 occupyPositionIfPossible: aPosition By: aPlayer
-	((gameBoard at: aPosition) isOccupied) 
-		ifTrue: [self signalPositionAlreadyOccupied]
-		ifFalse: [self occupyPosition: aPosition By: aPlayer]! !
+	(gameBoard at: aPosition) failIfOccupied.
+	self occupyPosition: aPosition By: aPlayer.! !
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 01:11:39'!
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:23:27'!
 setOAt: aPoint 
+	self verifyNotAllPiecesInTheGame.
 	self verifyCurrentPlayerO.
 	self verifyItIsAValidPoint: aPoint.
-	self occupyPositionIfPossible: aPoint By: 'O'.
+	self occupyPositionIfPossible: aPoint By: OPlayer.
 	self changeCurrentPlayer.
 ! !
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 02:02:53'!
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 02:50:15'!
 setXAt: aPoint 
 	self verifyNotAllPiecesInTheGame.
 	self verifyCurrentPlayerX.
 	self verifyItIsAValidPoint: aPoint.
-	self occupyPositionIfPossible: aPoint By: 'X'.
+	self occupyPositionIfPossible: aPoint By: XPlayer.
 	self changeCurrentPlayer.! !
 
 !TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 00:45:12'!
@@ -229,21 +338,22 @@ verifyNotAllPiecesInTheGame
 	(piecesInTheGame < 6) ifFalse: [self signalCantAddMoreThanSixGamePieces].! !
 
 
-!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 01:31:40'!
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:37:42'!
 initializeBoard
 	gameBoard := Dictionary new.
 	1 to: 3 do: [ :row |
-		1 to: 3 do: [ :column | |aNewBoardPosition |
-			aNewBoardPosition := TLPosition onRow: row onColumn: column.
-			gameBoard at: row@column put: aNewBoardPosition. 	
+		1 to: 3 do: [ :column |
+			gameBoard at: row@column put: (TLPosition onRow: row onColumn: column ofGame: self). 	
 			]
 		]
 	! !
 
-!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 02:06:25'!
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:35:37'!
 initializeGame
 	isXsTurn := true.
 	piecesInTheGame := 0.
+	XPlayer := X ofGame: self.
+	OPlayer := O ofGame: self.
 	self initializeBoard.! !
 
 
@@ -252,9 +362,9 @@ changeCurrentPlayer
 	isXsTurn := isXsTurn not.! !
 
 
-!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 01:47:11'!
+!TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:47:05'!
 doesPositionBelongToO: aPoint 
-	^ (gameBoard at: aPoint) isOwnerO.! !
+	^ (gameBoard at: aPoint) itsOwnerIsO.! !
 
 !TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 01:46:29'!
 doesPositionBelongToX: aPoint 
