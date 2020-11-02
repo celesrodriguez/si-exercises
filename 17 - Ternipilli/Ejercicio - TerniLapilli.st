@@ -214,25 +214,6 @@ test16movingAfterVictoryRaisesError
 	
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:48:31'!
-test17movingToInvalidPositionRaisesError
-
-	| aMatch |
-	aMatch := TerniLapilli newGame.
-	aMatch setXAt: 2@1.
-	aMatch setOAt: 3@1.
-	aMatch setXAt: 1@2.
-	aMatch setOAt: 2@2.
-	aMatch setXAt: 3@2.
-	aMatch setOAt: 2@3.
-	self deny: aMatch isOver. 
-	self should: [aMatch moveXFrom: 3@2 to: 1@3.] 
-	raise: Error   
-	withMessageText: TerniLapilli errorInvalidMovement.
-	
-	
-	! !
-
 !TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:46:34'!
 test17movingToPositionOutOfRangeRaisesError
 
@@ -248,6 +229,25 @@ test17movingToPositionOutOfRangeRaisesError
 	self should: [aMatch moveXFrom: 3@2 to: -1@2.] 
 	raise: Error   
 	withMessageText: TerniLapilli errorOutOfRangePosition.
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 17:13:39'!
+test18movingToInvalidPositionRaisesError
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	aMatch setOAt: 2@3.
+	self deny: aMatch isOver. 
+	self should: [aMatch moveXFrom: 3@2 to: 1@3.] 
+	raise: Error   
+	withMessageText: TerniLapilli errorInvalidMovement.
 	
 	
 	! !
@@ -301,6 +301,11 @@ signalTheGameIsOver
 	^ self error: self class errorGameOver.! !
 
 
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:07:27'!
+IsCenter: anInitialPosition or: aDestinationPosition
+
+	^ (self isCenter: anInitialPosition) or: [self isCenter: aDestinationPosition ]! !
+
 !TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 16:21:58'!
 ifAllPiecesInGameThenChangeState
 	(piecesInTheGame = 6) ifTrue: [gameState := AllPiecesInGame ofGame: self].! !
@@ -309,6 +314,26 @@ ifAllPiecesInGameThenChangeState
 lastPositionFormsALine: lastPosition
 
 	^ (self checkHorizontally: lastPosition) or: [ (self checkVertically: lastPosition) or: [self checkDiagonals]]! !
+
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:05:22'!
+moveDiagonally: distanceBetweenPoints
+
+	^ distanceBetweenPoints = 2 sqrt! !
+
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:04:59'!
+moveVerticallyOrHorizontally: distanceBetweenPoints
+
+	^ distanceBetweenPoints = 1! !
+
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:10:56'!
+movingDiagonallyIsValidFrom: anInitialPosition to: aDestinationPosition
+	| distanceBetweenPoints |
+	distanceBetweenPoints := anInitialPosition dist: aDestinationPosition.	
+	^ (self moveDiagonally: distanceBetweenPoints) and: [self IsCenter: anInitialPosition or: aDestinationPosition].! !
+
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:13:21'!
+movingVerticallyOrHorizontallyIsValidFrom: anInitialPosition to: aDestinationPosition
+	^ (anInitialPosition dist: aDestinationPosition) = 1.! !
 
 !TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 04:01:40'!
 verifyCurrentPlayerO
@@ -367,10 +392,24 @@ verifyPositionIsOwnedByX: aPositionToBeChecked
 	
 ! !
 
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 17:10:03'!
+verifyValidMovementFrom: anInitialPosition to: aDestinationPosition
+	| distanceBetweenPoints |
+	distanceBetweenPoints := anInitialPosition dist: aDestinationPosition.
+	(self movingVerticallyOrHorizontallyIsValidFrom: anInitialPosition to: aDestinationPosition) ifFalse: [
+			(self movingDiagonallyIsValidFrom: anInitialPosition to: aDestinationPosition) ifFalse: [self signalInvalidMovement].
+		]
+		! !
+
 
 !TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:00:15'!
 failBecauseItsNotMyTurn
 	self signalInvalidPlayer.! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 17:06:21'!
+isCenter: anInitialPosition
+	^ anInitialPosition = 2@2.
+		! !
 
 !TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 15:47:12'!
 isOver
