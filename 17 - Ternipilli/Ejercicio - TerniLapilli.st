@@ -73,15 +73,15 @@ test07setYOnAlreadyOccupiedPositionRaisesError
 	raise: Error   
 	withMessageText: TerniLapilli errorAlreadyOccupiedPosition.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:22:35'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:54:53'!
 test08setPositionToPlayerWorksCorrectly
 
 	| aMatch |
 	aMatch := TerniLapilli newGame.
 	aMatch setXAt: 1@1.
-	"aMatch setOAt: 2@1."
+	aMatch setOAt: 2@1.
 	self assert: (aMatch doesPositionBelongToX: 1@1).
-	"self assert: (aMatch doesPositionBelongToO: 2@1)."
+	self assert: (aMatch doesPositionBelongToO: 2@1).
 	self deny: aMatch isOver.! !
 
 !TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:22:55'!
@@ -143,6 +143,62 @@ test12diagonalVictoryWorksCorrectly
 	self assert: aMatch isOver.
 	! !
 
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 06:39:03'!
+test13moveOfNonOwnedPositionRaisesError
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	aMatch setOAt: 2@3.
+	self deny: aMatch isOver.
+	self should: [aMatch moveXFrom: 2@3 to: 1@3.] 
+	raise: Error   
+	withMessageText: TerniLapilli errorCurrentPlayerDoesntOwnPosition. 
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 06:40:49'!
+test14moveToOccupiedPositionRaisesError
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	aMatch setOAt: 2@3.
+	self deny: aMatch isOver.
+	self should: [aMatch moveXFrom: 2@1 to: 2@2.] 
+	raise: Error   
+	withMessageText: TerniLapilli errorAlreadyOccupiedPosition. 
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:56:03'!
+test20afterVictoryWeCantMoveAnything
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 1@1.
+	aMatch setOAt: 3@3.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@1.
+	self assert: aMatch isOver. 
+	self should: [aMatch setOAt: 1@2.] 
+	raise: Error   
+	withMessageText: TerniLapilli errorGameOver. 
+	
+	
+	! !
+
 
 !classDefinition: #TLPlayer category: 'Ejercicio - TerniLapilli'!
 Object subclass: #TLPlayer
@@ -197,6 +253,14 @@ isSomebody
 	^false.! !
 
 
+!Nobody methodsFor: 'testing' stamp: 'CR 11/2/2020 06:31:49'!
+failIfNotOwnedByO: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseOnlyMyOwnerCanMoveMe. ! !
+
+!Nobody methodsFor: 'testing' stamp: 'CR 11/2/2020 06:31:46'!
+failIfNotOwnedByX: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseOnlyMyOwnerCanMoveMe. ! !
+
 !Nobody methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:22'!
 ifItsSomebodyThenFail: aPositionOwnedByMe! !
 
@@ -217,21 +281,27 @@ isSomebody
 	^true.! !
 
 
-!O methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:01'!
-ifItsSomebodyThenFail: aPositionOwnedByMe
-	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
-
-
-!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:52:44'!
+!O methodsFor: 'testing' stamp: 'CR 11/2/2020 03:52:44'!
 changePlayer
 	terniLapilliGame changeTurnToX.! !
 
-!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 04:01:49'!
+!O methodsFor: 'testing' stamp: 'CR 11/2/2020 04:01:49'!
 checkAndPlayOnOsTurn! !
 
-!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:59:30'!
+!O methodsFor: 'testing' stamp: 'CR 11/2/2020 03:59:30'!
 checkAndPlayOnXsTurn
 	terniLapilliGame failBecauseItsNotMyTurn.! !
+
+!O methodsFor: 'testing' stamp: 'CR 11/2/2020 06:29:48'!
+failIfNotOwnedByO: aPositionOwnedByMe! !
+
+!O methodsFor: 'testing' stamp: 'CR 11/2/2020 06:29:39'!
+failIfNotOwnedByX: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseOnlyMyOwnerCanMoveMe. ! !
+
+!O methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:01'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
 
 
 !classDefinition: #X category: 'Ejercicio - TerniLapilli'!
@@ -250,21 +320,27 @@ isSomebody
 	^true.! !
 
 
-!X methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:11'!
-ifItsSomebodyThenFail: aPositionOwnedByMe
-	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
-
-
-!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:52:54'!
+!X methodsFor: 'testing' stamp: 'CR 11/2/2020 03:52:54'!
 changePlayer
 	terniLapilliGame changeTurnToO.! !
 
-!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 04:01:57'!
+!X methodsFor: 'testing' stamp: 'CR 11/2/2020 04:01:57'!
 checkAndPlayOnOsTurn
 	terniLapilliGame failBecauseItsNotMyTurn.! !
 
-!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:58:25'!
+!X methodsFor: 'testing' stamp: 'CR 11/2/2020 03:58:25'!
 checkAndPlayOnXsTurn! !
+
+!X methodsFor: 'testing' stamp: 'CR 11/2/2020 06:29:26'!
+failIfNotOwnedByO: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseOnlyMyOwnerCanMoveMe. ! !
+
+!X methodsFor: 'testing' stamp: 'CR 11/2/2020 06:30:03'!
+failIfNotOwnedByX: aPositionOwnedByMe! !
+
+!X methodsFor: 'testing' stamp: 'CR 11/2/2020 03:44:11'!
+ifItsSomebodyThenFail: aPositionOwnedByMe
+	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
 
 
 !classDefinition: #TLPosition category: 'Ejercicio - TerniLapilli'!
@@ -274,17 +350,34 @@ Object subclass: #TLPosition
 	poolDictionaries: ''
 	category: 'Ejercicio - TerniLapilli'!
 
-!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:45:00'!
+!TLPosition methodsFor: 'game interaction' stamp: 'CR 11/2/2020 06:12:21'!
+free
+	owner := Nobody ofGame: terniLapilliGame.! !
+
+!TLPosition methodsFor: 'game interaction' stamp: 'CR 11/2/2020 04:07:36'!
+setOwnerTo: aPlayerToBeAttachedTo
+	owner  := aPlayerToBeAttachedTo.! !
+
+
+!TLPosition methodsFor: 'testing' stamp: 'CR 11/2/2020 03:45:00'!
 failBecauseItsAlreadyOccupied
 	terniLapilliGame signalPositionAlreadyOccupied. ! !
 
-!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 03:41:28'!
+!TLPosition methodsFor: 'testing' stamp: 'CR 11/2/2020 06:34:31'!
+failBecauseOnlyMyOwnerCanMoveMe
+	terniLapilliGame signalCurrentPlayerDoesntOwnPosition.! !
+
+!TLPosition methodsFor: 'testing' stamp: 'CR 11/2/2020 06:38:42'!
+failIfNotOwnedByO
+	^owner failIfNotOwnedByO: self.! !
+
+!TLPosition methodsFor: 'testing' stamp: 'CR 11/2/2020 06:38:20'!
+failIfNotOwnedByX
+	^owner failIfNotOwnedByX: self.! !
+
+!TLPosition methodsFor: 'testing' stamp: 'CR 11/2/2020 03:41:28'!
 failIfOccupied
 	^owner ifItsSomebodyThenFail: self.! !
-
-!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 04:07:36'!
-setOwnerTo: aPlayerToBeAttachedTo
-	owner  := aPlayerToBeAttachedTo.! !
 
 
 !TLPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 04:08:13'!
@@ -302,7 +395,6 @@ isOccupied
 !TLPosition methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:46:59'!
 itsOwnerIsO
 	^owner isO.! !
-
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -330,6 +422,11 @@ failBecauseItsNotMyTurn
 signalCantAddMoreThanSixGamePieces
 
 	^ self error: self class errorCantAddMoreThanSixGamePieces.! !
+
+!TerniLapilli methodsFor: 'signals' stamp: 'CR 11/2/2020 06:34:20'!
+signalCurrentPlayerDoesntOwnPosition
+
+	^ self error: self class errorCurrentPlayerDoesntOwnPosition! !
 
 !TerniLapilli methodsFor: 'signals' stamp: 'CR 11/2/2020 00:46:26'!
 signalInvalidPlayer
@@ -401,42 +498,77 @@ verifyItIsAValidPoint: aPointToCheckRange
 verifyNotAllPiecesInTheGame
 	(piecesInTheGame < 6) ifFalse: [self signalCantAddMoreThanSixGamePieces].! !
 
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 06:25:17'!
+verifyPositionIsOwnedByO: aPositionToBeChecked
+	(gameBoard at: aPositionToBeChecked) failIfNotOwnedByO. 
+	
+! !
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:27:38'!
-occupyPosition: aPosition By: aPlayer
-	(gameBoard at: aPosition) setOwnerTo: aPlayer. 
-	piecesInTheGame := piecesInTheGame + 1.! !
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 06:25:07'!
+verifyPositionIsOwnedByX: aPositionToBeChecked
+	(gameBoard at: aPositionToBeChecked) failIfNotOwnedByX. 
+	
+! !
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:27:11'!
-occupyPositionIfPossible: aPosition By: aPlayer
-	(gameBoard at: aPosition) failIfOccupied.
-	self occupyPosition: aPosition By: aPlayer.! !
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 04:41:56'!
-setOAt: aPoint 
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 06:10:48'!
+moveOFrom: anInitialPosition to: aDestinationPosition
 	(gameOver) 
 		ifTrue:[self signalTheGameIsOver]
 		ifFalse: [
-			self verifyNotAllPiecesInTheGame.
+			self verifyItIsAValidPoint: anInitialPosition.
+			self verifyItIsAValidPoint: aDestinationPosition.
 			self verifyCurrentPlayerO.
-			self verifyItIsAValidPoint: aPoint.
-			self occupyPositionIfPossible: aPoint By: OPlayer.
-			self verifyIfItsAVictory: aPoint.
+			self occupyPositionIfPossible: aDestinationPosition By: currentPlayer.
+			self freePreviousPosition: anInitialPosition.
+			self verifyIfItsAVictory: aDestinationPosition.
 			self changeCurrentPlayer.	
 			
 			]
 ! !
 
-!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 04:42:02'!
-setXAt: aPoint 
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 06:22:34'!
+moveXFrom: anInitialPosition to: aDestinationPosition
+	(gameOver) 
+		ifTrue:[self signalTheGameIsOver]
+		ifFalse: [
+			self verifyItIsAValidPoint: anInitialPosition.
+			self verifyItIsAValidPoint: aDestinationPosition.
+			self verifyCurrentPlayerX.
+			self verifyPositionIsOwnedByX: anInitialPosition.
+			self occupyPositionIfPossible: aDestinationPosition By: currentPlayer.
+			self freePreviousPosition: anInitialPosition.
+			self verifyIfItsAVictory: aDestinationPosition.
+			self changeCurrentPlayer.	
+			
+			]
+! !
+
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 06:10:21'!
+setOAt: aDestinationPosition 
+	(gameOver) 
+		ifTrue:[self signalTheGameIsOver]
+		ifFalse: [
+			self verifyNotAllPiecesInTheGame.
+			self verifyCurrentPlayerO.
+			self verifyItIsAValidPoint: aDestinationPosition.
+			self occupyPositionIfPossible: aDestinationPosition By: currentPlayer.
+			self verifyIfItsAVictory: aDestinationPosition.
+			self changeCurrentPlayer.	
+			
+			]
+! !
+
+!TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 06:10:11'!
+setXAt: aDestinationPosition
 	(gameOver) 
 		ifTrue:[self signalTheGameIsOver]
 		ifFalse: [
 			self verifyNotAllPiecesInTheGame.
 			self verifyCurrentPlayerX.
-			self verifyItIsAValidPoint: aPoint.
-			self occupyPositionIfPossible: aPoint By: XPlayer.
-			self verifyIfItsAVictory: aPoint.
+			self verifyItIsAValidPoint: aDestinationPosition.
+			self occupyPositionIfPossible: aDestinationPosition By: currentPlayer.
+			self verifyIfItsAVictory: aDestinationPosition.
 			self changeCurrentPlayer.	
 			]! !
 
@@ -507,6 +639,11 @@ checkVertically: lastPosition
 	
 	self ifPositionsHaveTheSameOwnerThenItsVictory: firstPosition and: secondPosition and: thirdPosition.! !
 
+!TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 06:23:17'!
+freePreviousPosition: aPositionToRelease
+	(gameBoard at: aPositionToRelease) free.
+! !
+
 !TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 05:44:13'!
 ifPositionsHaveTheSameOwnerThenItsVictory: firstPosition and: secondPosition and: thirdPosition.
 
@@ -515,6 +652,16 @@ ifPositionsHaveTheSameOwnerThenItsVictory: firstPosition and: secondPosition and
 		(self sameOwner: firstPosition and: secondPosition and: thirdPosition)
 			ifTrue: [gameOver := true]
 		]! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 03:27:38'!
+occupyPosition: aPosition By: aPlayer
+	(gameBoard at: aPosition) setOwnerTo: aPlayer. 
+	piecesInTheGame := piecesInTheGame + 1.! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 03:27:11'!
+occupyPositionIfPossible: aPosition By: aPlayer
+	(gameBoard at: aPosition) failIfOccupied.
+	self occupyPosition: aPosition By: aPlayer.! !
 
 
 !TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:47:05'!
@@ -536,13 +683,17 @@ newGame
 	^ self new initializeGame.! !
 
 
-!TerniLapilli class methodsFor: 'error messages' stamp: 'CR 11/2/2020 01:07:01'!
+!TerniLapilli class methodsFor: 'error messages' stamp: 'CR 11/2/2020 06:35:37'!
 errorAlreadyOccupiedPosition
-	^ 'This positions is already occupied by another!!'! !
+	^ 'This position is already occupied!!'! !
 
 !TerniLapilli class methodsFor: 'error messages' stamp: 'CR 11/2/2020 02:05:38'!
 errorCantAddMoreThanSixGamePieces
 	^ 'Error!! Cant add more than more than 6 game pieces'! !
+
+!TerniLapilli class methodsFor: 'error messages' stamp: 'CR 11/2/2020 06:35:17'!
+errorCurrentPlayerDoesntOwnPosition
+	^ 'This position doesnt belong to current player!!'! !
 
 !TerniLapilli class methodsFor: 'error messages' stamp: 'CR 11/2/2020 04:19:40'!
 errorGameOver
