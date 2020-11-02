@@ -21,8 +21,8 @@ test02XstartsPlaying
 	self deny: aJustStartedMatch isPlayingO.
 	self deny: aJustStartedMatch isOver.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:21:55'!
-test03verifyPointIsInValidRange
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:45:51'!
+test03settingPieceToPositionOutOfRangeRaisesError
 
 	| aJustStartedMatch |
 	aJustStartedMatch := TerniLapilli newGame.
@@ -42,8 +42,8 @@ test04XPlaysAndGameChangesTurnToO
 	self assert: aJustStartedMatch isPlayingO.
 	self deny: aJustStartedMatch isOver.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:22:11'!
-test05verifyPointIsInValidRange
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:36:49'!
+test05playerTryingToPlayOnWrongTurnRaisesError
 
 	| aJustStartedMatch |
 	aJustStartedMatch := TerniLapilli newGame.
@@ -62,8 +62,8 @@ test06raisesErrorWhenOStarts
 	raise: Error   
 	withMessageText: TerniLapilli errorInvalidPlayer.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:22:23'!
-test07setYOnAlreadyOccupiedPositionRaisesError
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:37:35'!
+test07setPieceOnAlreadyOccupiedPositionRaisesError
 
 	| aJustStartedMatch |
 	aJustStartedMatch := TerniLapilli newGame.
@@ -73,8 +73,8 @@ test07setYOnAlreadyOccupiedPositionRaisesError
 	raise: Error   
 	withMessageText: TerniLapilli errorAlreadyOccupiedPosition.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:54:53'!
-test08setPositionToPlayerWorksCorrectly
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:38:08'!
+test08setPieceWorksCorrectly
 
 	| aMatch |
 	aMatch := TerniLapilli newGame.
@@ -84,8 +84,8 @@ test08setPositionToPlayerWorksCorrectly
 	self assert: (aMatch doesPositionBelongToO: 2@1).
 	self deny: aMatch isOver.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:22:55'!
-test09cantAddMoreThanSixGamePieces
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:38:46'!
+test09addingMoreThanSixPiecesRaisesError
 
 	| aMatch |
 	aMatch := TerniLapilli newGame.
@@ -143,8 +143,8 @@ test12diagonalVictoryWorksCorrectly
 	self assert: aMatch isOver.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 06:39:03'!
-test13moveOfNonOwnedPositionRaisesError
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:39:16'!
+test13movingNonOwnedPieceRaisesError
 
 	| aMatch |
 	aMatch := TerniLapilli newGame.
@@ -162,8 +162,8 @@ test13moveOfNonOwnedPositionRaisesError
 	
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 06:40:49'!
-test14moveToOccupiedPositionRaisesError
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:39:36'!
+test14movingPieceToOccupiedPositionRaisesError
 
 	| aMatch |
 	aMatch := TerniLapilli newGame.
@@ -181,8 +181,23 @@ test14moveToOccupiedPositionRaisesError
 	
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 05:56:03'!
-test20afterVictoryWeCantMoveAnything
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:40:55'!
+test15movingPieceWhenNotAllPiecesInGameRaisesError
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	self deny: aMatch isOver.
+	self should: [aMatch moveXFrom: 2@1 to: 2@2.] 
+	raise: Error   
+	withMessageText: TerniLapilli errorNotAllPiecesInGame.
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:41:43'!
+test16movingAfterVictoryRaisesError
 
 	| aMatch |
 	aMatch := TerniLapilli newGame.
@@ -195,6 +210,44 @@ test20afterVictoryWeCantMoveAnything
 	self should: [aMatch setOAt: 1@2.] 
 	raise: Error   
 	withMessageText: TerniLapilli errorGameOver. 
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:48:31'!
+test17movingToInvalidPositionRaisesError
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	aMatch setOAt: 2@3.
+	self deny: aMatch isOver. 
+	self should: [aMatch moveXFrom: 3@2 to: 1@3.] 
+	raise: Error   
+	withMessageText: TerniLapilli errorInvalidMovement.
+	
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'CR 11/2/2020 16:46:34'!
+test17movingToPositionOutOfRangeRaisesError
+
+	| aMatch |
+	aMatch := TerniLapilli newGame.
+	aMatch setXAt: 2@1.
+	aMatch setOAt: 3@1.
+	aMatch setXAt: 1@2.
+	aMatch setOAt: 2@2.
+	aMatch setXAt: 3@2.
+	aMatch setOAt: 2@3.
+	self deny: aMatch isOver. 
+	self should: [aMatch moveXFrom: 3@2 to: -1@2.] 
+	raise: Error   
+	withMessageText: TerniLapilli errorOutOfRangePosition.
 	
 	
 	! !
@@ -216,6 +269,11 @@ signalCantAddMoreThanSixGamePieces
 signalCurrentPlayerDoesntOwnPosition
 
 	^ self error: self class errorCurrentPlayerDoesntOwnPosition! !
+
+!TerniLapilli methodsFor: 'signals' stamp: 'CR 11/2/2020 16:49:13'!
+signalInvalidMovement
+
+	^ self error: self class errorInvalidMovement! !
 
 !TerniLapilli methodsFor: 'signals' stamp: 'CR 11/2/2020 00:46:26'!
 signalInvalidPlayer
@@ -268,10 +326,11 @@ verifyIfCurrentPlayerWins: lastPosition
 		gameState := GameOver ofGame: self.
 		]! !
 
-!TerniLapilli methodsFor: 'verifications' stamp: 'BT 11/2/2020 13:56:30'!
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 16:50:44'!
 verifyItIsAValidOMoveFrom: anInitialPosition to: aDestinationPosition
 
 	self verifyPosition: anInitialPosition and: aDestinationPosition.
+	self verifyValidMovementFrom: anInitialPosition to: aDestinationPosition. 
 	self verifyCurrentPlayerO.
 	self verifyPositionIsOwnedByO: anInitialPosition! !
 
@@ -282,10 +341,11 @@ verifyItIsAValidPoint: aPointToCheckRange
 
 	! !
 
-!TerniLapilli methodsFor: 'verifications' stamp: 'BT 11/2/2020 13:56:10'!
+!TerniLapilli methodsFor: 'verifications' stamp: 'CR 11/2/2020 16:50:53'!
 verifyItIsAValidXMoveFrom: aDestinationPosition to: anInitialPosition
 	
 	self verifyPosition: anInitialPosition and: aDestinationPosition.			
+	self verifyValidMovementFrom: anInitialPosition to: aDestinationPosition. 
 	self verifyCurrentPlayerX.
 	self verifyPositionIsOwnedByX: anInitialPosition! !
 
@@ -517,6 +577,10 @@ errorCurrentPlayerDoesntOwnPosition
 !TerniLapilli class methodsFor: 'error messages' stamp: 'CR 11/2/2020 04:19:40'!
 errorGameOver
 	^ 'Error!! The game has already ended'! !
+
+!TerniLapilli class methodsFor: 'error messages' stamp: 'CR 11/2/2020 16:48:58'!
+errorInvalidMovement
+	^ 'This movement is invalid!!'! !
 
 !TerniLapilli class methodsFor: 'error messages' stamp: 'BT 11/2/2020 00:19:28'!
 errorInvalidPlayer
