@@ -181,6 +181,18 @@ isSomebody
 ifItsSomebodyThenFail: aPositionOwnedByMe
 	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
 
+
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:52:44'!
+changePlayer
+	terniLapilliGame changeTurnToX.! !
+
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 04:01:49'!
+checkAndPlayOnOsTurn! !
+
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:59:30'!
+checkAndPlayOnXsTurn
+	terniLapilliGame failBecauseItsNotMyTurn.! !
+
 
 !classDefinition: #X category: 'Ejercicio - TerniLapilli'!
 TLPlayer subclass: #X
@@ -202,6 +214,18 @@ isSomebody
 ifItsSomebodyThenFail: aPositionOwnedByMe
 	aPositionOwnedByMe failBecauseItsAlreadyOccupied.! !
 
+
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:52:54'!
+changePlayer
+	terniLapilliGame changeTurnToO.! !
+
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 04:01:57'!
+checkAndPlayOnOsTurn
+	terniLapilliGame failBecauseItsNotMyTurn.! !
+
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:58:25'!
+checkAndPlayOnXsTurn! !
+
 
 !classDefinition: #TLPosition category: 'Ejercicio - TerniLapilli'!
 Object subclass: #TLPosition
@@ -218,15 +242,15 @@ failBecauseItsAlreadyOccupied
 failIfOccupied
 	^owner ifItsSomebodyThenFail: self.! !
 
-!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 01:37:20'!
-setOwnerTo: aPlayer
-	owner  := aPlayer.! !
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 04:07:36'!
+setOwnerTo: aPlayerToBeAttachedTo
+	owner  := aPlayerToBeAttachedTo.! !
 
 
-!TLPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:38:21'!
-initializeWithRow: aRowToSetPosition andColumn: aColumnToSetPosition ofGame: aTLGameToBeAttachedTo
-	row := aRowToSetPosition.
-	column := aColumnToSetPosition.
+!TLPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 04:08:13'!
+initializeWithRow: aTLPositionRow andColumn: aTLPositionColumn ofGame: aTLGameToBeAttachedTo
+	row := aTLPositionRow.
+	column := aTLPositionColumn.
 	terniLapilliGame := aTLGameToBeAttachedTo.
 	owner := Nobody ofGame: terniLapilliGame.! !
 
@@ -252,10 +276,14 @@ onRow: row onColumn: column ofGame: aTLGameToBeAttachedTo
 
 !classDefinition: #TerniLapilli category: 'Ejercicio - TerniLapilli'!
 Object subclass: #TerniLapilli
-	instanceVariableNames: 'isXsTurn gameBoard piecesInTheGame XPlayer OPlayer'
+	instanceVariableNames: 'currentPlayer gameBoard piecesInTheGame XPlayer OPlayer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Ejercicio - TerniLapilli'!
+
+!TerniLapilli methodsFor: 'signals' stamp: 'CR 11/2/2020 04:00:15'!
+failBecauseItsNotMyTurn
+	self signalInvalidPlayer.! !
 
 !TerniLapilli methodsFor: 'signals' stamp: 'CR 11/2/2020 02:05:22'!
 signalCantAddMoreThanSixGamePieces
@@ -282,21 +310,21 @@ signalPositionAlreadyOccupied
 isOver
 	^ false.! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'BT 11/2/2020 00:27:10'!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:05:28'!
 isPlayingO
-	^ isXsTurn not .! !
+	^ currentPlayer isO.! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 02:50:58'!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:05:44'!
 isPlayingX
-	^ isXsTurn.! !
+	^ self isPlayingO not.! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 02:26:49'!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:01:40'!
 verifyCurrentPlayerO
-	isXsTurn ifTrue: [self signalInvalidPlayer]. ! !
+	currentPlayer checkAndPlayOnOsTurn.! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'BT 11/2/2020 00:17:34'!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 03:58:14'!
 verifyCurrentPlayerX
-	isXsTurn ifFalse: [self signalInvalidPlayer]. ! !
+	currentPlayer checkAndPlayOnXsTurn.! !
 
 
 !TerniLapilli methodsFor: 'game - actions' stamp: 'CR 11/2/2020 03:27:38'!
@@ -348,18 +376,26 @@ initializeBoard
 		]
 	! !
 
-!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 03:35:37'!
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 04:02:33'!
 initializeGame
-	isXsTurn := true.
 	piecesInTheGame := 0.
 	XPlayer := X ofGame: self.
 	OPlayer := O ofGame: self.
+	currentPlayer := XPlayer.
 	self initializeBoard.! !
 
 
-!TerniLapilli methodsFor: 'private' stamp: 'BT 11/2/2020 00:23:24'!
+!TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 03:51:55'!
 changeCurrentPlayer
-	isXsTurn := isXsTurn not.! !
+	currentPlayer changePlayer.! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 03:53:26'!
+changeTurnToO
+	currentPlayer := OPlayer.! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'CR 11/2/2020 03:53:17'!
+changeTurnToX
+	currentPlayer := XPlayer.! !
 
 
 !TerniLapilli methodsFor: 'accessing' stamp: 'CR 11/2/2020 03:47:05'!

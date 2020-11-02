@@ -1995,3 +1995,148 @@ changeTurnToX
 !TerniLapilli methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:53:26'!
 changeTurnToO
 	currentPlayer := OPlayer.! !
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 03:58:14' prior: 50882260!
+verifyCurrentPlayerX
+	currentPlayer checkAndPlayOnXsTurn.! !
+!X methodsFor: 'nil' stamp: 'CR 11/2/2020 03:58:25'!
+checkAndPlayOnXsTurn! !
+!O methodsFor: 'nil' stamp: 'CR 11/2/2020 03:59:04'!
+checkAndPlayOnXsTurn
+	terniLapilliGame fail! !
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:59:30' prior: 50884573!
+checkAndPlayOnXsTurn
+	terniLapilliGame failBecauseItsNotMyTurn.! !
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:59:42'!
+checkAndPlayOnYsTurn! !
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 03:59:57'!
+checkAndPlayOnYsTurn
+	terniLapilliGame failBecauseItsNotMyTurn.! !
+!TerniLapilli methodsFor: 'nil' stamp: 'CR 11/2/2020 04:00:15'!
+failBecauseItsNotMyTurn
+	self signalInvalidPlayer.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 04:00:55'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 04:00:55'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 04:00:55'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 04:00:55'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 04:00:55'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 04:00:55'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 04:00:55'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 04:00:55'!
+ERROR!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 04:00:55'!
+ERROR!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:01:40' prior: 50884525!
+verifyCurrentPlayerO
+	currentPlayer checkAndPlayOnOsTurn.! !
+!O methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 04:01:49'!
+checkAndPlayOnOsTurn! !
+
+!methodRemoval: O #checkAndPlayOnYsTurn stamp: 'CR 11/2/2020 04:01:52'!
+checkAndPlayOnYsTurn!
+!X methodsFor: 'as yet unclassified' stamp: 'CR 11/2/2020 04:01:57'!
+checkAndPlayOnOsTurn
+	terniLapilliGame failBecauseItsNotMyTurn.! !
+
+!methodRemoval: X #checkAndPlayOnYsTurn stamp: 'CR 11/2/2020 04:02:00'!
+checkAndPlayOnYsTurn
+	terniLapilliGame failBecauseItsNotMyTurn.!
+!TerniLapilli methodsFor: 'initialization' stamp: 'CR 11/2/2020 04:02:33' prior: 50884268!
+initializeGame
+	piecesInTheGame := 0.
+	XPlayer := X ofGame: self.
+	OPlayer := O ofGame: self.
+	currentPlayer := XPlayer.
+	self initializeBoard.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 04:02:38'!
+FAILURE!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 04:02:38'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 04:02:38'!
+FAILURE!
+
+aJustStartedMatch isPlayingX!
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:05:09' prior: 50883662!
+isPlayingX
+	^ currentPlayer isX.! !
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:05:28' prior: 50882265!
+isPlayingO
+	^ currentPlayer isO.! !
+!TerniLapilli methodsFor: 'testing' stamp: 'CR 11/2/2020 04:05:44' prior: 50884687!
+isPlayingX
+	^ self isPlayingO not.! !
+
+!testRun: #TerniLapilliTest #test01aNewGameIsNotOver stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test02XstartsPlaying stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test04verifyPointIsInValidRange stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test05XPlaysAndGameChangesTurnToO stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test06verifyPointIsInValidRange stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test07raisesErrorWhenOStarts stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test08setYOnAlreadyOccupiedPositionRaisesError stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test09setPositionToPlayerWorksCorrectly stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+
+!testRun: #TerniLapilliTest #test10cantAddMoreThanSixGamePieces stamp: 'CR 11/2/2020 04:05:59'!
+PASSED!
+!TLPosition methodsFor: 'owner interface' stamp: 'CR 11/2/2020 04:07:36' prior: 50882988!
+setOwnerTo: aPlayerToBeAttachedTo
+	owner  := aPlayerToBeAttachedTo.! !
+!TLPosition methodsFor: 'initialization' stamp: 'CR 11/2/2020 04:08:13' prior: 50884294!
+initializeWithRow: aTLPositionRow andColumn: aTLPositionColumn ofGame: aTLGameToBeAttachedTo
+	row := aTLPositionRow.
+	column := aTLPositionColumn.
+	terniLapilliGame := aTLGameToBeAttachedTo.
+	owner := Nobody ofGame: terniLapilliGame.! !
