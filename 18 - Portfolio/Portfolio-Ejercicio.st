@@ -151,12 +151,9 @@ value
 	self subclassResponsibility ! !
 
 
-!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'CR 11/4/2020 23:12:00'!
-addIfItsADeposit: aSetOfDepositsToBeAddedTo
-	self subclassResponsibility.! !
+!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'CR 11/5/2020 18:52:36'!
+collaborateWithBalance: balanceToCollaborateWith
 
-!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'CR 11/4/2020 23:11:56'!
-addIfItsAWithdraw: aSetOfWithdrawsToBeAddedTo
 	self subclassResponsibility.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -195,13 +192,10 @@ value
 	^ value! !
 
 
-!Deposit methodsFor: 'receptive-account interaction' stamp: 'CR 11/4/2020 23:09:46'!
-addIfItsADeposit: aSetOfDepositToBeAddedTo
-	aSetOfDepositToBeAddedTo add: self.! !
-
-!Deposit methodsFor: 'receptive-account interaction' stamp: 'CR 11/4/2020 23:10:41'!
-addIfItsAWithdraw: aSetOfWithdrawsToBeAddedTo
-! !
+!Deposit methodsFor: 'receptive-account interaction' stamp: 'CR 11/5/2020 18:53:03'!
+collaborateWithBalance: balanceToCollaborateWith
+	
+	^ balanceToCollaborateWith + value. ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -234,12 +228,10 @@ value
 	^ value! !
 
 
-!Withdraw methodsFor: 'receptive-account interaction' stamp: 'CR 11/4/2020 23:10:28'!
-addIfItsADeposit: aSetOfDepositsToBeAddedTo! !
-
-!Withdraw methodsFor: 'receptive-account interaction' stamp: 'CR 11/4/2020 23:10:12'!
-addIfItsAWithdraw: aSetOfWithdrawsToBeAddedTo
-	aSetOfWithdrawsToBeAddedTo add: self.! !
+!Withdraw methodsFor: 'receptive-account interaction' stamp: 'CR 11/5/2020 18:53:24'!
+collaborateWithBalance: balanceToCollaborateWith
+	
+	^ balanceToCollaborateWith - value. ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -285,50 +277,44 @@ initialize
 
 !classDefinition: #ReceptiveAccount category: 'Portfolio-Ejercicio'!
 Object subclass: #ReceptiveAccount
-	instanceVariableNames: 'deposits withdraws'
+	instanceVariableNames: 'deposits withdraws transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!ReceptiveAccount methodsFor: 'initialization' stamp: 'CR 11/4/2020 23:20:59'!
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'NR 10/17/2019 15:06:56'!
 initialize
 
-	deposits := OrderedCollection new.
-	withdraws := OrderedCollection new.! !
+	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'transactions private' stamp: 'CR 11/4/2020 23:08:27'!
-registerByAccountType: aTransactionToRegister
-
-	aTransactionToRegister addIfItsADeposit: deposits.
-	aTransactionToRegister addIfItsAWithdraw: withdraws.! !
-
-!ReceptiveAccount methodsFor: 'transactions private' stamp: 'CR 11/4/2020 23:25:51'!
-sumTotalTransactionsFrom: aSetOfTransactions
-
-	^ aSetOfTransactions sum: [ :aTransactionToSumItsValue | aTransactionToSumItsValue value ] ifEmpty: [ 0 ].! !
-
-
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'CR 11/4/2020 23:06:47'!
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'CR 11/5/2020 18:50:56'!
 register: aTransactionToRegister
 
-	self registerByAccountType: aTransactionToRegister.
-	! !
+	transactions add: aTransactionToRegister.
+! !
 
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'CR 11/4/2020 23:23:12'!
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37'!
 transactions 
 
-	^ deposits copy union: (withdraws copy).! !
+	^ transactions copy! !
 
 
-!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/4/2020 23:20:19'!
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:47:16'!
 balance
 
-	^(self sumTotalTransactionsFrom: deposits) - (self sumTotalTransactionsFrom: withdraws).! !
+	^ self calculateTotalBalanceFromTransactions.! !
+
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:59:24'!
+calculateTotalBalanceFromTransactions
+
+	^ transactions inject: 0 into: [:totalBalance :aTransactionToCollaborateWith |
+				aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
+	! !
 
 
-!ReceptiveAccount methodsFor: 'testing' stamp: 'CR 11/4/2020 23:22:20'!
+!ReceptiveAccount methodsFor: 'testing' stamp: 'CR 11/5/2020 18:51:17'!
 hasRegistered: aTransactionToCheckIfRegistered
 
-	^ (deposits includes: aTransactionToCheckIfRegistered) or: [withdraws includes: aTransactionToCheckIfRegistered].
+	^ transactions includes: aTransactionToCheckIfRegistered. 
 ! !

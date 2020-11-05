@@ -8433,3 +8433,262 @@ test03registerReceptiveAccountWithTransactionsWorksCorrectly
 ----SNAPSHOT----(5 November 2020 00:58:33) CuisUniversity-4384.image priorSource: 17944892!
 
 ----QUIT----(5 November 2020 00:58:40) CuisUniversity-4384.image priorSource: 17963159!
+
+----STARTUP---- (5 November 2020 18:35:13) as /Users/celeste/facultad/ing1/si-exercises/CuisUniversity-4384.image!
+
+
+!classDefinition: #ReceptiveAccount category: 'Portfolio-Ejercicio' stamp: 'CR 11/5/2020 18:45:56'!
+Object subclass: #ReceptiveAccount
+	instanceVariableNames: 'deposits withdraws transactions'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:45:54' prior: 50892273!
+balance
+
+	^(self sumTotalTransactionsFrom: transactions).! !
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:47:05' prior: 50893018!
+balance
+
+	^(self calculateTotalBalanceFromTransactions).! !
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:47:14' prior: 50893023!
+balance
+
+	^self calculateTotalBalanceFromTransactions.! !
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:47:16' prior: 50893028!
+balance
+
+	^ self calculateTotalBalanceFromTransactions.! !
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:49:23'!
+calculateTotalBalanceFromTransactions
+	| totalBalance |
+	transactions do: [:aTransactionToCollaborateWith | aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
+	^ totalBalance.
+	! !
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:49:42' prior: 50893038!
+calculateTotalBalanceFromTransactions
+	| totalBalance |
+	totalBalance := 0.
+	transactions do: [:aTransactionToCollaborateWith | aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
+	^ totalBalance.
+	! !
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'NR 10/17/2019 15:06:56' prior: 50892306 overrides: 16896425!
+initialize
+
+	transactions := OrderedCollection new.! !
+
+!methodRemoval: ReceptiveAccount #registerByAccountType: stamp: 'CR 11/5/2020 18:50:19'!
+registerByAccountType: aTransactionToRegister
+
+	aTransactionToRegister addIfItsADeposit: deposits.
+	aTransactionToRegister addIfItsAWithdraw: withdraws.!
+
+!methodRemoval: ReceptiveAccount #sumTotalTransactionsFrom: stamp: 'CR 11/5/2020 18:50:22'!
+sumTotalTransactionsFrom: aSetOfTransactions
+
+	^ aSetOfTransactions sum: [ :aTransactionToSumItsValue | aTransactionToSumItsValue value ] ifEmpty: [ 0 ].!
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37' prior: 50892389!
+transactions 
+
+	^ transactions copy! !
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37' prior: 50892180!
+register: aTransaction
+
+	transactions add: aTransaction 
+! !
+!ReceptiveAccount methodsFor: 'transactions' stamp: 'CR 11/5/2020 18:50:56' prior: 50893084!
+register: aTransactionToRegister
+
+	transactions add: aTransactionToRegister.
+! !
+!ReceptiveAccount methodsFor: 'testing' stamp: 'NR 10/17/2019 03:28:43' prior: 50892351!
+hasRegistered: aTransaction
+
+	^ transactions includes: aTransaction 
+! !
+!ReceptiveAccount methodsFor: 'testing' stamp: 'CR 11/5/2020 18:51:17' prior: 50893095!
+hasRegistered: aTransactionToCheckIfRegistered
+
+	^ transactions includes: aTransactionToCheckIfRegistered. 
+! !
+
+!methodRemoval: AccountTransaction #addIfItsADeposit: stamp: 'CR 11/5/2020 18:51:45'!
+addIfItsADeposit: aSetOfDepositsToBeAddedTo
+	self subclassResponsibility.!
+
+!methodRemoval: AccountTransaction #addIfItsAWithdraw: stamp: 'CR 11/5/2020 18:51:47'!
+addIfItsAWithdraw: aSetOfWithdrawsToBeAddedTo
+	self subclassResponsibility.!
+!AccountTransaction methodsFor: 'nil' stamp: 'CR 11/5/2020 18:52:36'!
+collaborateWithBalance: balanceToCollaborateWith
+
+	self subclassResponsibility.! !
+!Deposit methodsFor: 'nil' stamp: 'CR 11/5/2020 18:53:03' overrides: 50893117!
+collaborateWithBalance: balanceToCollaborateWith
+	
+	^ balanceToCollaborateWith + value. ! !
+
+!methodRemoval: Deposit #addIfItsADeposit: stamp: 'CR 11/5/2020 18:53:12'!
+addIfItsADeposit: aSetOfDepositToBeAddedTo
+	aSetOfDepositToBeAddedTo add: self.!
+
+!methodRemoval: Deposit #addIfItsAWithdraw: stamp: 'CR 11/5/2020 18:53:13'!
+addIfItsAWithdraw: aSetOfWithdrawsToBeAddedTo
+!
+
+!methodRemoval: Withdraw #addIfItsADeposit: stamp: 'CR 11/5/2020 18:53:18'!
+addIfItsADeposit: aSetOfDepositsToBeAddedTo!
+
+!methodRemoval: Withdraw #addIfItsAWithdraw: stamp: 'CR 11/5/2020 18:53:20'!
+addIfItsAWithdraw: aSetOfWithdrawsToBeAddedTo
+	aSetOfWithdrawsToBeAddedTo add: self.!
+!Withdraw methodsFor: 'receptive-account interaction' stamp: 'CR 11/5/2020 18:53:24' overrides: 50893117!
+collaborateWithBalance: balanceToCollaborateWith
+	
+	^ balanceToCollaborateWith - value. ! !
+
+!testRun: #ReceptiveAccountTest #test01ReceptiveAccountHaveZeroAsBalanceWhenCreated stamp: 'CR 11/5/2020 18:53:40'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:53:40'!
+FAILURE!
+
+!testRun: #ReceptiveAccountTest #test03WithdrawDecreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:53:40'!
+FAILURE!
+
+!testRun: #ReceptiveAccountTest #test04WithdrawValueMustBePositive stamp: 'CR 11/5/2020 18:53:40'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test05ReceptiveAccountKnowsRegisteredTransactions stamp: 'CR 11/5/2020 18:53:40'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test06ReceptiveAccountDoNotKnowNotRegisteredTransactions stamp: 'CR 11/5/2020 18:53:40'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test07AccountKnowsItsTransactions stamp: 'CR 11/5/2020 18:53:40'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:53:49'!
+FAILURE!
+
+account balance!
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:58:00' prior: 50893047!
+calculateTotalBalanceFromTransactions
+
+	^ transactions inject: 0 into: [:totalBalance :aTransactionToCollaborateWith |
+				totalBalance + aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
+	! !
+
+!testRun: #ReceptiveAccountTest #test01ReceptiveAccountHaveZeroAsBalanceWhenCreated stamp: 'CR 11/5/2020 18:58:04'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:58:04'!
+ERROR!
+
+!testRun: #ReceptiveAccountTest #test03WithdrawDecreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:58:04'!
+ERROR!
+
+!testRun: #ReceptiveAccountTest #test04WithdrawValueMustBePositive stamp: 'CR 11/5/2020 18:58:04'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test05ReceptiveAccountKnowsRegisteredTransactions stamp: 'CR 11/5/2020 18:58:04'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test06ReceptiveAccountDoNotKnowNotRegisteredTransactions stamp: 'CR 11/5/2020 18:58:04'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test07AccountKnowsItsTransactions stamp: 'CR 11/5/2020 18:58:04'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:58:08'!
+ERROR!
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:58:31' prior: 50893184!
+calculateTotalBalanceFromTransactions
+
+	^ transactions inject: 0 into: [:totalBalance :aTransactionToCollaborateWith |
+				totalBalance + (aTransactionToCollaborateWith collaborateWithBalance: totalBalance)].
+	! !
+
+!testRun: #ReceptiveAccountTest #test01ReceptiveAccountHaveZeroAsBalanceWhenCreated stamp: 'CR 11/5/2020 18:58:34'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:58:34'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test03WithdrawDecreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:58:34'!
+FAILURE!
+
+!testRun: #ReceptiveAccountTest #test04WithdrawValueMustBePositive stamp: 'CR 11/5/2020 18:58:34'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test05ReceptiveAccountKnowsRegisteredTransactions stamp: 'CR 11/5/2020 18:58:34'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test06ReceptiveAccountDoNotKnowNotRegisteredTransactions stamp: 'CR 11/5/2020 18:58:34'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test07AccountKnowsItsTransactions stamp: 'CR 11/5/2020 18:58:34'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test03WithdrawDecreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:58:34'!
+FAILURE!
+!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:59:24' prior: 50893224!
+calculateTotalBalanceFromTransactions
+
+	^ transactions inject: 0 into: [:totalBalance :aTransactionToCollaborateWith |
+				aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
+	! !
+
+!testRun: #ReceptiveAccountTest #test01ReceptiveAccountHaveZeroAsBalanceWhenCreated stamp: 'CR 11/5/2020 18:59:29'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:59:29'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test03WithdrawDecreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 18:59:29'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test04WithdrawValueMustBePositive stamp: 'CR 11/5/2020 18:59:29'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test05ReceptiveAccountKnowsRegisteredTransactions stamp: 'CR 11/5/2020 18:59:29'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test06ReceptiveAccountDoNotKnowNotRegisteredTransactions stamp: 'CR 11/5/2020 18:59:29'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test07AccountKnowsItsTransactions stamp: 'CR 11/5/2020 18:59:29'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test01ReceptiveAccountHaveZeroAsBalanceWhenCreated stamp: 'CR 11/5/2020 19:00:01'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 19:00:01'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test03WithdrawDecreasesBalanceOnTransactionValue stamp: 'CR 11/5/2020 19:00:01'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test04WithdrawValueMustBePositive stamp: 'CR 11/5/2020 19:00:01'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test05ReceptiveAccountKnowsRegisteredTransactions stamp: 'CR 11/5/2020 19:00:01'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test06ReceptiveAccountDoNotKnowNotRegisteredTransactions stamp: 'CR 11/5/2020 19:00:01'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test07AccountKnowsItsTransactions stamp: 'CR 11/5/2020 19:00:01'!
+PASSED!
+
+!testRun: #PortfolioTest #test01balanceOfAnEmptyPortfolioIsZero stamp: 'CR 11/5/2020 19:00:06'!
+PASSED!
+
+!testRun: #PortfolioTest #test02registerReceptiveAccountWithNoTransactionsWorksCorrectly stamp: 'CR 11/5/2020 19:00:06'!
+PASSED!
+
+!testRun: #PortfolioTest #test03registerReceptiveAccountWithOnlyDepositWorksCorrectly stamp: 'CR 11/5/2020 19:00:06'!
+PASSED!
+
+!testRun: #PortfolioTest #test04 stamp: 'CR 11/5/2020 19:00:06'!
+PASSED!
