@@ -451,6 +451,15 @@ signalCantAddEntryBecauseCreatesLoop
 	self error: self class errorCantAddBecauseCreatesLoop.! !
 
 
+!PortfolioEntry methodsFor: 'private' stamp: 'CR 11/8/2020 02:26:48'!
+alreadyCollectedIn: alreadyCollectedAccounts
+
+	^ alreadyCollectedAccounts includes: self.! !
+
+!PortfolioEntry methodsFor: 'private' stamp: 'CR 11/8/2020 02:15:11'!
+collectReachableAccountsAndSaveIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+	self subclassResponsibility ! !
+
 !PortfolioEntry methodsFor: 'private' stamp: 'CR 11/8/2020 01:50:32'!
 collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
 	self subclassResponsibility.! !
@@ -477,13 +486,17 @@ PortfolioEntry subclass: #Portfolio
 balance
 	^ portfolioEntries sum: [:aReceptiveAccountToSum | aReceptiveAccountToSum balance] ifEmpty: [0].! !
 
-!Portfolio methodsFor: 'accessing' stamp: 'BT 11/5/2020 20:12:32'!
+!Portfolio methodsFor: 'accessing' stamp: 'CR 11/8/2020 01:55:53'!
 hasRegistered: aTransactionToCheckIfRegistered
-	^ portfolioEntries anySatisfy: [:aReceptiveAccount | aReceptiveAccount hasRegistered: aTransactionToCheckIfRegistered].! !
+	^ portfolioEntries anySatisfy: [:aPortfolioEntry | aPortfolioEntry hasRegistered: aTransactionToCheckIfRegistered].! !
 
-!Portfolio methodsFor: 'accessing' stamp: 'BT 11/5/2020 20:12:32'!
+!Portfolio methodsFor: 'accessing' stamp: 'CR 11/8/2020 02:28:37'!
 transactions
-	^ portfolioEntries collect: [:aReceptiveAccountToAddItsTransactions | aReceptiveAccountToAddItsTransactions transactions] andFold: [:a :b | a union: b] ifEmpty: (OrderedCollection new) copy. ! !
+	| accountsReachableByMe entriesReachableByMe|
+	accountsReachableByMe := Bag new.
+	entriesReachableByMe := Bag new.
+	self collectReachableAccountsAndSaveIn: accountsReachableByMe andRecursionOn: entriesReachableByMe. 
+	^ self collectTransactionsFromAccounts: accountsReachableByMe.! !
 
 
 !Portfolio methodsFor: 'errors' stamp: 'CR 11/8/2020 01:48:08'!
@@ -518,15 +531,38 @@ checkIfMeOrPortfolioEntriesWhereIncludedAreIn: entriesReachableByPortfolioThatMi
 	
 	! !
 
-!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:36:38'!
-collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:06:54'!
+verifyThereIsNoPortfolioEntryLoopWhenAdding: aPortfolioThatMightCreateLoop
+	| entriesReachableByPortfolioThatMightCreateLoop |
+	entriesReachableByPortfolioThatMightCreateLoop := aPortfolioThatMightCreateLoop entriesReachableIfAdded. 
+	
+	self checkIfMeOrPortfolioEntriesWhereIncludedAreIn: entriesReachableByPortfolioThatMightCreateLoop.
+	
+	! !
 
-	(self reachableEntriesAlreadyCollected: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
-		self keepCollectingAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+
+!Portfolio methodsFor: 'private' stamp: 'CR 11/8/2020 02:26:21'!
+collectReachableAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	(self alreadyCollectedIn: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
+		self keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
 		]
 	! !
 
-!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 01:41:11'!
+!Portfolio methodsFor: 'private' stamp: 'CR 11/8/2020 02:25:50'!
+collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+
+	(self alreadyCollectedIn: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
+		self keepCollectingEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+		]
+	! !
+
+!Portfolio methodsFor: 'private' stamp: 'CR 11/8/2020 02:33:21'!
+collectTransactionsFromAccounts: setOfAccountsReachableByMe
+
+	^ setOfAccountsReachableByMe collect: [:accountReachableByMeToAddItsTransactions | accountReachableByMeToAddItsTransactions transactions] andFold: [:aSetOfTransactions :anotherSetOfTransactions | aSetOfTransactions union: anotherSetOfTransactions] ifEmpty: (Bag new).! !
+
+!Portfolio methodsFor: 'private' stamp: 'CR 11/8/2020 01:41:11'!
 entriesReachableIfAdded
 	| entriesReachableByMe |
 	entriesReachableByMe := Bag new.
@@ -535,27 +571,22 @@ entriesReachableIfAdded
 	
 	! !
 
-!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:36:07'!
-keepCollectingAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+!Portfolio methodsFor: 'private' stamp: 'CR 11/8/2020 02:14:04'!
+keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	entriesReachableByPortfoliosWhereIncluded add: self.
+	portfolioEntries do: 
+					[:aPortfolioEntryWhoKeepsCollecting | aPortfolioEntryWhoKeepsCollecting collectReachableAccountsAndSaveIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded].
+
+	! !
+
+!Portfolio methodsFor: 'private' stamp: 'CR 11/8/2020 02:11:39'!
+keepCollectingEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
 
 	entriesReachableByPortfoliosWhereIncluded add: self.
 	portfolioEntries do: 
 					[:aPortfolioEntryWhoKeepsCollecting | aPortfolioEntryWhoKeepsCollecting collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded.].
 
-	! !
-
-!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:33:18'!
-reachableEntriesAlreadyCollected: entriesReachableByPortfoliosWhereIncluded
-
-	^ entriesReachableByPortfoliosWhereIncluded includes: self! !
-
-!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:06:54'!
-verifyThereIsNoPortfolioEntryLoopWhenAdding: aPortfolioThatMightCreateLoop
-	| entriesReachableByPortfolioThatMightCreateLoop |
-	entriesReachableByPortfolioThatMightCreateLoop := aPortfolioThatMightCreateLoop entriesReachableIfAdded. 
-	
-	self checkIfMeOrPortfolioEntriesWhereIncludedAreIn: entriesReachableByPortfolioThatMightCreateLoop.
-	
 	! !
 
 
@@ -599,6 +630,11 @@ calculateTotalBalanceFromTransactions
 	^ transactions inject: 0 into: [:totalBalance :aTransactionToCollaborateWith |
 				aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
 	! !
+
+!ReceptiveAccount methodsFor: 'private' stamp: 'CR 11/8/2020 02:24:23'!
+collectReachableAccountsAndSaveIn:  alreadyCollectedAccounts andRecursionOn: alreadyReachedEntries
+
+	(self alreadyCollectedIn: alreadyCollectedAccounts) ifFalse: [alreadyCollectedAccounts add: self]! !
 
 !ReceptiveAccount methodsFor: 'private' stamp: 'CR 11/8/2020 00:40:28'!
 collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
