@@ -37,21 +37,6 @@ test02balanceOfPortfolioWithOneReceptiveAccountWorksCorrectly
 	self assert: aPortfolio balance = 0.
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'BT 11/5/2020 19:12:11'!
-test03balanceOfPortfolioWithManyReceptiveAccountWorksCorrectly
-	| aDeposit aReceptiveAccountWithNoTransactions aReceptiveAccountWithTransactions aPortfolio |
-	aDeposit := Deposit for: 50.
-	aReceptiveAccountWithTransactions := ReceptiveAccount new.
-	aReceptiveAccountWithTransactions register: aDeposit.
-	
-	aReceptiveAccountWithNoTransactions := ReceptiveAccount new.
-	
-	aPortfolio := Portfolio new. 
-	aPortfolio register: aReceptiveAccountWithNoTransactions.
-	aPortfolio register: aReceptiveAccountWithTransactions.
-	self assert: aPortfolio balance = 50.
-	! !
-
 !PortfolioTest methodsFor: 'tests' stamp: 'BT 11/5/2020 19:31:47'!
 test03balanceOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly
 	| aPortfolioWithTwoAccounts aPortfolioWithMany |
@@ -66,6 +51,21 @@ test03balanceOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly
 	aPortfolioWithMany register: aPortfolioWithTwoAccounts.
 	
 	self assert: aPortfolioWithMany balance = 150.
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:39:31'!
+test03bisBalanceOfPortfolioWithManyReceptiveAccountsWorksCorrectly
+	| aDeposit aReceptiveAccountWithNoTransactions aReceptiveAccountWithTransactions aPortfolio |
+	aDeposit := Deposit for: 50.
+	aReceptiveAccountWithTransactions := ReceptiveAccount new.
+	aReceptiveAccountWithTransactions register: aDeposit.
+	
+	aReceptiveAccountWithNoTransactions := ReceptiveAccount new.
+	
+	aPortfolio := Portfolio new. 
+	aPortfolio register: aReceptiveAccountWithNoTransactions.
+	aPortfolio register: aReceptiveAccountWithTransactions.
+	self assert: aPortfolio balance = 50.
 	! !
 
 !PortfolioTest methodsFor: 'tests' stamp: 'BT 11/5/2020 19:41:08'!
@@ -386,7 +386,6 @@ Object subclass: #PortfolioEntry
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-
 !PortfolioEntry methodsFor: 'accessing' stamp: 'BT 11/5/2020 20:48:44'!
 balance
 	self subclassResponsibility ! !
@@ -398,6 +397,12 @@ hasRegistered: anAccountTransactionToBeRegistered
 !PortfolioEntry methodsFor: 'accessing' stamp: 'BT 11/5/2020 20:48:56'!
 transactions
 	self subclassResponsibility ! !
+
+
+!PortfolioEntry methodsFor: 'adding to portfolio' stamp: 'CR 11/7/2020 23:28:42'!
+addIfPossibleToPortfolioEntries: aPortfolioToBeAddedTo
+
+	self subclassResponsibility.! !
 
 
 !classDefinition: #Portfolio category: 'Portfolio-Ejercicio'!
@@ -420,41 +425,102 @@ transactions
 	^ portfolioEntries collect: [:aReceptiveAccountToAddItsTransactions | aReceptiveAccountToAddItsTransactions transactions] andFold: [:a :b | a union: b] ifEmpty: (OrderedCollection new) copy. ! !
 
 
-!Portfolio methodsFor: 'transactions' stamp: 'BT 11/5/2020 21:52:12'!
-checkIfParentIsAnyOf: allEntriesOfPortfolioThatMightCreateLoop
-	allEntriesOfPortfolioThatMightCreateLoop 
-	
+!Portfolio methodsFor: 'errors' stamp: 'CR 11/8/2020 00:06:11'!
+raiseErrorIfIncludedIn: entriesReachableByPortfolioThatMightCreateLoop
+
+	(entriesReachableByPortfolioThatMightCreateLoop includes: self) ifTrue: [ self signalCantAddEntryBecauseCreatesLoop].
 	
 	! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'BT 11/5/2020 21:44:34'!
-register: aReceptiveAccountToBeAdded
-
-	self verifyThereIsNoPortfolioEntryLoop: (aReceptiveAccountToBeAdded allPortfolioEntries).
-	portfolioEntries add: aReceptiveAccountToBeAdded.
-	
-	
-	! !
-
-!Portfolio methodsFor: 'transactions' stamp: 'BT 11/5/2020 21:58:57'!
+!Portfolio methodsFor: 'errors' stamp: 'BT 11/5/2020 21:58:57'!
 signalCantAddEntryBecauseCreatesLoop
 	^ self class errorCantAddBecauseCreatesLoop.! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'BT 11/5/2020 22:04:21'!
-verifyThereIsNoPortfolioEntryLoop: allEntriesOfPortfolioThatMightCreateLoop
 
-	(portfoliosWhereIncluded anySatisfy: [:aPortfolioWhereIncluded | allEntriesOfPortfolioThatMightCreateLoop includes: aPortfolioWhereIncluded]) ifTrue:[ self signalCantAddEntryBecauseCreatesLoop].
-	
-	portfoliosWhereIncluded do: [:aPortfolioWhereIncluded | 
-		aPortfolioWhereIncluded verifyThereIsNoPortfolioEntryLoop: allEntriesOfPortfolioThatMightCreateLoop ].
+!Portfolio methodsFor: 'transactions' stamp: 'CR 11/7/2020 23:24:39'!
+register: aPortfolioEntryToBeAdded
+
+	aPortfolioEntryToBeAdded addIfPossibleToPortfolioEntries: self.
 	
 	
 	! !
 
 
-!Portfolio methodsFor: 'initialization' stamp: 'BT 11/5/2020 20:12:32'!
+!Portfolio methodsFor: 'initialization' stamp: 'CR 11/8/2020 00:43:06'!
 initialize
-	portfolioEntries := OrderedCollection new.! !
+	portfolioEntries := OrderedCollection new.
+	portfoliosWhereIncluded := OrderedCollection new.! !
+
+
+!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:07:23'!
+checkIfMeOrPortfolioEntriesWhereIncludedAreIn: entriesReachableByPortfolioThatMightCreateLoop
+
+	self raiseErrorIfIncludedIn: entriesReachableByPortfolioThatMightCreateLoop.
+	portfoliosWhereIncluded do: [:portfolioWhereIncluded |  portfolioWhereIncluded checkIfMeOrPortfolioEntriesWhereIncludedAreIn: entriesReachableByPortfolioThatMightCreateLoop].
+
+	
+	! !
+
+!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:36:38'!
+collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+
+	(self reachableEntriesAlreadyCollected: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
+		self keepCollectingAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+		]
+	! !
+
+!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:42:15'!
+entriesReachableIfAdded
+	| entriesReachableByMe |
+	entriesReachableByMe := OrderedCollection new.
+	self collectReachableEntriesAndSaveIn: entriesReachableByMe. 
+	^ entriesReachableByMe
+	
+	! !
+
+!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:36:07'!
+keepCollectingAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+
+	entriesReachableByPortfoliosWhereIncluded add: self.
+	portfolioEntries do: 
+					[:aPortfolioEntryWhoKeepsCollecting | aPortfolioEntryWhoKeepsCollecting collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded.].
+
+	! !
+
+!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:33:18'!
+reachableEntriesAlreadyCollected: entriesReachableByPortfoliosWhereIncluded
+
+	^ entriesReachableByPortfoliosWhereIncluded includes: self! !
+
+!Portfolio methodsFor: 'verification' stamp: 'CR 11/8/2020 00:06:54'!
+verifyThereIsNoPortfolioEntryLoopWhenAdding: aPortfolioThatMightCreateLoop
+	| entriesReachableByPortfolioThatMightCreateLoop |
+	entriesReachableByPortfolioThatMightCreateLoop := aPortfolioThatMightCreateLoop entriesReachableIfAdded. 
+	
+	self checkIfMeOrPortfolioEntriesWhereIncludedAreIn: entriesReachableByPortfolioThatMightCreateLoop.
+	
+	! !
+
+
+!Portfolio methodsFor: 'adding to portfolio' stamp: 'CR 11/8/2020 00:44:51'!
+addIfPossibleToPortfolioEntries: aPortfolioToBeAddedTo
+
+	aPortfolioToBeAddedTo verifyThereIsNoPortfolioEntryLoopWhenAdding: self.
+	aPortfolioToBeAddedTo addToPorfolio: self.
+	self addNewPortfolioWhereIncluded: aPortfolioToBeAddedTo.
+	
+	
+	! !
+
+!Portfolio methodsFor: 'adding to portfolio' stamp: 'CR 11/8/2020 00:44:58'!
+addNewPortfolioWhereIncluded: aPortfolioToBeAddedTo
+
+	portfoliosWhereIncluded add: aPortfolioToBeAddedTo! !
+
+!Portfolio methodsFor: 'adding to portfolio' stamp: 'CR 11/7/2020 23:30:03'!
+addToPorfolio: aPortfolioEntryToAdd
+
+	portfolioEntries add: aPortfolioEntryToAdd.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -480,13 +546,18 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'transactions private' stamp: 'CR 11/4/2020 23:08:27'!
-registerByAccountType: aTransactionToRegister
+!ReceptiveAccount methodsFor: 'private' stamp: 'CR 11/5/2020 18:59:24'!
+calculateTotalBalanceFromTransactions
 
-	aTransactionToRegister addIfItsADeposit: deposits.
-	aTransactionToRegister addIfItsAWithdraw: withdraws.! !
+	^ transactions inject: 0 into: [:totalBalance :aTransactionToCollaborateWith |
+				aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
+	! !
 
-!ReceptiveAccount methodsFor: 'transactions private' stamp: 'CR 11/4/2020 23:25:51'!
+!ReceptiveAccount methodsFor: 'private' stamp: 'CR 11/8/2020 00:40:28'!
+collectReachableEntriesAndSaveIn: entriesReachableByPortfoliosWhereIncluded
+! !
+
+!ReceptiveAccount methodsFor: 'private' stamp: 'CR 11/4/2020 23:25:51'!
 sumTotalTransactionsFrom: aSetOfTransactions
 
 	^ aSetOfTransactions sum: [ :aTransactionToSumItsValue | aTransactionToSumItsValue value ] ifEmpty: [ 0 ].! !
@@ -498,27 +569,25 @@ register: aTransactionToRegister
 	transactions add: aTransactionToRegister.
 ! !
 
-!ReceptiveAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:37'!
+
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'CR 11/5/2020 18:47:16'!
+balance
+
+	^ self calculateTotalBalanceFromTransactions.! !
+
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'CR 11/5/2020 18:51:17'!
+hasRegistered: aTransactionToCheckIfRegistered
+
+	^ transactions includes: aTransactionToCheckIfRegistered. 
+! !
+
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'HernanWilkinson 7/13/2011 18:37'!
 transactions 
 
 	^ transactions copy! !
 
 
-!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:47:16'!
-balance
+!ReceptiveAccount methodsFor: 'adding to portfolio' stamp: 'CR 11/7/2020 23:28:28'!
+addIfPossibleToPortfolioEntries: aPortfolioToBeAddedTo
 
-	^ self calculateTotalBalanceFromTransactions.! !
-
-!ReceptiveAccount methodsFor: 'balance' stamp: 'CR 11/5/2020 18:59:24'!
-calculateTotalBalanceFromTransactions
-
-	^ transactions inject: 0 into: [:totalBalance :aTransactionToCollaborateWith |
-				aTransactionToCollaborateWith collaborateWithBalance: totalBalance].
-	! !
-
-
-!ReceptiveAccount methodsFor: 'testing' stamp: 'CR 11/5/2020 18:51:17'!
-hasRegistered: aTransactionToCheckIfRegistered
-
-	^ transactions includes: aTransactionToCheckIfRegistered. 
-! !
+	aPortfolioToBeAddedTo addToPorfolio: self.! !
