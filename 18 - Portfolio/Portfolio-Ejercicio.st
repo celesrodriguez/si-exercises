@@ -5,13 +5,7 @@ TestCase subclass: #PortfolioTest
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 01:17:38'!
-assertThat: portfolioTransactions isSameSetAs: transactionsThatShouldBeIncluded
-	
-	self assert: (transactionsThatShouldBeIncluded allSatisfy: [:transactionThatShouldBeIncluded | portfolioTransactions includes: transactionThatShouldBeIncluded]).
-	self assert: portfolioTransactions size = transactionsThatShouldBeIncluded size.! !
-
-!PortfolioTest methodsFor: 'tests' stamp: 'BT 11/5/2020 19:52:20'!
+!PortfolioTest methodsFor: 'setup' stamp: 'BT 11/5/2020 19:52:20'!
 setUp
 	
 	depositOfFifty := Deposit for: 50.
@@ -26,7 +20,8 @@ setUp
 	
 	withdrawOfTwenty := Withdraw for: 20.! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/4/2020 23:29:01'!
+
+!PortfolioTest methodsFor: 'accessing balance tests' stamp: 'CR 11/4/2020 23:29:01'!
 test01balanceOfAnEmptyPortfolioIsZero
 	| anEmptyPortfolio |
 	anEmptyPortfolio := Portfolio new. 
@@ -34,7 +29,7 @@ test01balanceOfAnEmptyPortfolioIsZero
 	self assert: 0 = anEmptyPortfolio balance.
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:53:14'!
+!PortfolioTest methodsFor: 'accessing balance tests' stamp: 'CR 11/8/2020 00:53:14'!
 test02balanceOfPortfolioWithOneReceptiveAccountWorksCorrectly
 	| aPortfolioWithBalanceZero |
 	aPortfolioWithBalanceZero := Portfolio new. 
@@ -42,7 +37,7 @@ test02balanceOfPortfolioWithOneReceptiveAccountWorksCorrectly
 	self assert:  [aPortfolioWithBalanceZero register: receptiveAccountWithNoTransactions] doesNotChange: [aPortfolioWithBalanceZero balance].
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:54:06'!
+!PortfolioTest methodsFor: 'accessing balance tests' stamp: 'CR 11/8/2020 00:54:06'!
 test03balanceOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly
 	| aPortfolioWithTwoAccounts aPortfolioWithAnAccountAndAPortfolio |
 	
@@ -57,7 +52,7 @@ test03balanceOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly
 	self assert: aPortfolioWithAnAccountAndAPortfolio balance = 150.
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:54:33'!
+!PortfolioTest methodsFor: 'accessing balance tests' stamp: 'CR 11/8/2020 00:54:33'!
 test03bis_balanceOfPortfolioWithManyReceptiveAccountsWorksCorrectly
 	| aPortfolioWithTwoAccounts |
 	
@@ -67,7 +62,8 @@ test03bis_balanceOfPortfolioWithManyReceptiveAccountsWorksCorrectly
 	self assert: aPortfolioWithTwoAccounts balance = 50.
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'BT 11/5/2020 19:41:08'!
+
+!PortfolioTest methodsFor: 'accessing hasregistered tests' stamp: 'BT 11/5/2020 19:41:08'!
 test04hasRegisteredOfAnEmptyPortfolioIsFalse
 	| anEmptyPortfolio |
 	anEmptyPortfolio := Portfolio new. 
@@ -75,7 +71,7 @@ test04hasRegisteredOfAnEmptyPortfolioIsFalse
 	self deny: (anEmptyPortfolio hasRegistered: depositOfFifty).
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:55:25'!
+!PortfolioTest methodsFor: 'accessing hasregistered tests' stamp: 'CR 11/8/2020 00:55:25'!
 test05hasRegisteredOfPortfolioWithOneReceptiveAccountWorksCorrectly
 	| aPortfolioWithOneAccount |
 	
@@ -84,7 +80,7 @@ test05hasRegisteredOfPortfolioWithOneReceptiveAccountWorksCorrectly
 	self assert: (aPortfolioWithOneAccount hasRegistered: depositOfHundred).
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:57:16'!
+!PortfolioTest methodsFor: 'accessing hasregistered tests' stamp: 'CR 11/8/2020 00:57:16'!
 test06hasRegisteredOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly
 	| aPortfolioWithTwoAccounts aPortfolioWithAnAccountAndAPortfolio |
 	
@@ -100,7 +96,8 @@ test06hasRegisteredOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrect
 	self assert: (aPortfolioWithAnAccountAndAPortfolio hasRegistered: depositOfHundred).
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'BT 11/5/2020 19:43:43'!
+
+!PortfolioTest methodsFor: 'accessing transactions tests' stamp: 'BT 11/5/2020 19:43:43'!
 test07transactionsOfAnEmptyPortfolioIsEmpty
 	| anEmptyPortfolio |
 	anEmptyPortfolio := Portfolio new. 
@@ -108,7 +105,7 @@ test07transactionsOfAnEmptyPortfolioIsEmpty
 	self assert: anEmptyPortfolio transactions isEmpty.
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:57:57'!
+!PortfolioTest methodsFor: 'accessing transactions tests' stamp: 'CR 11/8/2020 00:57:57'!
 test08transactionsOfPortfolioWithOneReceptiveAccountWorksCorrectly
 	| aPortfolioWithOneAccount |
 	
@@ -118,7 +115,7 @@ test08transactionsOfPortfolioWithOneReceptiveAccountWorksCorrectly
 	self assert: aPortfolioWithOneAccount transactions includes: depositOfFifty.
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 00:59:27'!
+!PortfolioTest methodsFor: 'accessing transactions tests' stamp: 'CR 11/8/2020 00:59:27'!
 test09transactionOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly
 	| aPortfolioWithTwoAccounts aPortfolioWithAnAccountAndAPortfolio |
 	
@@ -134,7 +131,54 @@ test09transactionOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly
 	self assert: (aPortfolioWithAnAccountAndAPortfolio transactions includes: depositOfHundred).	
 	self assert: (aPortfolioWithAnAccountAndAPortfolio transactions includes: depositOfFifty).	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 01:14:50'!
+
+!PortfolioTest methodsFor: 'assertions' stamp: 'CR 11/8/2020 01:17:38'!
+assertThat: portfolioTransactions isSameSetAs: transactionsThatShouldBeIncluded
+	
+	self assert: (transactionsThatShouldBeIncluded allSatisfy: [:transactionThatShouldBeIncluded | portfolioTransactions includes: transactionThatShouldBeIncluded]).
+	self assert: portfolioTransactions size = transactionsThatShouldBeIncluded size.! !
+
+
+!PortfolioTest methodsFor: 'entry loop test' stamp: 'CR 11/8/2020 01:46:13'!
+test11addingPortfolioToPortfolioWhereDirectlyIncludedRaisesError
+	| rootPorfolio childPortfolio |
+	
+	childPortfolio := Portfolio new.
+	
+	rootPorfolio := Portfolio new. 
+	rootPorfolio register: receptiveAccountWithDepositOfFifty.
+	rootPorfolio register: childPortfolio.
+	
+	self should: [childPortfolio register: rootPorfolio] 
+	raise: Error   
+	withMessageText: PortfolioEntry errorCantAddBecauseCreatesLoop.
+	
+
+	! !
+
+!PortfolioTest methodsFor: 'entry loop test' stamp: 'CR 11/8/2020 01:46:18'!
+test12addingPortfolioToPortfolioWhereIndirectlyIncludedRaisesError
+	| rootPorfolio childPortfolio grandchildPorfolio |
+	
+	childPortfolio := Portfolio new.
+	grandchildPorfolio := Portfolio new.
+	
+	childPortfolio register: grandchildPorfolio.
+	
+	rootPorfolio := Portfolio new. 
+	rootPorfolio register: receptiveAccountWithDepositOfFifty.
+	rootPorfolio register: childPortfolio.
+
+	
+	self should: [grandchildPorfolio register: rootPorfolio] 
+	raise: Error   
+	withMessageText: PortfolioEntry errorCantAddBecauseCreatesLoop.
+	
+
+	! !
+
+
+!PortfolioTest methodsFor: 'portfolio update test' stamp: 'CR 11/8/2020 01:14:50'!
 test10updatingAnAccountIncludedInPortfolioUpdatesPortfolio
 	| aPortfolioWithTwoAccounts aPortfolioWithAnAccountAndAPortfolio setWithTransactions|
 	
@@ -154,44 +198,6 @@ test10updatingAnAccountIncludedInPortfolioUpdatesPortfolio
 	self assert: (aPortfolioWithAnAccountAndAPortfolio balance) = 130.
 	self assertThat: (aPortfolioWithAnAccountAndAPortfolio transactions) isSameSetAs: setWithTransactions.
 	
-	! !
-
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 01:46:13'!
-test11addingPortfolioToPortfolioWhereDirectlyIncludedRaisesError
-	| rootPorfolio childPortfolio |
-	
-	childPortfolio := Portfolio new.
-	
-	rootPorfolio := Portfolio new. 
-	rootPorfolio register: receptiveAccountWithDepositOfFifty.
-	rootPorfolio register: childPortfolio.
-	
-	self should: [childPortfolio register: rootPorfolio] 
-	raise: Error   
-	withMessageText: PortfolioEntry errorCantAddBecauseCreatesLoop.
-	
-
-	! !
-
-!PortfolioTest methodsFor: 'tests' stamp: 'CR 11/8/2020 01:46:18'!
-test12addingPortfolioToPortfolioWhereIndirectlyIncludedRaisesError
-	| rootPorfolio childPortfolio grandchildPorfolio |
-	
-	childPortfolio := Portfolio new.
-	grandchildPorfolio := Portfolio new.
-	
-	childPortfolio register: grandchildPorfolio.
-	
-	rootPorfolio := Portfolio new. 
-	rootPorfolio register: receptiveAccountWithDepositOfFifty.
-	rootPorfolio register: childPortfolio.
-
-	
-	self should: [grandchildPorfolio register: rootPorfolio] 
-	raise: Error   
-	withMessageText: PortfolioEntry errorCantAddBecauseCreatesLoop.
-	
-
 	! !
 
 
