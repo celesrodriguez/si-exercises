@@ -31269,3 +31269,214 @@ verifyThereIsNoPortfolioEntryLoop: allEntriesOfPortfolioThatMightCreateLoop
 	
 	
 	! !
+
+----STARTUP---- (8 November 2020 00:33:27) as /home/belu/Documents/ING_SOFT/linux64/CuisUniversity-4383.image!
+
+
+a = b !
+
+----STARTUP---- (9 November 2020 16:50:48) as /home/belu/Documents/ING_SOFT/linux64/CuisUniversity-4383.image!
+
+
+!classRemoval: #ReceptiveAccount stamp: 'BT 11/9/2020 16:51:05'!
+Object subclass: #ReceptiveAccount
+	instanceVariableNames: 'deposits withdraws'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!classRemoval: #Portfolio stamp: 'BT 11/9/2020 16:51:06'!
+Object subclass: #Portfolio
+	instanceVariableNames: 'receptiveAccounts'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!classRemoval: #Withdraw stamp: 'BT 11/9/2020 16:51:06'!
+AccountTransaction subclass: #Withdraw
+	instanceVariableNames: 'value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!classRemoval: #Deposit stamp: 'BT 11/9/2020 16:51:07'!
+AccountTransaction subclass: #Deposit
+	instanceVariableNames: 'value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!classRemoval: #AccountTransaction stamp: 'BT 11/9/2020 16:51:07'!
+Object subclass: #AccountTransaction
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!classRemoval: #ReceptiveAccountTest stamp: 'BT 11/9/2020 16:51:07'!
+TestCase subclass: #ReceptiveAccountTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!classRemoval: #PortfolioTest stamp: 'BT 11/9/2020 16:51:08'!
+TestCase subclass: #PortfolioTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+----End fileIn of /home/belu/Documents/ING_SOFT/linux64/Portfolio-Ejercicio.st----!
+!Portfolio methodsFor: 'private' stamp: 'BT 11/9/2020 16:53:30'!
+collectReachableAccountssSavingThemIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	(self alreadyCollectedIn: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
+		self keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+		]
+	! !
+!ReceptiveAccount methodsFor: 'private' stamp: 'BT 11/9/2020 16:53:30'!
+collectReachableAccountssSavingThemIn:  alreadyCollectedAccounts andRecursionOn: alreadyReachedEntries
+
+	(self alreadyCollectedIn: alreadyCollectedAccounts) ifFalse: [alreadyCollectedAccounts add: self]! !
+!PortfolioEntry methodsFor: 'private' stamp: 'BT 11/9/2020 16:53:30'!
+collectReachableAccountssSavingThemIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+	self subclassResponsibility ! !
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'BT 11/9/2020 16:53:30' prior: 50871109!
+keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	entriesReachableByPortfoliosWhereIncluded add: self.
+	portfolioEntries do: 
+					[:aPortfolioEntryWhoKeepsCollecting | aPortfolioEntryWhoKeepsCollecting collectReachableAccountssSavingThemIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded].
+
+	! !
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'BT 11/9/2020 16:53:30' prior: 50871002 overrides: 50870919!
+transactions
+	| accountsReachableByMe entriesReachableByMe|
+	accountsReachableByMe := Bag new.
+	entriesReachableByMe := Bag new.
+	self collectReachableAccountssSavingThemIn: accountsReachableByMe andRecursionOn: entriesReachableByMe. 
+	^ self collectTransactionsFromAccounts: accountsReachableByMe.! !
+
+!methodRemoval: Portfolio #collectReachableAccountsAndSaveIn:andRecursionOn: stamp: 'BT 11/9/2020 16:53:30'!
+collectReachableAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	(self alreadyCollectedIn: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
+		self keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+		]
+	!
+
+!methodRemoval: ReceptiveAccount #collectReachableAccountsAndSaveIn:andRecursionOn: stamp: 'BT 11/9/2020 16:53:30'!
+collectReachableAccountsAndSaveIn:  alreadyCollectedAccounts andRecursionOn: alreadyReachedEntries
+
+	(self alreadyCollectedIn: alreadyCollectedAccounts) ifFalse: [alreadyCollectedAccounts add: self]!
+
+!methodRemoval: PortfolioEntry #collectReachableAccountsAndSaveIn:andRecursionOn: stamp: 'BT 11/9/2020 16:53:30'!
+collectReachableAccountsAndSaveIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+	self subclassResponsibility !
+!Portfolio methodsFor: 'private' stamp: 'BT 11/9/2020 16:54:19'!
+collectReachableAccountsSavingThemIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	(self alreadyCollectedIn: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
+		self keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+		]
+	! !
+!ReceptiveAccount methodsFor: 'private' stamp: 'BT 11/9/2020 16:54:19'!
+collectReachableAccountsSavingThemIn:  alreadyCollectedAccounts andRecursionOn: alreadyReachedEntries
+
+	(self alreadyCollectedIn: alreadyCollectedAccounts) ifFalse: [alreadyCollectedAccounts add: self]! !
+!PortfolioEntry methodsFor: 'private' stamp: 'BT 11/9/2020 16:54:19'!
+collectReachableAccountsSavingThemIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+	self subclassResponsibility ! !
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'BT 11/9/2020 16:54:19' prior: 50871267!
+keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	entriesReachableByPortfoliosWhereIncluded add: self.
+	portfolioEntries do: 
+					[:aPortfolioEntryWhoKeepsCollecting | aPortfolioEntryWhoKeepsCollecting collectReachableAccountsSavingThemIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded].
+
+	! !
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'BT 11/9/2020 16:54:19' prior: 50871285 overrides: 50870919!
+transactions
+	| accountsReachableByMe entriesReachableByMe|
+	accountsReachableByMe := Bag new.
+	entriesReachableByMe := Bag new.
+	self collectReachableAccountsSavingThemIn: accountsReachableByMe andRecursionOn: entriesReachableByMe. 
+	^ self collectTransactionsFromAccounts: accountsReachableByMe.! !
+
+!methodRemoval: Portfolio #collectReachableAccountssSavingThemIn:andRecursionOn: stamp: 'BT 11/9/2020 16:54:19'!
+collectReachableAccountssSavingThemIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+
+	(self alreadyCollectedIn: entriesReachableByPortfoliosWhereIncluded) ifFalse: [
+		self keepCollectingAccountsAndSaveIn: accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+		]
+	!
+
+!methodRemoval: ReceptiveAccount #collectReachableAccountssSavingThemIn:andRecursionOn: stamp: 'BT 11/9/2020 16:54:19'!
+collectReachableAccountssSavingThemIn:  alreadyCollectedAccounts andRecursionOn: alreadyReachedEntries
+
+	(self alreadyCollectedIn: alreadyCollectedAccounts) ifFalse: [alreadyCollectedAccounts add: self]!
+
+!methodRemoval: PortfolioEntry #collectReachableAccountssSavingThemIn:andRecursionOn: stamp: 'BT 11/9/2020 16:54:19'!
+collectReachableAccountssSavingThemIn:  accountsReachableByPortfoliosWhereIncluded andRecursionOn: entriesReachableByPortfoliosWhereIncluded
+	self subclassResponsibility !
+
+!testRun: #ReceptiveAccountTest #test01ReceptiveAccountHaveZeroAsBalanceWhenCreated stamp: 'BT 11/9/2020 16:54:25'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test02DepositIncreasesBalanceOnTransactionValue stamp: 'BT 11/9/2020 16:54:25'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test03WithdrawDecreasesBalanceOnTransactionValue stamp: 'BT 11/9/2020 16:54:25'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test04WithdrawValueMustBePositive stamp: 'BT 11/9/2020 16:54:25'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test05ReceptiveAccountKnowsRegisteredTransactions stamp: 'BT 11/9/2020 16:54:25'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test06ReceptiveAccountDoNotKnowNotRegisteredTransactions stamp: 'BT 11/9/2020 16:54:26'!
+PASSED!
+
+!testRun: #ReceptiveAccountTest #test07AccountKnowsItsTransactions stamp: 'BT 11/9/2020 16:54:26'!
+PASSED!
+
+!testRun: #PortfolioTest #test01balanceOfAnEmptyPortfolioIsZero stamp: 'BT 11/9/2020 16:54:38'!
+PASSED!
+
+!testRun: #PortfolioTest #test02balanceOfPortfolioWithOneReceptiveAccountWorksCorrectly stamp: 'BT 11/9/2020 16:54:38'!
+PASSED!
+
+!testRun: #PortfolioTest #test03balanceOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly stamp: 'BT 11/9/2020 16:54:38'!
+PASSED!
+
+!testRun: #PortfolioTest #test03bis_balanceOfPortfolioWithManyReceptiveAccountsWorksCorrectly stamp: 'BT 11/9/2020 16:54:38'!
+PASSED!
+
+!testRun: #PortfolioTest #test04hasRegisteredOfAnEmptyPortfolioIsFalse stamp: 'BT 11/9/2020 16:54:41'!
+PASSED!
+
+!testRun: #PortfolioTest #test05hasRegisteredOfPortfolioWithOneReceptiveAccountWorksCorrectly stamp: 'BT 11/9/2020 16:54:41'!
+PASSED!
+
+!testRun: #PortfolioTest #test06hasRegisteredOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly stamp: 'BT 11/9/2020 16:54:41'!
+PASSED!
+
+!testRun: #PortfolioTest #test07transactionsOfAnEmptyPortfolioIsEmpty stamp: 'BT 11/9/2020 16:54:45'!
+PASSED!
+
+!testRun: #PortfolioTest #test08transactionsOfPortfolioWithOneReceptiveAccountWorksCorrectly stamp: 'BT 11/9/2020 16:54:45'!
+PASSED!
+
+!testRun: #PortfolioTest #test09transactionOfPortfolioWithManyReceptiveAccountsAndPortfoliosWorksCorrectly stamp: 'BT 11/9/2020 16:54:45'!
+PASSED!
+
+!testRun: #PortfolioTest #test10updatingAnAccountIncludedInPortfolioUpdatesPortfolio stamp: 'BT 11/9/2020 16:54:53'!
+PASSED!
+
+!testRun: #PortfolioTest #test11addingPortfolioToPortfolioWhereDirectlyIncludedRaisesError stamp: 'BT 11/9/2020 16:54:57'!
+PASSED!
+
+!testRun: #PortfolioTest #test12addingPortfolioToPortfolioWhereIndirectlyIncludedRaisesError stamp: 'BT 11/9/2020 16:54:57'!
+PASSED!
