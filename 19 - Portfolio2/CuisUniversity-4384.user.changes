@@ -15541,3 +15541,747 @@ PASSED!
 
 !testRun: #ReportTest #test12TransferNetOfAPortfolioWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 17:55:58'!
 PASSED!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:09'!
+test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationAccounts for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+
+!methodRemoval: ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:57:09'!
+test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationAccounts for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:21'!
+test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationAccounts for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' ) isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+
+!methodRemoval: ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 17:57:21'!
+test14TreeRepresentationOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationAccounts for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' ) isEqualTo: treeRepresentationOfEmptyPortfolio tree.!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:29'!
+test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan'). 
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+!methodRemoval: ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 17:57:29'!
+test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan'). 
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:37'!
+test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio juansPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de Juan'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Fede').
+	fedesPortfolio add: juansPortfolio.
+	juansPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan').	  
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Fede' with: ' Portfolio de Juan' with: '  Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+!methodRemoval: ReportTest #test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 17:57:37'!
+test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio juansPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de Juan'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Fede').
+	fedesPortfolio add: juansPortfolio.
+	juansPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan').	  
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Fede' with: ' Portfolio de Juan' with: '  Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:58'!
+test17TreeRepresentationTransactionsOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationAccounts for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+
+!testRun: #ReportTest #test17TreeRepresentationTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:57:59'!
+PASSED!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:58:12'!
+test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationWithTransactions for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+
+!methodRemoval: ReportTest #test17TreeRepresentationTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:58:14'!
+test17TreeRepresentationTransactionsOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationAccounts for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:58:18'!
+ERROR!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:58:18'!
+ERROR!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:00:01'!
+ERROR!
+!TreeRepresentationWithTransactions methodsFor: 'initialization' stamp: 'CR 11/16/2020 18:01:57' prior: 50904264!
+initializeFor: anAccount 
+	accountToMakeReportFor := anAccount.
+	stringTree := OrderedCollection new.
+	collaborationAction := SummaryString new.
+	! !
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:02:07'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:02:07'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 18:02:07'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 18:02:07'!
+PASSED!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:02:07'!
+ERROR!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:02:07'!
+ERROR!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:02:24'!
+ERROR!
+
+aReportToCollaborateWith collaboration!
+
+!classRemoval: #IndentedTransactionTreeString stamp: 'CR 11/16/2020 18:05:18'!
+ReportAction subclass: #IndentedTransactionTreeString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #TreeRepresentationWithTransactions category: 'Portfolio2' stamp: 'CR 11/16/2020 18:05:43'!
+TreeRepresentation subclass: #TreeRepresentationWithTransactions
+	instanceVariableNames: 'transactionCollaborationAction'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!TreeRepresentationWithTransactions methodsFor: 'initialization' stamp: 'CR 11/16/2020 18:05:42' prior: 50905000!
+initializeFor: anAccount 
+	accountToMakeReportFor := anAccount.
+	stringTree := OrderedCollection new.
+	collaborationAction := IndentedTreeString new.
+	transactionCollaborationAction := SummaryString new.
+	! !
+!TreeRepresentationWithTransactions methodsFor: 'nil' stamp: 'CR 11/16/2020 18:05:55'!
+transactionCollaboration
+	^transactionCollaborationAction ! !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 18:06:26' prior: 50904468!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith transactionCollaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithAccountResult: resultOfCollaboration.! !
+
+!testRun: #ReportTest #test07TransferNetOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 18:06:32'!
+PASSED!
+
+!testRun: #ReportTest #test08TransferNetBetweenReceptiveAccountsWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 18:06:32'!
+PASSED!
+
+!testRun: #ReportTest #test09TransferNetBetweenReceptiveAccountsWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 18:06:32'!
+PASSED!
+
+!testRun: #ReportTest #test10TransferNetOfAnEmptyPortfolioIsZero stamp: 'CR 11/16/2020 18:06:32'!
+PASSED!
+
+!testRun: #ReportTest #test11TransferNetOfAPortfolioWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 18:06:32'!
+PASSED!
+
+!testRun: #ReportTest #test12TransferNetOfAPortfolioWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 18:06:32'!
+PASSED!
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:06:35'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:06:35'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 18:06:35'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 18:06:35'!
+PASSED!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:06:35'!
+PASSED!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:07:25'!
+test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationAccounts for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' ) isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:13:43' prior: 50904175!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	stringTree add: ('Balance = ', aReceptiveAccount balance asString).
+	aReceptiveAccount transactionCollaborationWith:  self onLevel: aTreeLevel.! !
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:13:59'!
+reportBalance: aReceptiveAccount
+
+	^ stringTree add: ('Balance = ', aReceptiveAccount balance asString)! !
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:13:59' prior: 50905146!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	self reportBalance: aReceptiveAccount.
+	aReceptiveAccount transactionCollaborationWith:  self onLevel: aTreeLevel.! !
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:14:36' prior: 50904953!
+test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationWithTransactions for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:14:39'!
+PASSED!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:14:58' prior: 50905129!
+test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationAccounts for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:15:01'!
+FAILURE!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:15:01'!
+FAILURE!
+
+!methodRemoval: TreeRepresentationWithTransactions #collaboratingAccount:onLevel: stamp: 'CR 11/16/2020 18:17:02'!
+collaboratingAccount: account onLevel: aTreeLevel
+	!
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:17:10' prior: 50905163!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	aReceptiveAccount transactionCollaborationWith:  self onLevel: aTreeLevel.! !
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 18:20:19' prior: 50902776!
+collaboratingPortfolio: aPortfolio onLevel: anIndentationLevel
+	^ self indentWithSpaces: anIndentationLevel andConcatenateName: aPortfolio name.! !
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 18:22:58' prior: 50902666!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.
+	accounts do: [:anAccount | anAccount collaborateWithTreeLevel: aReportToCollaborateWith  of: aTreeLevel + 1].
+	self collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel.
+	! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 18:23:16' prior: 50904080!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.
+	aReportToCollaborateWith transactionCollaboration: self onLevel: aTreeLevel.
+	self collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel.! !
+!Account methodsFor: 'nil' stamp: 'CR 11/16/2020 18:23:34'!
+collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel
+	! !
+!Account methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 18:23:41' prior: 50905266!
+collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel
+	! !
+!Account methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 18:24:24' prior: 50905272!
+collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel
+	aReportToCollaborateWith addBalance: self balance onLevel: aTreeLevel.! !
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 18:24:58'!
+addBalance: aBalanceToReport onLevel: aTreeLevel
+	! !
+!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 18:25:12' prior: 50905285!
+addBalance: aBalanceToReport onLevel: aTreeLevel
+	! !
+!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 18:25:39' prior: 50905290!
+addBalance: aBalanceToReport onLevel: aTreeLevel
+	collaborationAction.! !
+!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 18:29:33' prior: 50905295!
+addBalance: aBalanceToReport onLevel: aTreeLevel
+	| balanceReport |
+	balanceReport := collaborationAction useIndentOn: aBalanceToReport asString onLevel: aTreeLevel.! !
+!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 18:29:56' prior: 50905301!
+addBalance: aBalanceToReport onLevel: aTreeLevel
+	| balanceReport |
+	balanceReport := collaborationAction useIndentOn: aBalanceToReport asString onLevel: aTreeLevel.
+	stringTree add: balanceReport.! !
+
+!methodRemoval: TreeRepresentation #addBalance:onLevel: stamp: 'CR 11/16/2020 18:30:03'!
+addBalance: aBalanceToReport onLevel: aTreeLevel
+	| balanceReport |
+	balanceReport := collaborationAction useIndentOn: aBalanceToReport asString onLevel: aTreeLevel.
+	stringTree add: balanceReport.!
+!TreeRepresentationWithTransactions methodsFor: 'nil' stamp: 'CR 11/16/2020 18:30:12'!
+addBalance: aBalanceToReport onLevel: aTreeLevel
+	| balanceReport |
+	balanceReport := collaborationAction useIndentOn: aBalanceToReport asString onLevel: aTreeLevel.
+	stringTree add: balanceReport.! !
+
+!methodRemoval: TreeRepresentationWithTransactions #reportBalance: stamp: 'CR 11/16/2020 18:30:40'!
+reportBalance: aReceptiveAccount
+
+	^ stringTree add: ('Balance = ', aReceptiveAccount balance asString)!
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 18:31:50'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:31:50'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 18:31:50'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 18:31:50'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 18:31:50'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 18:31:50'!
+PASSED!
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:31:52'!
+ERROR!
+
+!testRun: #ReportTest #test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:31:52'!
+ERROR!
+
+!testRun: #ReportTest #test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 18:31:52'!
+ERROR!
+
+!testRun: #ReportTest #test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 18:31:52'!
+ERROR!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:31:52'!
+ERROR!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:31:52'!
+ERROR!
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:31:55'!
+ERROR!
+!TreeRepresentationAccounts methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:32:36'!
+addBalance: aBalanceToReport onLevel: aTreeLevel! !
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:32:41'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:32:41'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 18:32:41'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 18:32:41'!
+PASSED!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:32:41'!
+ERROR!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:32:41'!
+FAILURE!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:32:48'!
+ERROR!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:32:48'!
+ERROR!
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:35:02' prior: 50905329!
+addBalance: aBalanceToReport onLevel: anIdentationLevel
+	| balanceReport |
+	balanceReport := collaborationAction indentWithSpaces: anIdentationLevel andConcatenateName: 'Balance = ', aBalanceToReport asString.
+	stringTree add: balanceReport.! !
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:35:35'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:35:35'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 18:35:35'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 18:35:35'!
+PASSED!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:35:35'!
+PASSED!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:35:35'!
+FAILURE!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:35:35'!
+FAILURE!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:35:39'!
+FAILURE!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:35:39'!
+FAILURE!
+
+treeRepresentationOfEmptyPortfolio tree!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:37:01' prior: 50905194!
+test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationWithTransactions for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:37:03'!
+PASSED!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:38:07'!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfEmptyPortfolio fedesPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:40:05' prior: 50905508!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	fedesAccount register: 40.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de fede').
+	
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfPortfolio tree.! !
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:40:41' prior: 50905525!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit of: 100 on: fedesAccount.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de fede').
+	
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfPortfolio tree.! !
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:41:45' prior: 50905547!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Balance = 100' with: ' Cuenta de fede' with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:41:52'!
+FAILURE!
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:41:52'!
+FAILURE!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:42:26' prior: 50905569!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Balance = 100' with: ' Cuenta de fede' with: ' Depósito por 100'with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:42:28' prior: 50905601!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Balance = 100' with: ' Cuenta de fede' with: ' Depósito por 100' with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:42:38'!
+FAILURE!
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:42:38'!
+FAILURE!
+
+treeRepresentationOfPortfolio tree!
+
+aReceptiveAccount name!
+
+(aDeposit value) asString!
+
+self useIndentOn: (self collaboratingDeposit: aDeposit) onLevel: anIndentationLevel.!
+
+self collaboratingDeposit: aDeposit!
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 18:47:35' prior: 50904622!
+useIndentOn: aName onLevel: anIndentationLevel
+	| indentCollaborator |
+	indentCollaborator := IndentedTreeString new.
+	^ indentCollaborator indentWithSpaces: anIndentationLevel  andConcatenateName: aName.
+	
+	
+	! !
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:47:40'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:47:40'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 18:47:40'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 18:47:40'!
+PASSED!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 18:47:40'!
+PASSED!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 18:47:40'!
+PASSED!
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:47:40'!
+FAILURE!
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:47:40'!
+FAILURE!
+
+treeRepresentationOfPortfolio tree!
+
+aTreeLevel + 1!
+
+self executeCollaboration: (aReportToCollaborateWith transactionCollaboration) onLevel: aTreeLevel. !
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:52:22' prior: 50905625!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Balance = 100' with: ' Cuenta de fede' with: '  Depósito por 100' with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:52:26'!
+FAILURE!
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:52:26'!
+FAILURE!
+
+treeRepresentationOfPortfolio tree!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:53:38' prior: 50905715!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Balance = 100' with: ' Cuenta de fede' with: 
+	'  Depósito por 100' with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:53:57'!
+FAILURE!
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:53:57'!
+FAILURE!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:54:42' prior: 50905749!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de fede' with: 'Balance = 100' with: ' Cuenta de fede' with: 
+	'  Depósito por 100' with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 18:54:43'!
+PASSED!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:54:54'!
+test20TreeRepresentationWithTransactionsOfPortfolioWithManyTransactionsWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de fede' with: 'Balance = 100' with: ' Cuenta de fede' with: 
+	'  Depósito por 100' with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+
+!classDefinition: #ReportTest category: 'Portfolio2' stamp: 'CR 11/16/2020 19:01:06'!
+TestCase subclass: #ReportTest
+	instanceVariableNames: 'accountWithDepositOf100 accountWithDepositOf200 emptyAccount emptyAccountSummary accountSummaryWithOnlyDepositOf100 accountWithManyTransactions accountSummaryManyTransactions accountWithTwoTransfers emptyPortfolio simplePortfolio composedPortfolio accountSummaryOfComposedPortfolio accountWithOneTransferDeposit accountWithOneTransferWithdraw transferNetOfAccountWithOneTransferDeposit transferNetOfAccountWithOneTransferWithdraw simplePortfolioWithOneTransfer composedPortfolioWithManyTransfers accountSummaryOfSimplePortfolio fedesTreeRepresentation'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 19:01:33' prior: 50905810!
+test20TreeRepresentationWithTransactionsOfPortfolioWithManyTransactionsWorksCorrectly
+	| treeRepresentationOfPortfolioWithManyTransactions fedesPortfolio fedesAccount juansAccount juansPortfolio treeRepresentationOfPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de juan'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	juansAccount := ReceptiveAccount named: 'Cuenta de juan'.
+	Deposit register: 100 on: fedesAccount.
+	Withdraw register: 50 on: juansAccount.
+	fedesPortfolio add: fedesAccount.
+	juansPortfolio add: juansAccount.
+	fedesPortfolio add: juansPortfolio. 
+	treeRepresentationOfPortfolioWithManyTransactions := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: fedesTreeRepresentation isEqualTo: treeRepresentationOfPortfolioWithManyTransactions tree.! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 19:02:48' prior: 50903748 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300' with: 'Balance = 100' with: 'Balance = 200' with: 'Balance = 100'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	fedesTreeRepresentation := (OrderedCollection with: 'Portfolio de fede' with: 'Balance = 50' with: ' Cuenta de fede' with: '  Depósito por 100' with: ' Balance = 100' with: ' Portfolio de juan' ) add: '  Cuenta de juan'.
+	((fedesTreeRepresentation add: ' Balance = -50') add: '   Extracción por 50' ) add: '  Balance = -50'.
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 19:05:08' prior: 50905889 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300' with: 'Balance = 100' with: 'Balance = 200' with: 'Balance = 100'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	fedesTreeRepresentation := (OrderedCollection with: 'Portfolio de fede' with: 'Balance = 50' with: ' Cuenta de fede' with: '  Depósito por 100' with: ' Balance = 100' with: ' Portfolio de juan' ) add: '  Cuenta de juan'.
+	fedesTreeRepresentation add: ' Balance = -50'.
+	fedesTreeRepresentation add: '   Extracción por 50'.
+	fedesTreeRepresentation add: '  Balance = -50'.
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 19:05:37' prior: 50905973 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300' with: 'Balance = 100' with: 'Balance = 200' with: 'Balance = 100'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	fedesTreeRepresentation := (OrderedCollection with: 'Portfolio de fede' with: 'Balance = 50' with: ' Cuenta de fede' with: '  Depósito por 100' with: ' Balance = 100' with: ' Portfolio de juan' ).
+ 	fedesTreeRepresentation add: '  Cuenta de juan'.
+	fedesTreeRepresentation add: ' Balance = -50'.
+	fedesTreeRepresentation add: '   Extracción por 50'.
+	fedesTreeRepresentation add: '  Balance = -50'.
+	! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 19:05:50'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 19:05:50'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 19:05:50'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 19:05:50'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 19:05:50'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 19:05:50'!
+PASSED!
+
+!testRun: #ReportTest #test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!
+
+!testRun: #ReportTest #test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!
+
+!testRun: #ReportTest #test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!
+
+!testRun: #ReportTest #test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!
+
+!testRun: #ReportTest #test20TreeRepresentationWithTransactionsOfPortfolioWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 19:05:52'!
+PASSED!

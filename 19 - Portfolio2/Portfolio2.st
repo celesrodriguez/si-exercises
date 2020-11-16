@@ -307,12 +307,12 @@ test07AccountKnowsItsTransactions
 
 !classDefinition: #ReportTest category: 'Portfolio2'!
 TestCase subclass: #ReportTest
-	instanceVariableNames: 'accountWithDepositOf100 accountWithDepositOf200 emptyAccount emptyAccountSummary accountSummaryWithOnlyDepositOf100 accountWithManyTransactions accountSummaryManyTransactions accountWithTwoTransfers emptyPortfolio simplePortfolio composedPortfolio accountSummaryOfComposedPortfolio accountWithOneTransferDeposit accountWithOneTransferWithdraw transferNetOfAccountWithOneTransferDeposit transferNetOfAccountWithOneTransferWithdraw simplePortfolioWithOneTransfer composedPortfolioWithManyTransfers accountSummaryOfSimplePortfolio'
+	instanceVariableNames: 'accountWithDepositOf100 accountWithDepositOf200 emptyAccount emptyAccountSummary accountSummaryWithOnlyDepositOf100 accountWithManyTransactions accountSummaryManyTransactions accountWithTwoTransfers emptyPortfolio simplePortfolio composedPortfolio accountSummaryOfComposedPortfolio accountWithOneTransferDeposit accountWithOneTransferWithdraw transferNetOfAccountWithOneTransferDeposit transferNetOfAccountWithOneTransferWithdraw simplePortfolioWithOneTransfer composedPortfolioWithManyTransfers accountSummaryOfSimplePortfolio fedesTreeRepresentation'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio2'!
 
-!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:49:14'!
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 19:05:37'!
 setUp
 	emptyPortfolio := Portfolio new.
 	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
@@ -346,6 +346,11 @@ setUp
 	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
 	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
 	
+	fedesTreeRepresentation := (OrderedCollection with: 'Portfolio de fede' with: 'Balance = 50' with: ' Cuenta de fede' with: '  Depósito por 100' with: ' Balance = 100' with: ' Portfolio de juan' ).
+ 	fedesTreeRepresentation add: '  Cuenta de juan'.
+	fedesTreeRepresentation add: ' Balance = -50'.
+	fedesTreeRepresentation add: '   Extracción por 50'.
+	fedesTreeRepresentation add: '  Balance = -50'.
 	! !
 
 
@@ -394,30 +399,30 @@ assertThat:  aCollection isEqualTo: aCollectionToBeComparedTo
 	self assert: (aCollectionToBeComparedTo allSatisfy: [:anElement | aCollection includes: anElement ]).! !
 
 
-!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:25:15'!
-test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:09'!
+test13TreeRepresentationAccountOfAnEmptyReceptiveAccountIsItsName
 	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
 	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
 	treeRepresentationOfEmptyAccount := TreeRepresentationAccounts for: fedesEmptyAccount. 
 	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.! !
 
-!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:25:15'!
-test14TreeRepresentationOfAnEmptyPortfolioIsItsName
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:21'!
+test14TreeRepresentationAccountOfAnEmptyPortfolioIsItsName
 	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
 	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
 	treeRepresentationOfEmptyPortfolio := TreeRepresentationAccounts for: fedesEmptyPortfolio. 
 	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' ) isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
 
-!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:25:15'!
-test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:29'!
+test15TreeRepresentationAccountOfPortfolioWithOneAccountWorksCorrectly
 	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio |
 	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
 	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan'). 
 	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
 	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
 
-!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:25:15'!
-test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 17:57:37'!
+test16TreeRepresentationAccountOfPortfolioWithManyAccountsWorksCorrectly
 	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio juansPortfolio |
 	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
 	juansPortfolio := Portfolio named: 'Portfolio de Juan'.
@@ -426,6 +431,46 @@ test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
 	juansPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan').	  
 	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
 	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Fede' with: ' Portfolio de Juan' with: '  Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:14:36'!
+test17TreeRepresentationWithTransactionsOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationWithTransactions for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:37:01'!
+test18TreeRepresentationWithTransactionsOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationWithTransactions for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' with: 'Balance = 0') isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 18:54:42'!
+test19TreeRepresentationWithTransactionsOfPortfolioWithOneTransactionWorksCorrectly
+	| treeRepresentationOfPortfolio fedesPortfolio fedesAccount |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	Deposit register: 100 on: fedesAccount.
+	fedesPortfolio add: fedesAccount.
+	treeRepresentationOfPortfolio := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de fede' with: 'Balance = 100' with: ' Cuenta de fede' with: 
+	'  Depósito por 100' with: ' Balance = 100') isEqualTo: treeRepresentationOfPortfolio tree.! !
+
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 19:01:33'!
+test20TreeRepresentationWithTransactionsOfPortfolioWithManyTransactionsWorksCorrectly
+	| treeRepresentationOfPortfolioWithManyTransactions fedesPortfolio fedesAccount juansAccount juansPortfolio treeRepresentationOfPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de juan'.
+	fedesAccount := ReceptiveAccount named: 'Cuenta de fede'.
+	juansAccount := ReceptiveAccount named: 'Cuenta de juan'.
+	Deposit register: 100 on: fedesAccount.
+	Withdraw register: 50 on: juansAccount.
+	fedesPortfolio add: fedesAccount.
+	juansPortfolio add: juansAccount.
+	fedesPortfolio add: juansPortfolio. 
+	treeRepresentationOfPortfolioWithManyTransactions := TreeRepresentationWithTransactions for: fedesPortfolio. 
+	self assertThat: fedesTreeRepresentation isEqualTo: treeRepresentationOfPortfolioWithManyTransactions tree.! !
 
 
 !ReportTest methodsFor: 'transfer net tests' stamp: 'CR 11/16/2020 03:08:57'!
@@ -588,6 +633,10 @@ collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
 	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
 	aReportToCollaborateWith collaborationWithAccountResult: resultOfCollaboration.! !
 
+!Account methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 18:24:24'!
+collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel
+	aReportToCollaborateWith addBalance: self balance onLevel: aTreeLevel.! !
+
 
 !Account methodsFor: 'accessing' stamp: 'CR 11/16/2020 16:23:03'!
 name
@@ -719,11 +768,12 @@ collaborateWith: aReportToCollaborateWith
 	accounts do: [:anAccount | anAccount collaborateWith: aReportToCollaborateWith].
 	aReportToCollaborateWith collaboratingAccount: self.! !
 
-!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:55:02'!
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 18:22:58'!
 collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
 	
 	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.
 	accounts do: [:anAccount | anAccount collaborateWithTreeLevel: aReportToCollaborateWith  of: aTreeLevel + 1].
+	self collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel.
 	! !
 
 !Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:57:45'!
@@ -847,10 +897,11 @@ collaborateWith: aReportToCollaborateWith
 	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith].
 	aReportToCollaborateWith collaboratingAccount: self.! !
 
-!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:03:07'!
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 18:23:16'!
 collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
 	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.
-	aReportToCollaborateWith transactionCollaboration: self onLevel: aTreeLevel.! !
+	aReportToCollaborateWith transactionCollaboration: self onLevel: aTreeLevel.
+	self collaborateWithBalance: aReportToCollaborateWith onLevel: aTreeLevel.! !
 
 !ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:58:00'!
 executeCollaboration: aCollaborationToExecute onLevel: aTreeLevel
@@ -879,7 +930,7 @@ Object subclass: #AccountReport
 	poolDictionaries: ''
 	category: 'Portfolio2'!
 
-!AccountReport methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 01:51:05'!
+!AccountReport methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:51:05'!
 collaboration
 	^ collaborationAction.! !
 
@@ -963,11 +1014,11 @@ AccountReport subclass: #TreeRepresentation
 	poolDictionaries: ''
 	category: 'Portfolio2'!
 
-!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:35:46'!
+!TreeRepresentation methodsFor: 'collaboration' stamp: 'CR 11/16/2020 17:35:46'!
 collaborationWithAccountResult: anAccountStringRepresentation
 	stringTree add: anAccountStringRepresentation.! !
 
-!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:26:23'!
+!TreeRepresentation methodsFor: 'collaboration' stamp: 'CR 11/16/2020 17:26:23'!
 tree
 	accountToMakeReportFor collaborateWithTreeLevel: self of: 0.
 	^stringTree  ! !
@@ -979,6 +1030,9 @@ TreeRepresentation subclass: #TreeRepresentationAccounts
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio2'!
+
+!TreeRepresentationAccounts methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:32:36'!
+addBalance: aBalanceToReport onLevel: aTreeLevel! !
 
 !TreeRepresentationAccounts methodsFor: 'collaboration' stamp: 'CR 11/16/2020 17:15:53'!
 transactionCollaboration: anAccount onLevel: aTreeLevel! !
@@ -994,27 +1048,33 @@ initializeFor: anAccount
 
 !classDefinition: #TreeRepresentationWithTransactions category: 'Portfolio2'!
 TreeRepresentation subclass: #TreeRepresentationWithTransactions
-	instanceVariableNames: ''
+	instanceVariableNames: 'transactionCollaborationAction'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio2'!
 
-!TreeRepresentationWithTransactions methodsFor: 'initialization' stamp: 'CR 11/16/2020 17:22:35'!
+!TreeRepresentationWithTransactions methodsFor: 'initialization' stamp: 'CR 11/16/2020 18:05:42'!
 initializeFor: anAccount 
 	accountToMakeReportFor := anAccount.
 	stringTree := OrderedCollection new.
-	collaborationAction := AccountSummary new.
+	collaborationAction := IndentedTreeString new.
+	transactionCollaborationAction := SummaryString new.
 	! !
 
 
-!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 17:07:57'!
-collaboratingAccount: account onLevel: aTreeLevel
-	! !
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:35:02'!
+addBalance: aBalanceToReport onLevel: anIdentationLevel
+	| balanceReport |
+	balanceReport := collaborationAction indentWithSpaces: anIdentationLevel andConcatenateName: 'Balance = ', aBalanceToReport asString.
+	stringTree add: balanceReport.! !
 
-!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 17:16:37'!
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:05:55'!
+transactionCollaboration
+	^transactionCollaborationAction ! !
+
+!TreeRepresentationWithTransactions methodsFor: 'collaboration' stamp: 'CR 11/16/2020 18:17:10'!
 transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
 	aReceptiveAccount transactionCollaborationWith:  self onLevel: aTreeLevel.! !
-
 
 
 !classDefinition: #AccountTransaction category: 'Portfolio2'!
@@ -1042,10 +1102,10 @@ collaborateWith: aReportToCollaborateWith
 	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration). 
 	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration.! !
 
-!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:34:41'!
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 18:06:26'!
 collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
 	| resultOfCollaboration | 
-	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith transactionCollaboration) onLevel: aTreeLevel. 
 	aReportToCollaborateWith collaborationWithAccountResult: resultOfCollaboration.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -1280,14 +1340,6 @@ collaboratingWithdraw: aWithdraw
 	^  0.! !
 
 
-!classDefinition: #IndentedTransactionTreeString category: 'Portfolio2'!
-ReportAction subclass: #IndentedTransactionTreeString
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Portfolio2'!
-
-
 !classDefinition: #IndentedTreeString category: 'Portfolio2'!
 ReportAction subclass: #IndentedTreeString
 	instanceVariableNames: ''
@@ -1299,7 +1351,7 @@ ReportAction subclass: #IndentedTreeString
 calculateIndentation: anIndentationLevel
 	^ String new: anIndentationLevel withAll: $ . ! !
 
-!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:09:14'!
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 18:20:19'!
 collaboratingPortfolio: aPortfolio onLevel: anIndentationLevel
 	^ self indentWithSpaces: anIndentationLevel andConcatenateName: aPortfolio name.! !
 
@@ -1354,11 +1406,11 @@ collaboratingWithdraw: aWithdraw onLevel: anIndentationLevel
 	
 	! !
 
-!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:46:49'!
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 18:47:35'!
 useIndentOn: aName onLevel: anIndentationLevel
 	| indentCollaborator |
 	indentCollaborator := IndentedTreeString new.
-	^ indentCollaborator indentWithSpaces: anIndentationLevel  andConcatenateName: (self collaboratingWithdraw: aName ).
+	^ indentCollaborator indentWithSpaces: anIndentationLevel  andConcatenateName: aName.
 	
 	
 	! !
