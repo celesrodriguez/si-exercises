@@ -307,15 +307,15 @@ test07AccountKnowsItsTransactions
 
 !classDefinition: #ReportTest category: 'Portfolio2'!
 TestCase subclass: #ReportTest
-	instanceVariableNames: 'accountWithDepositOf100 accountWithDepositOf200 emptyAccount emptyAccountSummary accountSummaryWithOnlyDepositOf100 accountWithManyTransactions accountSummaryManyTransactions accountWithTwoTransfers emptyPortfolio simplePortfolio composedPortfolio accountSummaryOfComposedPortfolio accountWithOneTransferDeposit accountWithOneTransferWithdraw transferNetOfAccountWithOneTransferDeposit transferNetOfAccountWithOneTransferWithdraw simplePortfolioWithOneTransfer composedPortfolioWithManyTransfers'
+	instanceVariableNames: 'accountWithDepositOf100 accountWithDepositOf200 emptyAccount emptyAccountSummary accountSummaryWithOnlyDepositOf100 accountWithManyTransactions accountSummaryManyTransactions accountWithTwoTransfers emptyPortfolio simplePortfolio composedPortfolio accountSummaryOfComposedPortfolio accountWithOneTransferDeposit accountWithOneTransferWithdraw transferNetOfAccountWithOneTransferDeposit transferNetOfAccountWithOneTransferWithdraw simplePortfolioWithOneTransfer composedPortfolioWithManyTransfers accountSummaryOfSimplePortfolio'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio2'!
 
-!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 03:34:54'!
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:49:14'!
 setUp
 	emptyPortfolio := Portfolio new.
-	emptyAccountSummary := OrderedCollection new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
 	accountWithDepositOf100 := ReceptiveAccount new.
 	accountWithDepositOf200 := ReceptiveAccount new.
 	accountWithManyTransactions := ReceptiveAccount new.
@@ -338,9 +338,10 @@ setUp
 	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
 	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
 	
-	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100'.
-	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40'.
-	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200'.
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300' with: 'Balance = 100' with: 'Balance = 200' with: 'Balance = 100'.
 	
 	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
 	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
@@ -372,17 +373,17 @@ test04AccountSummaryOfAnEmptyPortfolioIsEmpty
 	accountSummaryOfEmptyPorfolio := AccountSummary for: emptyPortfolio. 
 	self assert: emptyAccountSummary = accountSummaryOfEmptyPorfolio summary.! !
 
-!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 02:37:17'!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:44:47'!
 test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly
 	| accountSummaryOfASimplePortfolio |
 	accountSummaryOfASimplePortfolio := AccountSummary for: simplePortfolio. 
-	self assert:  accountSummaryWithOnlyDepositOf100 = accountSummaryOfASimplePortfolio summary.! !
+	self assert:  accountSummaryOfSimplePortfolio = accountSummaryOfASimplePortfolio summary.! !
 
-!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 02:48:41'!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:50:15'!
 test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly
 	| accountSummaryOfAComposedPortfolio |
 	accountSummaryOfAComposedPortfolio := AccountSummary for: composedPortfolio. 
-	self assert:  accountSummaryOfComposedPortfolio = accountSummaryOfAComposedPortfolio summary.! !
+	self assertThat:  accountSummaryOfComposedPortfolio isEqualTo:  accountSummaryOfAComposedPortfolio summary.! !
 
 
 !ReportTest methodsFor: 'assertions' stamp: 'CR 11/16/2020 02:18:13'!
@@ -712,11 +713,11 @@ signalCanNotAddAccount
 	self error: self class canNotAddAccountErrorMessage! !
 
 
-!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 02:09:36'!
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:53:33'!
 collaborateWith: aReportToCollaborateWith
 
 	accounts do: [:anAccount | anAccount collaborateWith: aReportToCollaborateWith].
-	! !
+	aReportToCollaborateWith collaboratingAccount: self.! !
 
 !Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:55:02'!
 collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
@@ -841,11 +842,10 @@ addedTo: aPortfolio
 	! !
 
 
-!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 00:48:17'!
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:54:54'!
 collaborateWith: aReportToCollaborateWith
-
 	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith].
-	! !
+	aReportToCollaborateWith collaboratingAccount: self.! !
 
 !ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:19:22'!
 collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
@@ -907,6 +907,14 @@ initializeFor: anAccount
 	! !
 
 
+!AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 16:37:56'!
+addBalanceToReport: accountBalance
+	summary add: ('Balance = ', accountBalance asString).! !
+
+!AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 16:54:17'!
+collaboratingAccount: anAccountThatColaborates
+	summary add: ('Balance = ', anAccountThatColaborates balance asString).! !
+
 !AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:40:52'!
 collaborationWithTransactionResult: resultOfCollaboration
 	summary add: resultOfCollaboration.! !
@@ -931,6 +939,10 @@ initializeFor: anAccount
 	collaborationAction := CalculateNet new.
 	! !
 
+
+!TransferNet methodsFor: 'collaboration' stamp: 'CR 11/16/2020 16:54:28'!
+collaboratingAccount: anAccountThatColaborates
+! !
 
 !TransferNet methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:41:36'!
 collaborationWithTransactionResult: resultOfCollaboration

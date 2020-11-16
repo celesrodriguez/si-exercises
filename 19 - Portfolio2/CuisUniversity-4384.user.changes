@@ -14545,3 +14545,574 @@ test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
 
 !testRun: #ReportTest #test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:30:22'!
 PASSED!
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:36:01' prior: 50899351!
+collaborateWith: aReportToCollaborateWith
+	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith].
+	aReportToCollaborateWith addBalanceToReport: self balance.! !
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:36:21' prior: 50899875!
+collaborateWith: aReportToCollaborateWith
+
+	accounts do: [:anAccount | anAccount collaborateWith: aReportToCollaborateWith].
+	aReportToCollaborateWith addBalanceToReport: self balance.! !
+!AccountSummary methodsFor: 'nil' stamp: 'CR 11/16/2020 16:37:56'!
+addBalanceToReport: accountBalance
+	summary add: ('Balance = ', accountBalance asString).! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:38:08'!
+FAILURE!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 16:38:08'!
+FAILURE!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 16:38:08'!
+FAILURE!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 16:38:08'!
+FAILURE!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:38:08'!
+FAILURE!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:38:08'!
+FAILURE!
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:39:01' prior: 50902131 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40'.
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:39:49' prior: 50903077 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40'.
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:40:35' prior: 50903141 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:40:45' prior: 50903206 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:41:11' prior: 50903273 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:41:15'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 16:41:15'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 16:41:15'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 16:41:15'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:41:15'!
+FAILURE!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:41:15'!
+FAILURE!
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:41:21'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 16:41:22'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 16:41:24'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 16:41:25'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:41:26'!
+FAILURE!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:41:26'!
+FAILURE!
+
+accountSummaryOfASimplePortfolio summary!
+
+!classDefinition: #ReportTest category: 'Portfolio2' stamp: 'CR 11/16/2020 16:44:49'!
+TestCase subclass: #ReportTest
+	instanceVariableNames: 'accountWithDepositOf100 accountWithDepositOf200 emptyAccount emptyAccountSummary accountSummaryWithOnlyDepositOf100 accountWithManyTransactions accountSummaryManyTransactions accountWithTwoTransfers emptyPortfolio simplePortfolio composedPortfolio accountSummaryOfComposedPortfolio accountWithOneTransferDeposit accountWithOneTransferWithdraw transferNetOfAccountWithOneTransferDeposit transferNetOfAccountWithOneTransferWithdraw simplePortfolioWithOneTransfer composedPortfolioWithManyTransfers accountSummaryOfSimplePortfolio'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:44:47' prior: 50900668!
+test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly
+	| accountSummaryOfASimplePortfolio |
+	accountSummaryOfASimplePortfolio := AccountSummary for: simplePortfolio. 
+	self assert:  accountSummaryOfSimplePortfolio = accountSummaryOfASimplePortfolio summary.! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:45:38' prior: 50903341 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:46:26' prior: 50903493 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300' with: 'Balance = 100'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:46:29'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 16:46:29'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 16:46:29'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 16:46:29'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:46:29'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:46:29'!
+FAILURE!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:46:29'!
+FAILURE!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:46:33'!
+FAILURE!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:46:33'!
+FAILURE!
+
+accountSummaryOfAComposedPortfolio summary!
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:48:53' prior: 50903565 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300' with: 'Balance = 100' with: 'Balance = 200'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+!ReportTest methodsFor: 'setup' stamp: 'CR 11/16/2020 16:49:14' prior: 50903675 overrides: 16927572!
+setUp
+	emptyPortfolio := Portfolio new.
+	emptyAccountSummary := OrderedCollection with: 'Balance = 0'.
+	accountWithDepositOf100 := ReceptiveAccount new.
+	accountWithDepositOf200 := ReceptiveAccount new.
+	accountWithManyTransactions := ReceptiveAccount new.
+	accountWithTwoTransfers := ReceptiveAccount new.
+	accountWithOneTransferDeposit := ReceptiveAccount new.
+	accountWithOneTransferWithdraw := ReceptiveAccount new.
+	emptyAccount := ReceptiveAccount new.
+	simplePortfolio := Portfolio with: accountWithDepositOf100.
+	simplePortfolioWithOneTransfer := Portfolio with: accountWithOneTransferDeposit.
+	composedPortfolio := Portfolio with: simplePortfolio.
+	composedPortfolioWithManyTransfers := Portfolio with: simplePortfolioWithOneTransfer.
+	composedPortfolioWithManyTransfers add: accountWithManyTransactions.
+	composedPortfolio add: accountWithDepositOf200.
+	
+	Deposit register: 100 on: accountWithDepositOf100.
+	Deposit register: 200 on: accountWithDepositOf200.
+	Deposit register: 300 on: accountWithManyTransactions.
+	Withdraw register: 50 on: accountWithManyTransactions.
+	Transfer register: 75 from: accountWithManyTransactions to: accountWithTwoTransfers.
+	Transfer register: 40 from: accountWithTwoTransfers to: accountWithManyTransactions.
+	Transfer register: 50 from: accountWithOneTransferWithdraw to: accountWithOneTransferDeposit.
+	
+	accountSummaryWithOnlyDepositOf100 := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100'.
+	accountSummaryOfSimplePortfolio := OrderedCollection with: 'Depósito por 100' with: 'Balance = 100' with: 'Balance = 100'.
+	accountSummaryManyTransactions := OrderedCollection with: 'Depósito por 300' with: 'Extracción por 50' with: 'Salida por transferencia de 75' with: 'Entrada por transferencia de 40' with: ('Balance = ', accountWithManyTransactions balance asString).
+	accountSummaryOfComposedPortfolio := OrderedCollection with: 'Depósito por 100' with: 'Depósito por 200' with: 'Balance = 300' with: 'Balance = 100' with: 'Balance = 200' with: 'Balance = 100'.
+	
+	transferNetOfAccountWithOneTransferDeposit := OrderedCollection with: 'Entrada por transferencia de 50'.
+	transferNetOfAccountWithOneTransferWithdraw := OrderedCollection with: 'Entrada por transferencia de 50'.
+	
+	! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:49:17'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 16:49:17'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 16:49:17'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 16:49:17'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:49:17'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:49:17'!
+FAILURE!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:49:17'!
+FAILURE!
+
+accountSummaryOfAComposedPortfolio summary!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:50:15' prior: 50901075!
+test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly
+	| accountSummaryOfAComposedPortfolio |
+	accountSummaryOfAComposedPortfolio := AccountSummary for: composedPortfolio. 
+	self assertThat:  accountSummaryOfComposedPortfolio isEqualTo:  accountSummaryOfAComposedPortfolio summary.! !
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:50:18'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:50:21'!
+PASSED!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:50:24'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 16:50:24'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:50:24'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:50:24'!
+PASSED!
+
+!testRun: #ReportTest #test07TransferNetOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:50:26'!
+ERROR!
+
+!testRun: #ReportTest #test08TransferNetBetweenReceptiveAccountsWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 16:50:26'!
+ERROR!
+
+!testRun: #ReportTest #test09TransferNetBetweenReceptiveAccountsWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 16:50:26'!
+ERROR!
+
+!testRun: #ReportTest #test10TransferNetOfAnEmptyPortfolioIsZero stamp: 'CR 11/16/2020 16:50:26'!
+ERROR!
+
+!testRun: #ReportTest #test11TransferNetOfAPortfolioWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 16:50:26'!
+ERROR!
+
+!testRun: #ReportTest #test12TransferNetOfAPortfolioWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 16:50:26'!
+ERROR!
+
+!testRun: #ReportTest #test07TransferNetOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:51:00'!
+ERROR!
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:53:33' prior: 50903039!
+collaborateWith: aReportToCollaborateWith
+
+	accounts do: [:anAccount | anAccount collaborateWith: aReportToCollaborateWith].
+	aReportToCollaborateWith collaboratingAccount: self.! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:53:47' prior: 50903029!
+collaborateWith: aReportToCollaborateWith
+	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith].
+	aReportToCollaborateWith collaboratingAcount: self.! !
+!AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 16:54:17'!
+collaboratingAccount: anAccountThatColaborates
+	summary add: ('Balance = ', anAccountThatColaborates balance asString).! !
+!TransferNet methodsFor: 'nil' stamp: 'CR 11/16/2020 16:54:28'!
+collaboratingAccount: anAccountThatColaborates
+! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:54:36'!
+ERROR!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 16:54:36'!
+ERROR!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 16:54:36'!
+ERROR!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 16:54:36'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:54:36'!
+ERROR!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:54:36'!
+ERROR!
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:54:54' prior: 50903923!
+collaborateWith: aReportToCollaborateWith
+	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith].
+	aReportToCollaborateWith collaboratingAccount: self.! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:54:57'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 16:54:57'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 16:54:57'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 16:54:57'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:54:57'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:54:57'!
+PASSED!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:55:00'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 16:55:00'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:55:00'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:55:00'!
+PASSED!
+
+!testRun: #ReportTest #test07TransferNetOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 16:55:02'!
+PASSED!
+
+!testRun: #ReportTest #test08TransferNetBetweenReceptiveAccountsWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 16:55:02'!
+PASSED!
+
+!testRun: #ReportTest #test09TransferNetBetweenReceptiveAccountsWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 16:55:02'!
+PASSED!
+
+!testRun: #ReportTest #test10TransferNetOfAnEmptyPortfolioIsZero stamp: 'CR 11/16/2020 16:55:02'!
+PASSED!
+
+!testRun: #ReportTest #test11TransferNetOfAPortfolioWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 16:55:02'!
+PASSED!
+
+!testRun: #ReportTest #test12TransferNetOfAPortfolioWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 16:55:02'!
+PASSED!
