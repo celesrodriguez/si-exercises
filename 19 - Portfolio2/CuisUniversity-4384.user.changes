@@ -15116,3 +15116,428 @@ PASSED!
 
 !testRun: #ReportTest #test12TransferNetOfAPortfolioWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 16:55:02'!
 PASSED!
+
+!methodRemoval: ReportAction #collaboratingDeposit: stamp: 'CR 11/16/2020 16:56:51'!
+collaboratingDeposit: aDeposit
+	self subclassResponsibility !
+
+!methodRemoval: ReportAction #collaboratingTransferDeposit: stamp: 'CR 11/16/2020 16:56:51'!
+collaboratingTransferDeposit: aTransferDeposit
+	self subclassResponsibility !
+
+!methodRemoval: ReportAction #collaboratingTransferWithdraw: stamp: 'CR 11/16/2020 16:56:51'!
+collaboratingTransferWithdraw: aTransferWithdraw
+	self subclassResponsibility !
+
+!methodRemoval: ReportAction #collaboratingWithdraw: stamp: 'CR 11/16/2020 16:56:52'!
+collaboratingWithdraw: aWithdraw
+	self subclassResponsibility !
+
+ReportAction subclass: #IndentedTransactionTreeString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #IndentedTransactionTreeString category: 'Portfolio2' stamp: 'CR 11/16/2020 16:57:14'!
+ReportAction subclass: #IndentedTransactionTreeString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:58:01' prior: 50902866!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:03:07' prior: 50904072!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.
+	aReportToCollaborateWith transactionCollaboration: self onLevel: aTreeLevel.! !
+!IndentedTransactionTreeString methodsFor: 'nil' stamp: 'CR 11/16/2020 17:05:05'!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	aReceptiveAccount collaborateWith:  aReceptiveAccount onLevel: aTreeLevel.! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:05:58' overrides: 50902784!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith].
+	aReportToCollaborateWith collaboratingAccount: self onLevel: aTreeLevel.! !
+
+!methodRemoval: IndentedTransactionTreeString #transactionCollaboration:onLevel: stamp: 'CR 11/16/2020 17:06:51'!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	aReceptiveAccount collaborateWith:  aReceptiveAccount onLevel: aTreeLevel.!
+
+AccountReport subclass: #TreeRepresentationWithTransactions
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #TreeRepresentationWithTransactions category: 'Portfolio2' stamp: 'CR 11/16/2020 17:07:05'!
+AccountReport subclass: #TreeRepresentationWithTransactions
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!TreeRepresentationWithTransactions methodsFor: 'nil' stamp: 'CR 11/16/2020 17:07:16'!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	aReceptiveAccount collaborateWith:  aReceptiveAccount onLevel: aTreeLevel.! !
+!TreeRepresentationWithTransactions methodsFor: 'nil' stamp: 'CR 11/16/2020 17:07:57'!
+collaboratingAccount: account onLevel: aTreeLevel
+	! !
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 17:08:09'!
+collaboratingAccount: account onLevel: aTreeLevel
+	! !
+
+!methodRemoval: TreeRepresentation #collaboratingAccount:onLevel: stamp: 'CR 11/16/2020 17:08:35'!
+collaboratingAccount: account onLevel: aTreeLevel
+	!
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:15:12' prior: 50904098 overrides: 50902784!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	aReportToCollaborateWith collaboratingAccount: self onLevel: aTreeLevel.! !
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 17:15:53'!
+transactionCollaboration: anAccount onLevel: aTreeLevel! !
+!TreeRepresentationWithTransactions methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:16:29' prior: 50904130!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	aReceptiveAccount transactionCollaborationWith:  aReceptiveAccount onLevel: aTreeLevel.! !
+!TreeRepresentationWithTransactions methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:16:37' prior: 50904166!
+transactionCollaboration: aReceptiveAccount onLevel: aTreeLevel
+	aReceptiveAccount transactionCollaborationWith:  self onLevel: aTreeLevel.! !
+!ReceptiveAccount methodsFor: 'nil' stamp: 'CR 11/16/2020 17:17:07'!
+transactionCollaborationWith:  aReportToCollaborateWith onLevel: aTreeLevel
+	! !
+!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:17:31' prior: 50904182!
+transactionCollaborationWith:  aReportToCollaborateWith onLevel: aTreeLevel
+	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel].
+	! !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:18:15'!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration.! !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:19:29' prior: 50904197!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration). 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel.! !
+!TreeRepresentationWithTransactions methodsFor: 'nil' stamp: 'CR 11/16/2020 17:20:15'!
+initializeFor: anAccount 
+	accountToMakeReportFor := anAccount.
+	stringTree := OrderedCollection new.
+	collaborationAction := IndentedTreeString new.
+	! !
+
+!methodRemoval: AccountReport #collaborationWithTransactionResult: stamp: 'CR 11/16/2020 17:21:07'!
+collaborationWithTransactionResult: resultOfCollaboration
+	self subclassResponsibility.!
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:22:06' prior: 50904210!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel.! !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:22:23' prior: 50904237!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration). 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel.! !
+!TreeRepresentationWithTransactions methodsFor: 'initialization' stamp: 'CR 11/16/2020 17:22:35' prior: 50904222!
+initializeFor: anAccount 
+	accountToMakeReportFor := anAccount.
+	stringTree := OrderedCollection new.
+	collaborationAction := AccountSummary new.
+	! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:23:42' prior: 50904188!
+transactionCollaborationWith:  aReportToCollaborateWith onLevel: aTreeLevel
+	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel + 1].
+	! !
+!TreeRepresentationWithTransactions methodsFor: 'nil' stamp: 'CR 11/16/2020 17:24:31'!
+collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel
+	^ stringTree add: resultOfCollaboration.! !
+
+!classRenamed: #TreeRepresentation as: #TreeRepresentationAccounts stamp: 'CR 11/16/2020 17:25:15'!
+Smalltalk renameClassNamed: #TreeRepresentation as: #TreeRepresentationAccounts!
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:25:15' prior: 50902892!
+test14TreeRepresentationOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentationAccounts for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' ) isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:25:15' prior: 50902953!
+test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan'). 
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:25:15' prior: 50902817!
+test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentationAccounts for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 17:25:15' prior: 50902999!
+test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio juansPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de Juan'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Fede').
+	fedesPortfolio add: juansPortfolio.
+	juansPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan').	  
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentationAccounts for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Fede' with: ' Portfolio de Juan' with: '  Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+AccountReport subclass: #TreeRepresentation
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #TreeRepresentation category: 'Portfolio2' stamp: 'CR 11/16/2020 17:25:42'!
+AccountReport subclass: #TreeRepresentation
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+TreeRepresentation subclass: #TreeRepresentationAccounts
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #TreeRepresentationAccounts category: 'Portfolio2' stamp: 'CR 11/16/2020 17:25:54'!
+TreeRepresentation subclass: #TreeRepresentationAccounts
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+TreeRepresentation subclass: #TreeRepresentationWithTransactions
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+TreeRepresentation subclass: #TreeRepresentationWithTransactions
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #TreeRepresentationWithTransactions category: 'Portfolio2' stamp: 'CR 11/16/2020 17:26:03'!
+TreeRepresentation subclass: #TreeRepresentationWithTransactions
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 17:26:23'!
+tree
+	accountToMakeReportFor collaborateWithTreeLevel: self of: 0.
+	^stringTree  ! !
+
+!methodRemoval: TreeRepresentationAccounts #tree stamp: 'CR 11/16/2020 17:26:28'!
+tree
+	accountToMakeReportFor collaborateWithTreeLevel: self of: 0.
+	^stringTree  !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:28:34' prior: 50904251!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel.! !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:32:07' prior: 50904427!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration). 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel.! !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:33:07' prior: 50904441!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel.! !
+!AccountTransaction methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:34:41' prior: 50904454!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithAccountResult: resultOfCollaboration.! !
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 17:35:46'!
+collaborationWithAccountResult: anAccountStringRepresentation
+	stringTree add: anAccountStringRepresentation.! !
+
+!methodRemoval: TreeRepresentationAccounts #collaborationWithAccountResult: stamp: 'CR 11/16/2020 17:35:52'!
+collaborationWithAccountResult: anAccountStringRepresentation
+	stringTree add: anAccountStringRepresentation.!
+
+!methodRemoval: TreeRepresentationWithTransactions #collaborationWithTransactionResult:onLevel: stamp: 'CR 11/16/2020 17:36:11'!
+collaborationWithTransactionResult: resultOfCollaboration onLevel: aTreeLevel
+	^ stringTree add: resultOfCollaboration.!
+!Deposit methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:38:56'!
+executeCollaboration: aCollaboration onLevel: aTreeLevel! !
+!Deposit methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:39:26' prior: 50904501!
+executeCollaboration: collaborationToPerform onLevel: aTreeLevel
+	^ collaborationToPerform collaboratingDeposit: self onLevel: aTreeLevel.
+	 ! !
+!TransferDeposit methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:39:43'!
+executeCollaboration: collaborationToPerform onLevel: aTreeLevel
+	^ collaborationToPerform collaboratingTransferDeposit: self onLevel: aTreeLevel.
+	 ! !
+!TransferWithdraw methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:40:00'!
+executeCollaboration: collaborationToPerform onLevel: aTreeLevel
+	^ collaborationToPerform collaboratingTransferWithdraw: self onLevel: aTreeLevel.
+	 ! !
+!Withdraw methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 17:40:20'!
+executeCollaboration: collaborationToPerform onLevel: aTreeLevel
+	^ collaborationToPerform collaboratingWithdraw: self onLevel: aTreeLevel.
+	 ! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:41:46'!
+collaboratingDeposit: aDeposit onLevel: aTreeLevel
+	^  'Depósito por ' , (aDeposit value) asString. ! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:41:50'!
+collaboratingTransferDeposit: aTransferDeposit onLevel: aTreeLevel
+	^  'Entrada por transferencia de ' , (aTransferDeposit value) asString. ! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:41:56'!
+collaboratingTransferWithdraw: aTransferWithdraw onLevel: aTreeLevel
+	^  'Salida por transferencia de ' , (aTransferWithdraw value) asString. ! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:42:00'!
+collaboratingWithdraw: aWithdraw onLevel: aTreeLevel
+	^  'Extracción por ' , (aWithdraw value) asString. ! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:42:50' prior: 50904560!
+collaboratingWithdraw: aWithdraw onLevel: aTreeLevel
+	| indentCollaborator |
+	indentCollaborator := IndentedTreeString new.
+	! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:43:09' prior: 50904567!
+collaboratingWithdraw: aWithdraw onLevel: aTreeLevel
+	| indentCollaborator |
+	indentCollaborator := IndentedTreeString new.
+	
+	! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:44:18' prior: 50904575!
+collaboratingWithdraw: aWithdraw onLevel: anIndentationLevel
+	| indentCollaborator |
+	indentCollaborator := IndentedTreeString new.
+	^ indentCollaborator indentWithSpaces: anIndentationLevel  andConcatenateName: (self collaboratingWithdraw: aWithdraw).
+	
+	
+	! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:45:20' prior: 50904583!
+collaboratingWithdraw: aWithdraw onLevel: anIndentationLevel
+	^ self useIndentOn: aWithdraw onLevel: anIndentationLevel.
+	
+	
+	! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:45:37'!
+useIndentOn: aTransaction onLevel: anIndentationLevel
+	| indentCollaborator |
+	indentCollaborator := IndentedTreeString new.
+	^ indentCollaborator indentWithSpaces: anIndentationLevel  andConcatenateName: (self collaboratingWithdraw: aTransaction ).
+	
+	
+	! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:46:32' prior: 50904538!
+collaboratingDeposit: aDeposit onLevel: anIndentationLevel
+	^ self useIndentOn: (self collaboratingDeposit: aDeposit) onLevel: anIndentationLevel.! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:46:49' prior: 50904602!
+useIndentOn: aName onLevel: anIndentationLevel
+	| indentCollaborator |
+	indentCollaborator := IndentedTreeString new.
+	^ indentCollaborator indentWithSpaces: anIndentationLevel  andConcatenateName: (self collaboratingWithdraw: aName ).
+	
+	
+	! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:47:20' prior: 50904595!
+collaboratingWithdraw: aWithdraw onLevel: anIndentationLevel
+	^ self useIndentOn:  (self collaboratingWithdraw: aWithdraw) onLevel: anIndentationLevel.
+	
+	
+	! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:47:46' prior: 50904552!
+collaboratingTransferWithdraw: aTransferWithdraw onLevel: anIndentationLevel
+	^ self useIndentOn:  (self collaboratingTransferWithdraw: aTransferWithdraw) onLevel: anIndentationLevel.! !
+!SummaryString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 17:48:22' prior: 50904544!
+collaboratingTransferDeposit: aTransferDeposit onLevel: anIndentationLevel
+	^ self useIndentOn: (self collaboratingTransferDeposit: aTransferDeposit) onLevel: anIndentationLevel.! !
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 17:49:21'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 17:49:21'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 17:49:21'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 17:49:21'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 17:49:21'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 17:49:21'!
+PASSED!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:49:24'!
+ERROR!
+
+!testRun: #ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 17:49:24'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 17:49:24'!
+ERROR!
+
+!testRun: #ReportTest #test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 17:49:24'!
+ERROR!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:49:48'!
+ERROR!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:49:55'!
+ERROR!
+
+!methodRemoval: ReceptiveAccount #collaborateWith:onLevel: stamp: 'CR 11/16/2020 17:55:45'!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	aReportToCollaborateWith collaboratingAccount: self onLevel: aTreeLevel.!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 17:55:52'!
+PASSED!
+
+!testRun: #ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 17:55:52'!
+PASSED!
+
+!testRun: #ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 17:55:52'!
+PASSED!
+
+!testRun: #ReportTest #test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 17:55:52'!
+PASSED!
+
+!testRun: #ReportTest #test01AccountSummaryOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 17:55:55'!
+PASSED!
+
+!testRun: #ReportTest #test02AccountSummaryOfAReceptiveAccountWithOneTransactionWorksCorrectly stamp: 'CR 11/16/2020 17:55:55'!
+PASSED!
+
+!testRun: #ReportTest #test03AccountSummaryOfAReceptiveAccountWithManyTransactionsWorksCorrectly stamp: 'CR 11/16/2020 17:55:55'!
+PASSED!
+
+!testRun: #ReportTest #test04AccountSummaryOfAnEmptyPortfolioIsEmpty stamp: 'CR 11/16/2020 17:55:55'!
+PASSED!
+
+!testRun: #ReportTest #test05AccountSummaryOfAPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 17:55:55'!
+PASSED!
+
+!testRun: #ReportTest #test06AccountSummaryOfAPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 17:55:55'!
+PASSED!
+
+!testRun: #ReportTest #test07TransferNetOfAnEmptyReceptiveAccountIsEmpty stamp: 'CR 11/16/2020 17:55:58'!
+PASSED!
+
+!testRun: #ReportTest #test08TransferNetBetweenReceptiveAccountsWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 17:55:58'!
+PASSED!
+
+!testRun: #ReportTest #test09TransferNetBetweenReceptiveAccountsWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 17:55:58'!
+PASSED!
+
+!testRun: #ReportTest #test10TransferNetOfAnEmptyPortfolioIsZero stamp: 'CR 11/16/2020 17:55:58'!
+PASSED!
+
+!testRun: #ReportTest #test11TransferNetOfAPortfolioWithOneTransferWorksCorrectly stamp: 'CR 11/16/2020 17:55:58'!
+PASSED!
+
+!testRun: #ReportTest #test12TransferNetOfAPortfolioWithManyTransfersWorksCorrectly stamp: 'CR 11/16/2020 17:55:58'!
+PASSED!
