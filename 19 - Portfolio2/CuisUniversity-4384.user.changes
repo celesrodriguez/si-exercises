@@ -14151,3 +14151,397 @@ register: aValue on: anAccount by: aTransfer
 	anAccount register: transferTransaction.
 	
 	^ transferTransaction.! !
+
+----QUIT----(16 November 2020 03:54:26) CuisUniversity-4384.image priorSource: 18182141!
+
+----STARTUP---- (16 November 2020 15:05:12) as /Users/celeste/facultad/ing1/si-exercises/CuisUniversity-4384.image!
+
+!Portfolio class methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 15:20:54'!
+named: portfolioName with: anAccount
+
+	^(self new initializeWithName:  portfolioName)
+		add: anAccount;
+		yourself! !
+
+!classDefinition: #Portfolio category: 'Portfolio2' stamp: 'CR 11/16/2020 15:21:26'!
+Account subclass: #Portfolio
+	instanceVariableNames: 'accounts parents name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!Portfolio methodsFor: 'initialization' stamp: 'CR 11/16/2020 15:21:24'!
+initializeWithName:  portfolioName
+
+	accounts := OrderedCollection new.
+	parents := OrderedCollection new.
+	name := portfolioName. ! !
+!Portfolio class methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 15:22:05'!
+named: portfolioName with: anAccount with: anotherAccount
+
+	^(self new initializeWithName: portfolioName) 
+		add: anAccount;
+		add: anotherAccount;
+		yourself! !
+!ReceptiveAccount class methodsFor: 'nil' stamp: 'CR 11/16/2020 15:23:42'!
+named: receptiveAccountName
+	^self new initializeWithName: receptiveAccountName. ! !
+
+!classDefinition: #ReceptiveAccount category: 'Portfolio2' stamp: 'CR 11/16/2020 15:24:31'!
+Account subclass: #ReceptiveAccount
+	instanceVariableNames: 'transactions name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'CR 11/16/2020 15:24:30'!
+initializeWithName: receptiveAccountNameToBeInitializedWith
+
+	super initialize.
+	transactions := OrderedCollection new.
+	name := receptiveAccountNameToBeInitializedWith.! !
+!Portfolio methodsFor: 'initialization' stamp: 'CR 11/16/2020 15:24:42' prior: 50902437!
+initializeWithName:  portfolioNameToBeInitializedWith
+
+	accounts := OrderedCollection new.
+	parents := OrderedCollection new.
+	name := portfolioNameToBeInitializedWith. ! !
+
+Object subclass: #Account
+	instanceVariableNames: 'name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+Account subclass: #Portfolio
+	instanceVariableNames: 'accounts parents'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #Portfolio category: 'Portfolio2' stamp: 'CR 11/16/2020 15:25:03'!
+Account subclass: #Portfolio
+	instanceVariableNames: 'accounts parents'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+Account subclass: #ReceptiveAccount
+	instanceVariableNames: 'transactions'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #ReceptiveAccount category: 'Portfolio2' stamp: 'CR 11/16/2020 15:25:06'!
+Account subclass: #ReceptiveAccount
+	instanceVariableNames: 'transactions'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+Object subclass: #Account
+	instanceVariableNames: 'name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #Account category: 'Portfolio2' stamp: 'CR 11/16/2020 15:25:11'!
+Object subclass: #Account
+	instanceVariableNames: 'name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+Report subclass: #TreeRepresentation
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #TreeRepresentation category: 'Portfolio2' stamp: 'CR 11/16/2020 15:29:09'!
+Report subclass: #TreeRepresentation
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+Report subclass: #TreeRepresentation
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #TreeRepresentation category: 'Portfolio2' stamp: 'CR 11/16/2020 15:31:43'!
+Report subclass: #TreeRepresentation
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #IndentedTreeString category: 'Portfolio2' stamp: 'CR 11/16/2020 15:34:31'!
+ReportAction subclass: #IndentedTreeString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 15:34:14'!
+initializeFor: anAccount 
+	accountToMakeReportFor := anAccount.
+	stringTree := OrderedCollection new.
+	collaborationAction := IndentedTreeString new.
+	! !
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 15:35:45'!
+tree
+	accountToMakeReportFor collaborateWith: self.
+	^stringTree  ! !
+!Report class methodsFor: 'nil' stamp: 'CR 11/16/2020 15:36:08'!
+for: anAccount
+	^self new initializeFor: anAccount.! !
+
+!methodRemoval: AccountSummary class #for: stamp: 'CR 11/16/2020 15:36:12'!
+for: anAccount
+	^self new initializeFor: anAccount.!
+
+!methodRemoval: TransferNet class #for: stamp: 'CR 11/16/2020 15:36:16'!
+for: anAccount
+	^self new initializeFor: anAccount.!
+!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 15:41:17' prior: 50902559!
+tree
+	accountToMakeReportFor collaborateWith: self.
+	^stringTree  ! !
+
+Object subclass: #AccountReport
+	instanceVariableNames: 'accountToMakeReportFor collaborationAction'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classDefinition: #AccountReport category: 'Portfolio2' stamp: 'CR 11/16/2020 15:43:33'!
+Object subclass: #AccountReport
+	instanceVariableNames: 'accountToMakeReportFor collaborationAction'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classRemoval: #AccountReport stamp: 'CR 11/16/2020 15:43:56'!
+Object subclass: #AccountReport
+	instanceVariableNames: 'accountToMakeReportFor collaborationAction'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!classRenamed: #Report as: #AccountReport stamp: 'CR 11/16/2020 15:44:06'!
+Smalltalk renameClassNamed: #Report as: #AccountReport!
+!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 15:45:43' prior: 50902577!
+tree
+	accountToMakeReportFor collaborateWithTree: self ofLevel: -1.
+	^stringTree  ! !
+!TreeRepresentation methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 15:46:02' prior: 50902608!
+tree
+	accountToMakeReportFor collaborateWithTreeLevel: self of: -1.
+	^stringTree  ! !
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:47:05'!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+
+	accounts do: [:anAccount | anAccount collaborateWithTreeLevel: aReportToCollaborateWith  of: aTreeLevel + 1].
+	! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:48:11'!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	! !
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:49:24' prior: 50902620!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	
+	aReportToCollaborateWith collaboratingPortfolio: self.
+	accounts do: [:anAccount | anAccount collaborateWithTreeLevel: aReportToCollaborateWith  of: aTreeLevel + 1].
+	! !
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:49:55' prior: 50902635!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	
+	aReportToCollaborateWith collaboratingPortfolio: self onLevel: aTreeLevel.
+	accounts do: [:anAccount | anAccount collaborateWithTreeLevel: aReportToCollaborateWith  of: aTreeLevel + 1].
+	! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:50:26' prior: 50902629!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	aReportToCollaborateWith collaboratingReceptiveAccount: self onLevel: aTreeLevel.! !
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:55:02' prior: 50902646!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.
+	accounts do: [:anAccount | anAccount collaborateWithTreeLevel: aReportToCollaborateWith  of: aTreeLevel + 1].
+	! !
+!Account methodsFor: 'nil' stamp: 'CR 11/16/2020 15:55:13'!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	! !
+!Account methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 15:56:20' prior: 50902676!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithTransactionResult: resultOfCollaboration.! !
+!Portfolio methodsFor: 'nil' stamp: 'CR 11/16/2020 15:56:52'!
+executeCollaboration: aCollaborationToExecute onLevel: aTreeLevel
+	! !
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 15:57:45' prior: 50902693!
+executeCollaboration: aCollaborationToExecute onLevel: aTreeLevel
+	^ aCollaborationToExecute collaboratingPortfolio: self onLevel: aTreeLevel.! !
+!ReceptiveAccount methodsFor: 'nil' stamp: 'CR 11/16/2020 15:58:00'!
+executeCollaboration: aCollaborationToExecute onLevel: aTreeLevel
+	^ aCollaborationToExecute collaboratingReceptiveAccount: self onLevel: aTreeLevel.! !
+!IndentedTreeString methodsFor: 'nil' stamp: 'CR 11/16/2020 15:58:42'!
+collaboratingPortfolio: aPortfolio onLevel: aTreeLevel
+	! !
+!IndentedTreeString methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 16:00:05' prior: 50902713!
+collaboratingPortfolio: aPortfolio onLevel: anIndentationLevel
+	^ (self calculateIndentation: anIndentationLevel) , aPortfolio name.! !
+!IndentedTreeString methodsFor: 'nil' stamp: 'CR 11/16/2020 16:00:32'!
+collaboratingReceptiveAccount: aReceptiveAccount onLevel: anIndentationLevel
+	^ (self calculateIndentation: anIndentationLevel) , ReceptiveAccount name.! !
+!IndentedTreeString methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 16:00:39' prior: 50902726!
+collaboratingReceptiveAccount: aReceptiveAccount onLevel: anIndentationLevel
+	^ (self calculateIndentation: anIndentationLevel) , aReceptiveAccount name.! !
+!IndentedTreeString methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 16:01:13'!
+calculateIndentation: anIndentationLevel! !
+
+String new: 1 withAll: ' '.!
+
+String new: 1 withAll: $ .!
+
+String new: 0 withAll: $ .!
+!IndentedTreeString methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 16:06:32' prior: 50902743!
+calculateIndentation: anIndentationLevel
+	^ String new: anIndentationLevel withAll: $ . ! !
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:08:30' prior: 50902735!
+collaboratingReceptiveAccount: aReceptiveAccount onLevel: anIndentationLevel
+	^ self indentWithSpaces: anIndentationLevel andConcatenateName: aReceptiveAccount name.! !
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:08:54'!
+indentWithSpaces: anIndentationLevel andConcatenateName: aNameToConcatenateWith
+	^ (self calculateIndentation: anIndentationLevel) , aNameToConcatenateWith.! !
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:09:14' prior: 50902719!
+collaboratingPortfolio: aPortfolio onLevel: anIndentationLevel
+	^ self indentWithSpaces: anIndentationLevel andConcatenateName: aPortfolio name.! !
+!Account methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 16:09:36' prior: 50902681!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithAccountResult: resultOfCollaboration.! !
+!TreeRepresentation methodsFor: 'nil' stamp: 'CR 11/16/2020 16:10:46'!
+collaborationWithAccountResult: anAccountStringRepresentation
+	stringTree add: anAccountStringRepresentation.! !
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:15:16'!
+test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentation for: fedesEmptyAccount. 
+	self assert: emptyAccountSummary = treeRepresentationOfEmptyAccount tree.! !
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:15:49' prior: 50902803!
+test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentation for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:15:51'!
+ERROR!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:15:51'!
+ERROR!
+!TreeRepresentation methodsFor: 'collaboration' stamp: 'CR 11/16/2020 16:16:35' prior: 50902614!
+tree
+	accountToMakeReportFor collaborateWithTreeLevel: self of: 0.
+	^stringTree  ! !
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:17:07'!
+ERROR!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:17:07'!
+ERROR!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:17:29'!
+ERROR!
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:19:06' prior: 50902658!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	self collaboratingWith: aReportToCollaborateWith onLevel: aTreeLevel.! !
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:19:22' prior: 50902858!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.! !
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:19:29'!
+FAILURE!
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:19:29'!
+FAILURE!
+
+treeRepresentationOfEmptyAccount tree!
+
+self indentWithSpaces: anIndentationLevel andConcatenateName: aReceptiveAccount name.!
+!Account methodsFor: 'nil' stamp: 'CR 11/16/2020 16:23:03' overrides: 16882612!
+name
+	^name ! !
+
+!testRun: #ReportTest #test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName stamp: 'CR 11/16/2020 16:23:18'!
+PASSED!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:24:44'!
+test14TreeRepresentationOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentation for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' ) isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+
+!testRun: #ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 16:24:46'!
+ERROR!
+
+!testRun: #ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 16:24:46'!
+ERROR!
+!Portfolio class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 16:25:15'!
+named: portfolioName
+	^(self new initializeWithName:  portfolioName)
+		yourself! !
+
+!testRun: #ReportTest #test14TreeRepresentationOfAnEmptyPortfolioIsItsName stamp: 'CR 11/16/2020 16:25:25'!
+PASSED!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:27:25'!
+test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan'). 
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentation for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: 'Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+!testRun: #ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:27:28'!
+FAILURE!
+
+!testRun: #ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:27:28'!
+FAILURE!
+
+treeRepresentationOfPortfolioWithOneAccount tree!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:28:03' prior: 50902924!
+test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan'). 
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentation for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+!testRun: #ReportTest #test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly stamp: 'CR 11/16/2020 16:28:06'!
+PASSED!
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:29:23'!
+test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio juansPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de Juan'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Fede').
+	fedesPortfolio add: juansPortfolio.
+	juansPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan').
+	  
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentation for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+!ReportTest methodsFor: 'account summary tests' stamp: 'CR 11/16/2020 16:30:13' prior: 50902975!
+test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio juansPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de Juan'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Fede').
+	fedesPortfolio add: juansPortfolio.
+	juansPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan').	  
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentation for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Fede' with: ' Portfolio de Juan' with: '  Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+!testRun: #ReportTest #test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly stamp: 'CR 11/16/2020 16:30:22'!
+PASSED!

@@ -393,6 +393,40 @@ assertThat:  aCollection isEqualTo: aCollectionToBeComparedTo
 	self assert: (aCollectionToBeComparedTo allSatisfy: [:anElement | aCollection includes: anElement ]).! !
 
 
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 16:15:49'!
+test13TreeRepresentationOfAnEmptyReceptiveAccountIsItsName
+	| treeRepresentationOfEmptyAccount fedesEmptyAccount |
+	fedesEmptyAccount := ReceptiveAccount named: 'Cuenta vacia de Fede'.
+	treeRepresentationOfEmptyAccount := TreeRepresentation for: fedesEmptyAccount. 
+	self assertThat: (OrderedCollection with: 'Cuenta vacia de Fede' ) isEqualTo: treeRepresentationOfEmptyAccount tree.! !
+
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 16:24:44'!
+test14TreeRepresentationOfAnEmptyPortfolioIsItsName
+	| treeRepresentationOfEmptyPortfolio fedesEmptyPortfolio |
+	fedesEmptyPortfolio := Portfolio named: 'Portfolio vacio de Fede'.
+	treeRepresentationOfEmptyPortfolio := TreeRepresentation for: fedesEmptyPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio vacio de Fede' ) isEqualTo: treeRepresentationOfEmptyPortfolio tree.! !
+
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 16:28:03'!
+test15TreeRepresentationOfPortfolioWithOneAccountWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan'). 
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentation for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+!ReportTest methodsFor: 'tree representation tests' stamp: 'CR 11/16/2020 16:30:13'!
+test16TreeRepresentationOfPortfolioWithManyAccountsWorksCorrectly
+	| treeRepresentationOfPortfolioWithOneAccount fedesPortfolio juansPortfolio |
+	fedesPortfolio := Portfolio named: 'Portfolio de Fede'.
+	juansPortfolio := Portfolio named: 'Portfolio de Juan'.
+	fedesPortfolio add: (ReceptiveAccount named: 'Cuenta de Fede').
+	fedesPortfolio add: juansPortfolio.
+	juansPortfolio add: (ReceptiveAccount named: 'Cuenta de Juan').	  
+	treeRepresentationOfPortfolioWithOneAccount := TreeRepresentation for: fedesPortfolio. 
+	self assertThat: (OrderedCollection with: 'Portfolio de Fede' with: ' Cuenta de Fede' with: ' Portfolio de Juan' with: '  Cuenta de Juan') isEqualTo: treeRepresentationOfPortfolioWithOneAccount tree.! !
+
+
 !ReportTest methodsFor: 'transfer net tests' stamp: 'CR 11/16/2020 03:08:57'!
 test07TransferNetOfAnEmptyReceptiveAccountIsEmpty
 	| transferNetOfEmptyAccount |
@@ -508,7 +542,7 @@ test07CanNavigateFromTransferDepositToWithdrawAndViceversa
 
 !classDefinition: #Account category: 'Portfolio2'!
 Object subclass: #Account
-	instanceVariableNames: ''
+	instanceVariableNames: 'name'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio2'!
@@ -545,6 +579,18 @@ transactions
 addedTo: aPortfolio
 
 	self subclassResponsibility ! !
+
+
+!Account methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:09:36'!
+collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel
+	| resultOfCollaboration | 
+	resultOfCollaboration := self executeCollaboration: (aReportToCollaborateWith collaboration) onLevel: aTreeLevel. 
+	aReportToCollaborateWith collaborationWithAccountResult: resultOfCollaboration.! !
+
+
+!Account methodsFor: 'accessing' stamp: 'CR 11/16/2020 16:23:03'!
+name
+	^name ! !
 
 
 !classDefinition: #Portfolio category: 'Portfolio2'!
@@ -594,6 +640,13 @@ initialize
 
 	accounts := OrderedCollection new.
 	parents := OrderedCollection new.! !
+
+!Portfolio methodsFor: 'initialization' stamp: 'CR 11/16/2020 15:24:42'!
+initializeWithName:  portfolioNameToBeInitializedWith
+
+	accounts := OrderedCollection new.
+	parents := OrderedCollection new.
+	name := portfolioNameToBeInitializedWith. ! !
 
 
 !Portfolio methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:19:36'!
@@ -665,31 +718,63 @@ collaborateWith: aReportToCollaborateWith
 	accounts do: [:anAccount | anAccount collaborateWith: aReportToCollaborateWith].
 	! !
 
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:55:02'!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.
+	accounts do: [:anAccount | anAccount collaborateWithTreeLevel: aReportToCollaborateWith  of: aTreeLevel + 1].
+	! !
+
+!Portfolio methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:57:45'!
+executeCollaboration: aCollaborationToExecute onLevel: aTreeLevel
+	^ aCollaborationToExecute collaboratingPortfolio: self onLevel: aTreeLevel.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Portfolio class' category: 'Portfolio2'!
 Portfolio class
 	instanceVariableNames: ''!
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'NR 11/9/2020 06:01:26'!
-canNotAddAccountErrorMessage
-	
-	^'Can not add repeated account to a portfolio!!'! !
+!Portfolio class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 16:25:15'!
+named: portfolioName
+	^(self new initializeWithName:  portfolioName)
+		yourself! !
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'HAW 5/25/2019 11:18:21'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 15:20:54'!
+named: portfolioName with: anAccount
+
+	^(self new initializeWithName:  portfolioName)
+		add: anAccount;
+		yourself! !
+
+!Portfolio class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 15:22:05'!
+named: portfolioName with: anAccount with: anotherAccount
+
+	^(self new initializeWithName: portfolioName) 
+		add: anAccount;
+		add: anotherAccount;
+		yourself! !
+
+!Portfolio class methodsFor: 'instance creation' stamp: 'HAW 5/25/2019 11:18:21'!
 with: anAccount
 
 	^self new 
 		add: anAccount;
 		yourself! !
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'HAW 5/25/2019 11:23:59'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'HAW 5/25/2019 11:23:59'!
 with: anAccount with: anotherAccount
 
 	^self new 
 		add: anAccount;
 		add: anotherAccount;
 		yourself! !
+
+
+!Portfolio class methodsFor: 'error messages' stamp: 'NR 11/9/2020 06:01:26'!
+canNotAddAccountErrorMessage
+	
+	^'Can not add repeated account to a portfolio!!'! !
 
 
 !classDefinition: #ReceptiveAccount category: 'Portfolio2'!
@@ -704,6 +789,13 @@ initialize
 
 	super initialize.
 	transactions := OrderedCollection new.! !
+
+!ReceptiveAccount methodsFor: 'initialization' stamp: 'CR 11/16/2020 15:24:30'!
+initializeWithName: receptiveAccountNameToBeInitializedWith
+
+	super initialize.
+	transactions := OrderedCollection new.
+	name := receptiveAccountNameToBeInitializedWith.! !
 
 
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'NR 11/9/2020 05:56:36'!
@@ -753,6 +845,125 @@ addedTo: aPortfolio
 collaborateWith: aReportToCollaborateWith
 
 	transactions do: [:aTransaction | aTransaction collaborateWith: aReportToCollaborateWith].
+	! !
+
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 16:19:22'!
+collaborateWithTreeLevel: aReportToCollaborateWith of: aTreeLevel
+	self collaborateWith: aReportToCollaborateWith onLevel: aTreeLevel.! !
+
+!ReceptiveAccount methodsFor: 'report collaboration' stamp: 'CR 11/16/2020 15:58:00'!
+executeCollaboration: aCollaborationToExecute onLevel: aTreeLevel
+	^ aCollaborationToExecute collaboratingReceptiveAccount: self onLevel: aTreeLevel.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'ReceptiveAccount class' category: 'Portfolio2'!
+ReceptiveAccount class
+	instanceVariableNames: ''!
+
+!ReceptiveAccount class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 15:23:42'!
+named: receptiveAccountName
+	^self new initializeWithName: receptiveAccountName. ! !
+
+
+!classDefinition: #AccountReport category: 'Portfolio2'!
+Object subclass: #AccountReport
+	instanceVariableNames: 'accountToMakeReportFor collaborationAction'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!AccountReport methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 01:51:05'!
+collaboration
+	^ collaborationAction.! !
+
+!AccountReport methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 01:40:25'!
+collaborationWithTransactionResult: resultOfCollaboration
+	self subclassResponsibility.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AccountReport class' category: 'Portfolio2'!
+AccountReport class
+	instanceVariableNames: ''!
+
+!AccountReport class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 15:36:08'!
+for: anAccount
+	^self new initializeFor: anAccount.! !
+
+
+!classDefinition: #AccountSummary category: 'Portfolio2'!
+AccountReport subclass: #AccountSummary
+	instanceVariableNames: 'summary'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!AccountSummary methodsFor: 'initialization' stamp: 'CR 11/16/2020 01:49:08'!
+initializeFor: anAccount 
+	accountToMakeReportFor := anAccount.
+	summary := OrderedCollection new.
+	collaborationAction := SummaryString new.
+	! !
+
+
+!AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:40:52'!
+collaborationWithTransactionResult: resultOfCollaboration
+	summary add: resultOfCollaboration.! !
+
+!AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:49:41'!
+summary
+	accountToMakeReportFor collaborateWith: self.  
+	^summary.! !
+
+
+!classDefinition: #TransferNet category: 'Portfolio2'!
+AccountReport subclass: #TransferNet
+	instanceVariableNames: 'transferNetAmount'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!TransferNet methodsFor: 'initialization' stamp: 'CR 11/16/2020 01:50:00'!
+initializeFor: anAccount
+	accountToMakeReportFor := anAccount.
+	transferNetAmount := 0.
+	collaborationAction := CalculateNet new.
+	! !
+
+
+!TransferNet methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:41:36'!
+collaborationWithTransactionResult: resultOfCollaboration
+	transferNetAmount := transferNetAmount + resultOfCollaboration.! !
+
+!TransferNet methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:49:49'!
+net
+	accountToMakeReportFor collaborateWith: self.  
+	^transferNetAmount.! !
+
+
+!classDefinition: #TreeRepresentation category: 'Portfolio2'!
+AccountReport subclass: #TreeRepresentation
+	instanceVariableNames: 'stringTree'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!TreeRepresentation methodsFor: 'collaboration' stamp: 'CR 11/16/2020 16:10:46'!
+collaborationWithAccountResult: anAccountStringRepresentation
+	stringTree add: anAccountStringRepresentation.! !
+
+!TreeRepresentation methodsFor: 'collaboration' stamp: 'CR 11/16/2020 16:16:35'!
+tree
+	accountToMakeReportFor collaborateWithTreeLevel: self of: 0.
+	^stringTree  ! !
+
+
+!TreeRepresentation methodsFor: 'initialization' stamp: 'CR 11/16/2020 15:34:14'!
+initializeFor: anAccount 
+	accountToMakeReportFor := anAccount.
+	stringTree := OrderedCollection new.
+	collaborationAction := IndentedTreeString new.
 	! !
 
 
@@ -961,92 +1172,6 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
-!classDefinition: #Report category: 'Portfolio2'!
-Object subclass: #Report
-	instanceVariableNames: 'accountToMakeReportFor collaborationAction'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Portfolio2'!
-
-!Report methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 01:51:05'!
-collaboration
-	^ collaborationAction.! !
-
-!Report methodsFor: 'as yet unclassified' stamp: 'CR 11/16/2020 01:40:25'!
-collaborationWithTransactionResult: resultOfCollaboration
-	self subclassResponsibility.! !
-
-
-!classDefinition: #AccountSummary category: 'Portfolio2'!
-Report subclass: #AccountSummary
-	instanceVariableNames: 'summary'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Portfolio2'!
-
-!AccountSummary methodsFor: 'initialization' stamp: 'CR 11/16/2020 01:49:08'!
-initializeFor: anAccount 
-	accountToMakeReportFor := anAccount.
-	summary := OrderedCollection new.
-	collaborationAction := SummaryString new.
-	! !
-
-
-!AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:40:52'!
-collaborationWithTransactionResult: resultOfCollaboration
-	summary add: resultOfCollaboration.! !
-
-!AccountSummary methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:49:41'!
-summary
-	accountToMakeReportFor collaborateWith: self.  
-	^summary.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'AccountSummary class' category: 'Portfolio2'!
-AccountSummary class
-	instanceVariableNames: ''!
-
-!AccountSummary class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 00:23:36'!
-for: anAccount
-	^self new initializeFor: anAccount.! !
-
-
-!classDefinition: #TransferNet category: 'Portfolio2'!
-Report subclass: #TransferNet
-	instanceVariableNames: 'transferNetAmount'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Portfolio2'!
-
-!TransferNet methodsFor: 'initialization' stamp: 'CR 11/16/2020 01:50:00'!
-initializeFor: anAccount
-	accountToMakeReportFor := anAccount.
-	transferNetAmount := 0.
-	collaborationAction := CalculateNet new.
-	! !
-
-
-!TransferNet methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:41:36'!
-collaborationWithTransactionResult: resultOfCollaboration
-	transferNetAmount := transferNetAmount + resultOfCollaboration.! !
-
-!TransferNet methodsFor: 'collaboration' stamp: 'CR 11/16/2020 01:49:49'!
-net
-	accountToMakeReportFor collaborateWith: self.  
-	^transferNetAmount.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferNet class' category: 'Portfolio2'!
-TransferNet class
-	instanceVariableNames: ''!
-
-!TransferNet class methodsFor: 'instance creation' stamp: 'CR 11/16/2020 00:24:02'!
-for: anAccount
-	^self new initializeFor: anAccount.! !
-
-
 !classDefinition: #ReportAction category: 'Portfolio2'!
 Object subclass: #ReportAction
 	instanceVariableNames: ''
@@ -1093,6 +1218,30 @@ collaboratingTransferWithdraw: aTransferWithdraw
 !CalculateNet methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 01:36:00'!
 collaboratingWithdraw: aWithdraw
 	^  0.! !
+
+
+!classDefinition: #IndentedTreeString category: 'Portfolio2'!
+ReportAction subclass: #IndentedTreeString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio2'!
+
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:06:32'!
+calculateIndentation: anIndentationLevel
+	^ String new: anIndentationLevel withAll: $ . ! !
+
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:09:14'!
+collaboratingPortfolio: aPortfolio onLevel: anIndentationLevel
+	^ self indentWithSpaces: anIndentationLevel andConcatenateName: aPortfolio name.! !
+
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:08:30'!
+collaboratingReceptiveAccount: aReceptiveAccount onLevel: anIndentationLevel
+	^ self indentWithSpaces: anIndentationLevel andConcatenateName: aReceptiveAccount name.! !
+
+!IndentedTreeString methodsFor: 'transaction collaboration' stamp: 'CR 11/16/2020 16:08:54'!
+indentWithSpaces: anIndentationLevel andConcatenateName: aNameToConcatenateWith
+	^ (self calculateIndentation: anIndentationLevel) , aNameToConcatenateWith.! !
 
 
 !classDefinition: #SummaryString category: 'Portfolio2'!
