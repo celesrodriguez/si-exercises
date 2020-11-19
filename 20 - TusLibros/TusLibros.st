@@ -77,6 +77,37 @@ test06AddingNegativeQuantityOfBooksRaisesError
 	withMessageText: ( Cart cantAddNegativeQuantityOfBooks).
 	! !
 
+!CartTest methodsFor: 'tests' stamp: 'CR 11/19/2020 15:12:33'!
+test07ListEmptyCartGivesEmptyList
+	
+	self assert: aCart listBooks = 'The cart has no items'.! !
+
+!CartTest methodsFor: 'tests' stamp: 'CR 11/19/2020 15:23:33'!
+test08ListCartWithOneBookWorksCorrectly
+	
+	aCart add: anISBN times: 1.
+	
+	self assert: aCart listBooks = '#(''ISBN #123'' -> 1)'.! !
+
+!CartTest methodsFor: 'tests' stamp: 'CR 11/19/2020 15:23:40'!
+test09ListCartWithOneBookMultipleTimesWorksCorrectly
+	
+	aCart add: anISBN times: 1.
+	aCart add: anISBN times: 5.
+	
+	self assert: aCart listBooks = '#(''ISBN #123'' -> 6)'.! !
+
+!CartTest methodsFor: 'tests' stamp: 'CR 11/19/2020 15:23:43'!
+test10ListCartWithManyBooksMultipleTimesWorksCorrectly
+	
+	aCart add: anISBN times: 1.	
+	aCart add: anotherISBN times: 1.
+	
+	aCart add: anISBN times: 4.	
+	aCart add: anotherISBN times: 5.
+	
+	self assert: aCart listBooks = '#(''ISBN #127'' -> 6 ''ISBN #123'' -> 5)'.! !
+
 
 !classDefinition: #Cart category: 'TusLibros'!
 Object subclass: #Cart
@@ -103,10 +134,6 @@ hasBook: anISBN times: quantity
 !Cart methodsFor: 'accessing' stamp: 'BT 11/19/2020 00:50:39'!
 idIs: aCartID
 	^ cartID = aCartID.! !
-
-!Cart methodsFor: 'accessing' stamp: 'BT 11/19/2020 02:10:09'!
-listBooks 
-	^ booksInCart associations.! !
 
 
 !Cart methodsFor: 'signals' stamp: 'BT 11/19/2020 02:18:27'!
@@ -147,6 +174,11 @@ add: anISBN times: bookQuantityToAdd
 	self checkIfPresent: anISBN andAdd: bookQuantityToAdd.
 	
 	! !
+
+!Cart methodsFor: 'actions' stamp: 'CR 11/19/2020 15:23:26'!
+listBooks 
+	booksInCart ifEmpty: [^ 'The cart has no items'].
+	^ booksInCart associations asString.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
