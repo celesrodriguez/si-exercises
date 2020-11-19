@@ -16,15 +16,15 @@ setUp
 	
 	anotherCart := Cart withID: aCartID ofClient: aClientID .! !
 
-!CartTest methodsFor: 'tests' stamp: 'BT 11/19/2020 02:36:40'!
+!CartTest methodsFor: 'tests' stamp: 'BT 11/19/2020 16:28:09'!
 test01CreateCartWithClientIDAndCartIDWorksCorrectly
-	| JohnCartID clientJohnID JohnCart |
+	| JohnsCartID clientJohnID JohnsCart |
 	clientJohnID := 12.
-	JohnCartID := 13.
-	JohnCart := Cart withID: JohnCartID ofClient: clientJohnID.
+	JohnsCartID := 13.
+	JohnsCart := Cart withID: JohnsCartID ofClient: clientJohnID.
 	
-	self assert: (JohnCart belongsTo: clientJohnID).
-	self assert: (JohnCart idIs: JohnCartID).
+	self assert: (JohnsCart belongsTo: clientJohnID).
+	self assert: (JohnsCart idIs: JohnsCartID).
 	 ! !
 
 !CartTest methodsFor: 'tests' stamp: 'BT 11/19/2020 02:48:32'!
@@ -55,7 +55,7 @@ test04AddingOneBookMultipleTimesToCartWorksCorrectly
 
 	 ! !
 
-!CartTest methodsFor: 'tests' stamp: 'BT 11/19/2020 02:48:42'!
+!CartTest methodsFor: 'tests' stamp: 'BT 11/19/2020 16:29:10'!
 test05AddingManyBooksManyTimesToCartWorksCorrectly
 	
 	aCart add: anISBN times: 1.	
@@ -63,7 +63,6 @@ test05AddingManyBooksManyTimesToCartWorksCorrectly
 	
 	aCart add: anISBN times: 4.	
 	aCart add: anotherISBN times: 5.
-	
 	
 	self assert: (aCart hasBook: anISBN times: 5).
 	self assert: (aCart hasBook: anotherISBN times: 6).
