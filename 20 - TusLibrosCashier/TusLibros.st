@@ -145,9 +145,13 @@ createCartWithOneItem
 	^ cart
 ! !
 
-!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 00:56:22'!
+!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:28:31'!
 createCashier
 	^ Cashier new.! !
+
+!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:27:26'!
+createCashierWithMerchatProcessorSimulatorOfValidOperations
+	^ Cashier withMerchantProcessor: MPSimulatorValidPayment new.! !
 
 !CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 01:22:38'!
 createInvalidCreditCard
@@ -175,20 +179,88 @@ defaultCatalog
 	^ catalog 
 ! !
 
-!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 02:13:27'!
+!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:41:41'!
 test01checkOutCartWithOneItemWithValidCardWorksCorrectly
 
 	| cashier cartWithOneItem ticket creditCart |
 	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
 	cartWithOneItem := self createCartWithOneItem.
 	creditCart := self createValidCreditCard.
-	ticket := cashier checkOut: (self createCartWithManyItems ) usingCreditCard: creditCart of: 'Carlitos Ticona' .
+	ticket := cashier checkOut: cartWithOneItem usingCreditCard: creditCart of: 'Carlitos Ticona' .
 	
 	self assert: (ticket amountCharged = 3.5).
-	self assert: (ticket paidWithCreditCard = creditCart).
+	self assert: (ticket creditCardNumber = creditCart number).
 	self assert: (ticket paidBy = 'Carlitos Ticona')
 	
 	
+
+	
+! !
+
+!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:42:41'!
+test02checkOutCartWithManyItemsWithValidCardWorksCorrectly
+
+	| cashier ticket creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	ticket := cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .
+	
+	self assert: (ticket amountCharged = 18.7).
+	self assert: (ticket creditCardNumber = creditCart number).
+	self assert: (ticket paidBy = 'Carlitos Ticona')
+	
+	
+
+	
+! !
+
+!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:48:21'!
+test03checkOutCartWithExpiredCreditCardRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createInvalidCreditCard.
+
+	self should:  [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .]
+	raise:  Error
+	withMessageText: Cashier errorExpiredCreditCard.
+
+	
+! !
+
+!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:48:03'!
+test03checkOutCartWithInvalidCreditCardRaisesError
+
+	| cashier ticket creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createInvalidCreditCard.
+
+	self should:  [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .]
+	raise:  Error
+	withMessageText: Cashier errorExpiredCreditCard.
+
+	
+! !
+
+!CashierTest methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:50:22'!
+test04checkOutCartWhenNotOwnerIsPayingRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard .
+
+	self should:  [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Fulano' .]
+	raise:  Error
+	withMessageText: Cashier errorInvalidClientIsBuying.
 
 	
 ! !
@@ -297,11 +369,14 @@ signalInvalidClientIsBuying
 	! !
 
 
-!Cashier methodsFor: 'actions' stamp: 'BT 11/24/2020 01:53:55'!
+!Cashier methodsFor: 'actions' stamp: 'BT 11/26/2020 16:20:57'!
 checkOut: aCart usingCreditCard: aCreditCard of: buyingClient
+	| cartTotal idTransaction |
 	self verifyOwnerOf: aCreditCard is: buyingClient.
 	self verifyItIsaValidCreditCard: aCreditCard.
-	^ merchantProcessor charge: (aCart total) to: aCreditCard.
+	cartTotal :=  aCart total.
+	idTransaction := merchantProcessor charge: cartTotal to: aCreditCard.
+	^Ticket forTransaction: idTransaction doneBy: aCreditCard of: cartTotal.
 	
 	
 	! !
@@ -321,6 +396,10 @@ verifyOwnerOf: aCreditCard is: buyingClient.
 	
 	! !
 
+
+!Cashier methodsFor: 'initialization' stamp: 'BT 11/26/2020 16:30:22'!
+perfomCheckOutsWith: merchantProcessorToCollaborateWith
+	merchantProcessor := merchantProcessorToCollaborateWith.! !
 
 !Cashier methodsFor: 'initialization' stamp: 'BT 11/24/2020 01:46:11'!
 withMerchantProcessor: merchantProcessorToCollaborateWith
@@ -354,17 +433,22 @@ Object subclass: #CreditCard
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CreditCard methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 01:35:48'!
-expiration
-	^ expiration ! !
-
-!CreditCard methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 01:11:37'!
+!CreditCard methodsFor: 'initialization' stamp: 'BT 11/24/2020 01:11:37'!
 of: cardOwner expiratingOn: monthOfExpiration number: cardNumber
 	owner := cardOwner.
 	expiration := monthOfExpiration.
 	number := cardNumber.! !
 
-!CreditCard methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 01:35:38'!
+
+!CreditCard methodsFor: 'accessing' stamp: 'BT 11/24/2020 01:35:48'!
+expiration
+	^ expiration ! !
+
+!CreditCard methodsFor: 'accessing' stamp: 'BT 11/26/2020 16:20:02'!
+number
+	^ number ! !
+
+!CreditCard methodsFor: 'accessing' stamp: 'BT 11/24/2020 01:35:38'!
 owner
 	^ owner! !
 
@@ -424,30 +508,44 @@ MerchantProcessorSimulator subclass: #MPSimulatorValidPayment
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MPSimulatorValidPayment methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 02:02:29'!
+!MPSimulatorValidPayment methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:32:11'!
 charge: amountToPay to: aCreditCard
-	^ Receipt for: aCreditCard of: amountToPay.! !
+	^ '0192'! !
 
 
-!classDefinition: #Receipt category: 'TusLibros'!
-Object subclass: #Receipt
-	instanceVariableNames: 'client amountPaid creditCard'
+!classDefinition: #Ticket category: 'TusLibros'!
+Object subclass: #Ticket
+	instanceVariableNames: 'client amountPaid creditCardNumber transaction'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Receipt methodsFor: 'initialization' stamp: 'BT 11/24/2020 02:05:06'!
-for: aCreditCard of: amount
-	creditCard := aCreditCard.
+!Ticket methodsFor: 'accessing' stamp: 'BT 11/26/2020 16:16:29'!
+amountCharged
+	^ amountPaid ! !
+
+!Ticket methodsFor: 'accessing' stamp: 'BT 11/26/2020 16:39:21'!
+creditCardNumber
+	^ creditCardNumber.! !
+
+!Ticket methodsFor: 'accessing' stamp: 'BT 11/26/2020 16:21:33'!
+paidBy
+	^ client ! !
+
+
+!Ticket methodsFor: 'initialization' stamp: 'BT 11/26/2020 16:20:37'!
+forTransaction: idTransaction doneBy: aCreditCard of: amount.
+	transaction := idTransaction.
+	creditCardNumber := aCreditCard number.
 	amountPaid := 	amount.
 	client := aCreditCard owner.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Receipt class' category: 'TusLibros'!
-Receipt class
+!classDefinition: 'Ticket class' category: 'TusLibros'!
+Ticket class
 	instanceVariableNames: ''!
 
-!Receipt class methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 02:03:59'!
-for: aCreditCard of: amountToPay
-	^ self new for: aCreditCard of: amountToPay.! !
+!Ticket class methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:36:45'!
+forTransaction: idTransaction doneBy: aCreditCard of: amountToPay
+	^ self new forTransaction: idTransaction doneBy: aCreditCard of: amountToPay.! !
