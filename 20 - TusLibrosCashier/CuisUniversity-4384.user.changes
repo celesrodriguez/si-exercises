@@ -941,3 +941,56 @@ PASSED!
 
 !testRun: #CashierTest #test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError stamp: 'CR 11/26/2020 17:25:56'!
 PASSED!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:27:57'!
+test07checkOutCartAlreadyCheckedOutRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorInvalidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .
+	
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = Cashier errorCartAlreadyCheckedOut.
+		].
+	
+
+	
+! !
+
+!testRun: #CashierTest #test07checkOutCartAlreadyCheckedOutRaisesError stamp: 'CR 11/26/2020 17:28:01'!
+ERROR!
+
+!testRun: #CashierTest #test07checkOutCartAlreadyCheckedOutRaisesError stamp: 'CR 11/26/2020 17:28:01'!
+ERROR!
+
+!testRun: #CashierTest #test07checkOutCartAlreadyCheckedOutRaisesError stamp: 'CR 11/26/2020 17:28:10'!
+ERROR!
+
+!testRun: #CashierTest #test07checkOutCartAlreadyCheckedOutRaisesError stamp: 'CR 11/26/2020 17:28:10'!
+ERROR!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:28:18' prior: 50908229!
+test07checkOutCartAlreadyCheckedOutRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .
+	
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = Cashier errorCartAlreadyCheckedOut.
+		].
+	
+
+	
+! !
+
+!testRun: #CashierTest #test07checkOutCartAlreadyCheckedOutRaisesError stamp: 'CR 11/26/2020 17:28:24'!
+PASSED!

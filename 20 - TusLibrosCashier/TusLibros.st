@@ -292,6 +292,26 @@ test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError
 	
 ! !
 
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:28:18'!
+test07checkOutCartAlreadyCheckedOutRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .
+	
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = Cashier errorCartAlreadyCheckedOut.
+		].
+	
+
+	
+! !
+
 
 !classDefinition: #Cart category: 'TusLibros'!
 Object subclass: #Cart
