@@ -726,3 +726,218 @@ test04checkOutCartWhenNotOwnerIsPayingRaisesError
 
 	
 ! !
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:18:08' prior: 50907726!
+test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorInvalidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	
+	self should: [] raise: Error withExceptionDo: [].
+	self should:  [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .]
+	raise:  Error
+	withMessageText: MPSimulatorInvalidPayment errorUnsuccesfulPayment. 
+	
+	
+	
+
+	
+! !
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:20:09' prior: 50907962!
+test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorInvalidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		anError messageText = MPSimulatorInvalidPayment errorUnsuccesfulPayment.
+		self deny: cartWithManyItems alreadyCheckedOut.
+		].
+	
+
+	
+! !
+
+!testRun: #CashierTest #test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError stamp: 'CR 11/26/2020 17:20:11'!
+PASSED!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:20:30' prior: 50907638!
+test05checkOutCartWithOneItemWithValidCreditCardButInvalidPaymentRaisesError
+
+	| cashier cartWithOneItem creditCart |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorInvalidPayment new. 
+	cartWithOneItem := self createCartWithOneItem.
+	creditCart := self createValidCreditCard.
+	
+	self should: [cashier checkOut: cartWithOneItem usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		anError messageText = MPSimulatorInvalidPayment errorUnsuccesfulPayment.
+		self deny: cartWithOneItem alreadyCheckedOut.
+		].
+
+	
+! !
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:21:19' prior: 50906960!
+test03checkOutCartWithExpiredCreditCardRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createInvalidCreditCard.
+
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = Cashier errorExpiredCreditCard.
+		self deny: cartWithManyItems alreadyCheckedOut.
+		].
+
+	
+! !
+
+!testRun: #CashierTest #test03checkOutCartWithExpiredCreditCardRaisesError stamp: 'CR 11/26/2020 17:21:20'!
+PASSED!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:21:28' prior: 50908010!
+test05checkOutCartWithOneItemWithValidCreditCardButInvalidPaymentRaisesError
+
+	| cashier cartWithOneItem creditCart |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorInvalidPayment new. 
+	cartWithOneItem := self createCartWithOneItem.
+	creditCart := self createValidCreditCard.
+	
+	self should: [cashier checkOut: cartWithOneItem usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = MPSimulatorInvalidPayment errorUnsuccesfulPayment.
+		self deny: cartWithOneItem alreadyCheckedOut.
+		].
+
+	
+! !
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:21:33' prior: 50907983!
+test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorInvalidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = MPSimulatorInvalidPayment errorUnsuccesfulPayment.
+		self deny: cartWithManyItems alreadyCheckedOut.
+		].
+	
+
+	
+! !
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:22:06' prior: 50907945!
+test04checkOutCartWhenNotOwnerIsPayingRaisesError
+
+	| cashier creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard .
+
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Fulano' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = Cashier errorInvalidClientIsBuying.
+		self deny: cartWithManyItems alreadyCheckedOut.
+		].
+	
+! !
+
+!testRun: #CashierTest #test04checkOutCartWhenNotOwnerIsPayingRaisesError stamp: 'CR 11/26/2020 17:22:08'!
+PASSED!
+
+!testRun: #CashierTest #test01checkOutCartWithOneItemWithValidCreditCardAndValidPaymentWorksCorrectly stamp: 'CR 11/26/2020 17:22:21'!
+PASSED!
+
+!testRun: #CashierTest #test02checkOutCartWithManyItemsWithValidCreditCardAndValidPaymentWorksCorrectly stamp: 'CR 11/26/2020 17:22:22'!
+PASSED!
+
+!testRun: #CashierTest #test03checkOutCartWithExpiredCreditCardRaisesError stamp: 'CR 11/26/2020 17:22:22'!
+PASSED!
+
+!testRun: #CashierTest #test04checkOutCartWhenNotOwnerIsPayingRaisesError stamp: 'CR 11/26/2020 17:22:22'!
+PASSED!
+
+!testRun: #CashierTest #test05checkOutCartWithOneItemWithValidCreditCardButInvalidPaymentRaisesError stamp: 'CR 11/26/2020 17:22:22'!
+PASSED!
+
+!testRun: #CashierTest #test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError stamp: 'CR 11/26/2020 17:22:22'!
+PASSED!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:23:04' prior: 50907495!
+test01checkOutCartWithOneItemWithValidCreditCardAndValidPaymentWorksCorrectly
+
+	| cashier cartWithOneItem ticket creditCart |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithOneItem := self createCartWithOneItem.
+	creditCart := self createValidCreditCard.
+	ticket := cashier checkOut: cartWithOneItem usingCreditCard: creditCart of: 'Carlitos Ticona' .
+	
+	self assert: (ticket amountCharged = 3.5).
+	self assert: (ticket creditCardNumber = creditCart number).
+	self assert: (ticket paidBy = 'Carlitos Ticona').
+	self assert: cartWithOneItem alreadyCheckedOut.
+	
+	
+
+	
+! !
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:23:14' prior: 50907409!
+test02checkOutCartWithManyItemsWithValidCreditCardAndValidPaymentWorksCorrectly
+
+	| cashier ticket creditCart cartWithManyItems |
+	cashier := self createCashier.
+	cashier perfomCheckOutsWith: MPSimulatorValidPayment new.
+	cartWithManyItems := self createCartWithManyItems.
+	creditCart := self createValidCreditCard.
+	ticket := cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .
+	
+	self assert: (ticket amountCharged = 18.7).
+	self assert: (ticket creditCardNumber = creditCart number).
+	self assert: (ticket paidBy = 'Carlitos Ticona').
+	self assert: cartWithManyItems alreadyCheckedOut.
+	
+	
+
+	
+! !
+
+!methodRemoval: Cashier #withMerchantProcessor: stamp: 'CR 11/26/2020 17:23:46'!
+withMerchantProcessor: merchantProcessorToCollaborateWith
+	merchantProcessor := merchantProcessorToCollaborateWith.!
+
+!testRun: #CashierTest #test01checkOutCartWithOneItemWithValidCreditCardAndValidPaymentWorksCorrectly stamp: 'CR 11/26/2020 17:25:56'!
+PASSED!
+
+!testRun: #CashierTest #test02checkOutCartWithManyItemsWithValidCreditCardAndValidPaymentWorksCorrectly stamp: 'CR 11/26/2020 17:25:56'!
+PASSED!
+
+!testRun: #CashierTest #test03checkOutCartWithExpiredCreditCardRaisesError stamp: 'CR 11/26/2020 17:25:56'!
+PASSED!
+
+!testRun: #CashierTest #test04checkOutCartWhenNotOwnerIsPayingRaisesError stamp: 'CR 11/26/2020 17:25:56'!
+PASSED!
+
+!testRun: #CashierTest #test05checkOutCartWithOneItemWithValidCreditCardButInvalidPaymentRaisesError stamp: 'CR 11/26/2020 17:25:56'!
+PASSED!
+
+!testRun: #CashierTest #test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError stamp: 'CR 11/26/2020 17:25:56'!
+PASSED!

@@ -176,7 +176,7 @@ defaultCatalog
 ! !
 
 
-!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 16:58:18'!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:23:04'!
 test01checkOutCartWithOneItemWithValidCreditCardAndValidPaymentWorksCorrectly
 
 	| cashier cartWithOneItem ticket creditCart |
@@ -188,14 +188,15 @@ test01checkOutCartWithOneItemWithValidCreditCardAndValidPaymentWorksCorrectly
 	
 	self assert: (ticket amountCharged = 3.5).
 	self assert: (ticket creditCardNumber = creditCart number).
-	self assert: (ticket paidBy = 'Carlitos Ticona')
+	self assert: (ticket paidBy = 'Carlitos Ticona').
+	self assert: cartWithOneItem alreadyCheckedOut.
 	
 	
 
 	
 ! !
 
-!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 16:57:48'!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:23:14'!
 test02checkOutCartWithManyItemsWithValidCreditCardAndValidPaymentWorksCorrectly
 
 	| cashier ticket creditCart cartWithManyItems |
@@ -207,14 +208,15 @@ test02checkOutCartWithManyItemsWithValidCreditCardAndValidPaymentWorksCorrectly
 	
 	self assert: (ticket amountCharged = 18.7).
 	self assert: (ticket creditCardNumber = creditCart number).
-	self assert: (ticket paidBy = 'Carlitos Ticona')
+	self assert: (ticket paidBy = 'Carlitos Ticona').
+	self assert: cartWithManyItems alreadyCheckedOut.
 	
 	
 
 	
 ! !
 
-!CashierTest methodsFor: 'checkout tests' stamp: 'BT 11/26/2020 16:48:21'!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:21:19'!
 test03checkOutCartWithExpiredCreditCardRaisesError
 
 	| cashier creditCart cartWithManyItems |
@@ -223,14 +225,17 @@ test03checkOutCartWithExpiredCreditCardRaisesError
 	cartWithManyItems := self createCartWithManyItems.
 	creditCart := self createInvalidCreditCard.
 
-	self should:  [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .]
-	raise:  Error
-	withMessageText: Cashier errorExpiredCreditCard.
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = Cashier errorExpiredCreditCard.
+		self deny: cartWithManyItems alreadyCheckedOut.
+		].
 
 	
 ! !
 
-!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:15:02'!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:22:06'!
 test04checkOutCartWhenNotOwnerIsPayingRaisesError
 
 	| cashier creditCart cartWithManyItems |
@@ -239,14 +244,16 @@ test04checkOutCartWhenNotOwnerIsPayingRaisesError
 	cartWithManyItems := self createCartWithManyItems.
 	creditCart := self createValidCreditCard .
 
-	self should:  [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Fulano' .]
-	raise:  Error
-	withMessageText: Cashier errorInvalidClientIsBuying.
-
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Fulano' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = Cashier errorInvalidClientIsBuying.
+		self deny: cartWithManyItems alreadyCheckedOut.
+		].
 	
 ! !
 
-!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:01:25'!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:21:28'!
 test05checkOutCartWithOneItemWithValidCreditCardButInvalidPaymentRaisesError
 
 	| cashier cartWithOneItem creditCart |
@@ -255,16 +262,17 @@ test05checkOutCartWithOneItemWithValidCreditCardButInvalidPaymentRaisesError
 	cartWithOneItem := self createCartWithOneItem.
 	creditCart := self createValidCreditCard.
 	
-	self should:  [cashier checkOut: cartWithOneItem usingCreditCard: creditCart of: 'Carlitos Ticona' .]
-	raise:  Error
-	withMessageText: MPSimulatorInvalidPayment errorUnsuccesfulPayment. 
-	
-	
+	self should: [cashier checkOut: cartWithOneItem usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = MPSimulatorInvalidPayment errorUnsuccesfulPayment.
+		self deny: cartWithOneItem alreadyCheckedOut.
+		].
 
 	
 ! !
 
-!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:02:31'!
+!CashierTest methodsFor: 'checkout tests' stamp: 'CR 11/26/2020 17:21:33'!
 test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError
 
 	| cashier creditCart cartWithManyItems |
@@ -273,11 +281,12 @@ test06checkOutCartWithManyItemsWithValidCreditCardButInvalidPaymentRaisesError
 	cartWithManyItems := self createCartWithManyItems.
 	creditCart := self createValidCreditCard.
 	
-	self should:  [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .]
-	raise:  Error
-	withMessageText: MPSimulatorInvalidPayment errorUnsuccesfulPayment. 
-	
-	
+	self should: [cashier checkOut: cartWithManyItems usingCreditCard: creditCart of: 'Carlitos Ticona' .] 
+	raise: Error 
+	withExceptionDo: [: anError| 
+		self assert: anError messageText = MPSimulatorInvalidPayment errorUnsuccesfulPayment.
+		self deny: cartWithManyItems alreadyCheckedOut.
+		].
 	
 
 	
@@ -441,10 +450,6 @@ verifyOwnerOf: aCreditCard is: buyingClient.
 perfomCheckOutsWith: merchantProcessorToCollaborateWith
 	merchantProcessor := merchantProcessorToCollaborateWith.! !
 
-!Cashier methodsFor: 'initialization' stamp: 'BT 11/24/2020 01:46:11'!
-withMerchantProcessor: merchantProcessorToCollaborateWith
-	merchantProcessor := merchantProcessorToCollaborateWith.! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Cashier class' category: 'TusLibros'!
@@ -496,7 +501,7 @@ owner
 CreditCard class
 	instanceVariableNames: ''!
 
-!CreditCard class methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 01:11:01'!
+!CreditCard class methodsFor: 'instance creation' stamp: 'BT 11/24/2020 01:11:01'!
 of: cardOwner expiratingOn: monthOfExpiration number: cardNumber
 	^ self new of: cardOwner expiratingOn: monthOfExpiration number: cardNumber.! !
 
@@ -508,7 +513,7 @@ Object subclass: #MerchantProcessorSimulator
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 01:57:28'!
+!MerchantProcessorSimulator methodsFor: 'charge to credit card' stamp: 'BT 11/24/2020 01:57:28'!
 charge: amountToPay to: aCreditCard
 	self subclassResponsibility.! !
 
@@ -520,11 +525,11 @@ MerchantProcessorSimulator subclass: #MPSimulatorInvalidPayment
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MPSimulatorInvalidPayment methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 01:58:09'!
+!MPSimulatorInvalidPayment methodsFor: 'charge to credit card' stamp: 'BT 11/24/2020 01:58:09'!
 charge: amountToPay to: aCreditCard
 	self signalUnsuccesfulPayment.! !
 
-!MPSimulatorInvalidPayment methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 02:00:13'!
+!MPSimulatorInvalidPayment methodsFor: 'charge to credit card' stamp: 'BT 11/24/2020 02:00:13'!
 signalUnsuccesfulPayment
 	self error: self class errorUnsuccesfulPayment.! !
 
@@ -534,7 +539,7 @@ signalUnsuccesfulPayment
 MPSimulatorInvalidPayment class
 	instanceVariableNames: ''!
 
-!MPSimulatorInvalidPayment class methodsFor: 'as yet unclassified' stamp: 'BT 11/24/2020 02:00:01'!
+!MPSimulatorInvalidPayment class methodsFor: 'error messages' stamp: 'BT 11/24/2020 02:00:01'!
 errorUnsuccesfulPayment
 	^ 'Unsuccesful Payment'! !
 
@@ -546,7 +551,7 @@ MerchantProcessorSimulator subclass: #MPSimulatorValidPayment
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MPSimulatorValidPayment methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:32:11'!
+!MPSimulatorValidPayment methodsFor: 'charge to credit card' stamp: 'BT 11/26/2020 16:32:11'!
 charge: amountToPay to: aCreditCard
 	^ '0192'! !
 
@@ -584,6 +589,6 @@ forTransaction: idTransaction doneBy: aCreditCard of: amount.
 Ticket class
 	instanceVariableNames: ''!
 
-!Ticket class methodsFor: 'as yet unclassified' stamp: 'BT 11/26/2020 16:36:45'!
+!Ticket class methodsFor: 'instance creation' stamp: 'BT 11/26/2020 16:36:45'!
 forTransaction: idTransaction doneBy: aCreditCard of: amountToPay
 	^ self new forTransaction: idTransaction doneBy: aCreditCard of: amountToPay.! !
