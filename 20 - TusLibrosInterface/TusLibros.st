@@ -327,8 +327,8 @@ test06ListItemsOfValidCartWorksCorrectly
 	self assert: (interface listCart: cartID) = (Bag with: itemToAdd).
 				! !
 
-!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 01:08:41'!
-test07CannotCheckOutAnInvalidCart
+!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 06:11:51'!
+test07CannotCheckOutUnknownCart
 
 	| interface |
 	interface := RestInterface for: testObjectFactory defaultSupermarket withAuthenticator: testObjectFactory defaultAuthenticator.
@@ -340,55 +340,59 @@ test07CannotCheckOutAnInvalidCart
 	
 				! !
 
-!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 01:12:46'!
-test08CheckOutValidCartWorksCorrectly
+!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 06:55:08'!
+test08CannotCheckOutEmptyCart
 
-	| interface cartID itemToAdd clientPurchases |
+	| interface cartID  |
 	interface := RestInterface for: testObjectFactory defaultSupermarket withAuthenticator: testObjectFactory defaultAuthenticator.
 	
 	cartID := interface createCartForClient: 'aClientID'  withPassword: 'passwordOfClientWhoIsCreatingACart'.
-	itemToAdd := testObjectFactory itemSellByTheStore.
-	interface addToCart: cartID book: itemToAdd. 
 	
-	interface checkout: cartID withCreditCard: (testObjectFactory notExpiredCreditCard ) for: 'aClientID'.
-	clientPurchases := interface listPurchases: 'aClientID' withPassword: 'passwordOfClientWhoIsCreatingACart'.
-	self assert: (interface listCart: cartID = clientPurchases).
-				! !
+	self should: [interface checkout: cartID withCreditCard: (testObjectFactory notExpiredCreditCard ) for: 'aClientID'.] 
+	raise: Error
+	withExceptionDo: [:anError | | clientPurchases |
+		clientPurchases := interface listPurchases: 'aClientID' withPassword: 'passwordOfClientWhoIsCreatingACart'.
+		self assert: clientPurchases = 'No purchases'. 
+		self assert: anError messageText = RestInterface cannotCheckOutEmptyCart.
+		].! !
 
-!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 02:17:34'!
-test10CheckOutValidCartWorksCorrectly
-
-	| interface cartID itemToAdd clientPurchases |
-	interface := RestInterface for: testObjectFactory defaultSupermarket withAuthenticator: testObjectFactory defaultAuthenticator.
-	
-	cartID := interface createCartForClient: 'aClientID'  withPassword: 'passwordOfClientWhoIsCreatingACart'.
-	itemToAdd := testObjectFactory itemSellByTheStore.
-	interface addToCart: cartID book: itemToAdd. 
-	
-	interface checkout: cartID withCreditCard: (testObjectFactory notExpiredCreditCard ) for: 'aClientID'.
-	clientPurchases := interface listPurchases: 'aClientID' withPassword: 'passwordOfClientWhoIsCreatingACart'.
-	self assert: (interface listCart: cartID = clientPurchases).
-				! !
-
-!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 02:22:58'!
-test10UserIsAuthenticatedWhenWorksCorrectly
-	| interface cartID itemToAdd clientPurchases |
-	
+!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 06:49:48'!
+test09UserIsAuthenticatedWhenListingPurchases
+	| interface |
 	interface := RestInterface for: testObjectFactory defaultSupermarket withAuthenticator: (testObjectFactory invalidClientAuthenticator).
-
-	self should: [interface createCartForClient: 'aClientID'  withPassword: 'anInvalidPassword'.]
+	
+	self should: [interface listPurchases: 'aClientID' withPassword: 'anInvalidPassword'.]
 	 raise: Error 
 	 withMessageText: RestInterface invalidClientErrorDescription.
-				
+				! !
+
+!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 06:43:59'!
+test10CheckOutValidCartWorksCorrectly
+
+	| interface cartID itemToAdd clientPurchases purchase |
 	interface := RestInterface for: testObjectFactory defaultSupermarket withAuthenticator: testObjectFactory defaultAuthenticator.
-	
+	purchase := '(''validBook''->1 ) Total spent = 10'.
 	cartID := interface createCartForClient: 'aClientID'  withPassword: 'passwordOfClientWhoIsCreatingACart'.
 	itemToAdd := testObjectFactory itemSellByTheStore.
 	interface addToCart: cartID book: itemToAdd. 
 	
 	interface checkout: cartID withCreditCard: (testObjectFactory notExpiredCreditCard ) for: 'aClientID'.
 	clientPurchases := interface listPurchases: 'aClientID' withPassword: 'passwordOfClientWhoIsCreatingACart'.
-	self assert: (interface listCart: cartID = clientPurchases).
+	self assert: purchase = clientPurchases.
+				! !
+
+!RestInterfaceTest methodsFor: 'tests' stamp: 'CR 12/3/2020 06:55:40'!
+test11PurchasesForClientWhoDidNotCheckOutIsEmpty
+
+	| interface cartID itemToAdd clientPurchases |
+	interface := RestInterface for: testObjectFactory defaultSupermarket withAuthenticator: testObjectFactory defaultAuthenticator.
+	
+	cartID := interface createCartForClient: 'aClientID'  withPassword: 'passwordOfClientWhoIsCreatingACart'.
+	itemToAdd := testObjectFactory itemSellByTheStore.
+	interface addToCart: cartID book: itemToAdd. 
+	
+	clientPurchases := interface listPurchases: 'aClientID' withPassword: 'passwordOfClientWhoIsCreatingACart'.
+	self assert: 'No purchases' = clientPurchases.
 				! !
 
 
@@ -702,19 +706,15 @@ validateUser: aUserToAuthenticate withPassword: aPassword
 	! !
 
 
-
-!RestInterface methodsFor: 'api' stamp: 'BT 12/2/2020 14:31:25'!
-addToCart: aCartID book: aBook
-	supermarket addBook: aBook toCart: 	aCartID ifAbsent: [self error: self class  unknownCartErrorMessage].
-! !
-
-!RestInterface methodsFor: 'api' stamp: 'CR 12/3/2020 00:58:58'!
+!RestInterface methodsFor: 'create cart private' stamp: 'CR 12/3/2020 00:58:58'!
 assignNewCart: newCartID toClient: aClientID
 
 	(cartsByClient at: aClientID ifAbsentPut: [OrderedCollection new]) add: newCartID.! !
 
-!RestInterface methodsFor: 'api' stamp: 'CR 12/2/2020 23:27:04'!
-cardToPayWith
+
+!RestInterface methodsFor: 'api' stamp: 'BT 12/2/2020 14:31:25'!
+addToCart: aCartID book: aBook
+	supermarket addBook: aBook toCart: 	aCartID ifAbsent: [self error: self class  unknownCartErrorMessage].
 ! !
 
 !RestInterface methodsFor: 'api' stamp: 'CR 12/3/2020 01:30:02'!
@@ -741,14 +741,6 @@ listPurchases: clientID withPassword: clientPassword
 	clientSalesBook := supermarket salesBookFor: clientID.
 	^ self purchasesGivenSalesBook: clientSalesBook.! !
 
-!RestInterface methodsFor: 'api' stamp: 'CR 12/3/2020 02:08:02'!
-purchasesGivenSalesBook: clientSalesBook
-	|  totalSpent allItems |
-	totalSpent := clientSalesBook sum: [: sale | sale total ] ifEmpty: [0].
-	allItems := Bag new.
-	clientSalesBook do: [: sale | allItems addAll: (sale items) ].
-	^ (allItems contents asString withoutPrefix: 'a Dictionary'), ('Total spent = ', totalSpent asString).! !
-
 
 !RestInterface methodsFor: 'initialization' stamp: 'CR 12/3/2020 00:48:12'!
 initializeWith: aSupermarket withAuthenticator: anAuthenticator 
@@ -756,6 +748,42 @@ initializeWith: aSupermarket withAuthenticator: anAuthenticator
 	authenticator := anAuthenticator.
 	cartsByClient := Dictionary new.
 ! !
+
+
+!RestInterface methodsFor: 'list purchases private' stamp: 'CR 12/3/2020 06:31:29'!
+addItemsFromSalesBook: clientSalesBook To: allItems
+
+	clientSalesBook do: [: sale | allItems addAll: (sale items) ]! !
+
+!RestInterface methodsFor: 'list purchases private' stamp: 'CR 12/3/2020 06:24:36'!
+asStringItemsFrom: allItems
+
+	^ allItems contents asString withoutPrefix: 'a Dictionary'! !
+
+!RestInterface methodsFor: 'list purchases private' stamp: 'CR 12/3/2020 06:25:47'!
+itemsAsString: allItems
+
+	^ allItems contents asString withoutPrefix: 'a Dictionary'! !
+
+!RestInterface methodsFor: 'list purchases private' stamp: 'CR 12/3/2020 06:31:39'!
+purchasesGivenSalesBook: clientSalesBook
+	|  totalSpent allItems |
+	(clientSalesBook isEmpty) ifTrue: [^'No purchases'].
+	
+	totalSpent := self sumTotalSpentFor: clientSalesBook.
+	allItems := Bag new.
+	self addItemsFromSalesBook: clientSalesBook To: allItems.
+	^ (self itemsAsString: allItems), (self totalSpentAsString: totalSpent).! !
+
+!RestInterface methodsFor: 'list purchases private' stamp: 'CR 12/3/2020 06:22:18'!
+sumTotalSpentFor: clientSalesBook
+
+	^ clientSalesBook sum: [: sale | sale total ] ifEmpty: [0]! !
+
+!RestInterface methodsFor: 'list purchases private' stamp: 'CR 12/3/2020 06:37:32'!
+totalSpentAsString: totalSpent
+
+	^ ' Total spent = ', totalSpent asString! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -767,6 +795,10 @@ RestInterface class
 for: aSupermarket withAuthenticator: anAuthenticator 
 	^ self new initializeWith: aSupermarket withAuthenticator: anAuthenticator.! !
 
+
+!RestInterface class methodsFor: 'error messages' stamp: 'CR 12/3/2020 06:52:28'!
+cannotCheckOutEmptyCart
+	^ 'Can not check out empty cart!!'.! !
 
 !RestInterface class methodsFor: 'error messages' stamp: 'CR 12/2/2020 23:27:33'!
 expiredCreditCard
@@ -827,7 +859,7 @@ hasToBeNonNegative
 
 !classDefinition: #StoreTestObjectsFactory category: 'TusLibros'!
 Object subclass: #StoreTestObjectsFactory
-	instanceVariableNames: 'today'
+	instanceVariableNames: 'today timeNow'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
@@ -892,6 +924,11 @@ defaultExpirationDate
 	
 	^ today + 1! !
 
+!StoreTestObjectsFactory methodsFor: 'date' stamp: 'CR 12/3/2020 07:02:21'!
+now
+	
+	^ timeNow! !
+
 !StoreTestObjectsFactory methodsFor: 'date' stamp: 'HernanWilkinson 6/17/2013 18:37'!
 today
 	
@@ -951,11 +988,11 @@ newCartForClient: aClientID
 	! !
 
 
-!Supermarket methodsFor: 'interface - interaction' stamp: 'CR 12/3/2020 02:12:38'!
+!Supermarket methodsFor: 'interface - interaction' stamp: 'CR 12/3/2020 06:51:32'!
 checkout: cartID withCreditCard: creditCardToPayWith for: clientID ifInvalidCart: errorBlock 
 	| aCartToCheckOut aCashierToPayWith |
 	aCartToCheckOut := carts at: cartID ifAbsent: errorBlock.
-	"fijarse que no este vacio el carrito"
+	self verifyCartIsNonEmpty: aCartToCheckOut.
 	aCashierToPayWith := Cashier toCheckout: aCartToCheckOut charging: creditCardToPayWith through: merchantProcessor on: self timeNow registeringOn: (salesBookByClient at: clientID). 
 	^ aCashierToPayWith checkOut.
 	
@@ -970,6 +1007,11 @@ listCartsItemsOf: aCartID ifAbsent: errorBlock
 !Supermarket methodsFor: 'interface - interaction' stamp: 'CR 12/3/2020 02:01:47'!
 salesBookFor: clientID
 	^ salesBookByClient at: clientID.! !
+
+!Supermarket methodsFor: 'interface - interaction' stamp: 'CR 12/3/2020 06:52:44'!
+verifyCartIsNonEmpty: aCartToCheckOut
+
+	^ (aCartToCheckOut isEmpty) ifTrue: [self error: RestInterface cannotCheckOutEmptyCart]! !
 
 
 !Supermarket methodsFor: 'cart' stamp: 'BT 12/2/2020 14:27:33'!
@@ -990,10 +1032,6 @@ timeNow
 Supermarket class
 	instanceVariableNames: ''!
 
-!Supermarket class methodsFor: 'initialization' stamp: 'CR 12/3/2020 01:04:42'!
-withCatalog: aCatalog 
-	^ self new initializeWithCatalog: aCatalog through: MPValidTransaction new.! !
-
-!Supermarket class methodsFor: 'initialization' stamp: 'CR 12/3/2020 01:05:23'!
+!Supermarket class methodsFor: 'instance creation' stamp: 'CR 12/3/2020 01:05:23'!
 withCatalog: aCatalog through: aMerchantProcessor
 	^ self new initializeWithCatalog: aCatalog through: aMerchantProcessor.! !
